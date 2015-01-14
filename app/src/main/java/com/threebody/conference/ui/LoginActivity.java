@@ -1,13 +1,15 @@
-package com.threebody.conference;
+package com.threebody.conference.ui;
 
-import android.os.Bundle;
+import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
+import com.threebody.conference.R;
 import com.threebody.conference.handle.LoginHandle;
 import com.threebody.conference.listener.OnJoinConferenceListener;
 import com.threebody.conference.util.TextViewUtil;
+import com.threebody.conference.util.ToastUtil;
 
 import butterknife.InjectView;
 
@@ -16,31 +18,36 @@ public class LoginActivity extends BaseActivity {
     @InjectView(R.id.etNum)EditText etNum;
     @InjectView(R.id.etName)EditText etName;
     @InjectView(R.id.etPassword)EditText etPassword;
-    @InjectView(R.id.tvAddIn)TextView tvAddIn;
+    @InjectView(R.id.btnAddIn)Button btnAddIn;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initUI() {
         setContentView(R.layout.activity_login);
-        tvAddIn.setOnClickListener(this);
+        super.initUI();
+        getSupportActionBar().hide();
+        btnAddIn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
-            case R.id.tvAddIn:
+            case R.id.btnAddIn:
+                Intent intent = new Intent();
+                intent.setClass(this, MeetingActivity.class);
+                startActivity(intent);
                 if(!TextViewUtil.isNullOrEmpty(etNum)){
-
+                    ToastUtil.showToast(this, R.string.noMeetNum);
                     return;
                 }
                 if(!TextViewUtil.isNullOrEmpty(etName)){
-
+                    ToastUtil.showToast(this, R.string.noUser);
                     return;
                 }
-                if(!TextViewUtil.isNullOrEmpty(etPassword)){
-
-                    return;
-                }
+//                if(!TextViewUtil.isNullOrEmpty(etPassword)){
+//                    ToastUtil.showToast(this, R.string.noPswd);
+//                    return;
+//                }
                 joinConference();
                 break;
             default:
@@ -48,6 +55,7 @@ public class LoginActivity extends BaseActivity {
         }
     }
     private void joinConference(){
+
         String num = etNum.getText().toString().trim();
         String name = etName.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
