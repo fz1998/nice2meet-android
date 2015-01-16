@@ -1,4 +1,4 @@
-package com.threebody.sdk.domain;
+package com.infowarelab.conference.domain;
 
 import java.io.Serializable;
 
