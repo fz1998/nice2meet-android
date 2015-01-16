@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/topbg"
+        android:paddingLeft="@dimen/TextSize10"
+        android:paddingRight="@dimen/TextSize10"
+        android:paddingTop="@dimen/TextSize05"
+        android:paddingBottom="@dimen/TextSize05">
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/etSend"
+            android:background="@color/white"
+            android:textSize="@dimen/TextSize14"
+            android:hint="@string/inMessge"
+            android:padding="@dimen/TextSize05"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/TextSize14"
+            android:text="@string/send"/>
+    </LinearLayout>
+</LinearLayout>
+

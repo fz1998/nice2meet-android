@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/TextSize10">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/tvUserName"
+        android:textSize="@dimen/TextSize17"
+        android:textColor="@color/white"
+        android:text="alice"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivVideoStatus"
+        android:src="@drawable/status_video"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivAudioStatus"
+        android:src="@drawable/status_sound"
+        android:layout_marginLeft="@dimen/TextSize10"/>
+</LinearLayout>
