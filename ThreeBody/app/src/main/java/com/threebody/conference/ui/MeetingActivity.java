@@ -13,6 +13,9 @@ import com.threebody.conference.ui.fragment.SetFragment;
 import com.threebody.conference.ui.fragment.VideoFragment;
 import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.conference.ui.util.ToastUtil;
+import com.threebody.conference.ui.view.video.LocalVideoView;
+import com.threebody.conference.ui.view.video.OnFramenLister;
+import com.threebody.sdk.domain.VideoBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +25,13 @@ import butterknife.InjectView;
 /**
  * Created by xiaxin on 15-1-14.
  */
-public class MeetingActivity extends BaseActivity{
+public class MeetingActivity extends BaseActivity implements OnFramenLister{
     @InjectView(R.id.llContainer)LinearLayout llContainer;
     @InjectView(R.id.flMessage)FrameLayout flMessage;
     @InjectView(R.id.flVideo)FrameLayout flVideo;
     @InjectView(R.id.flSet)FrameLayout flSet;
     @InjectView(R.id.flExit)FrameLayout flExit;
+    @InjectView(R.id.localVideo)LocalVideoView localVideoView;
     ChatFragment mMessage;
     VideoFragment mVideo;
     SetFragment mSet;
@@ -54,6 +58,7 @@ public class MeetingActivity extends BaseActivity{
         mFragments.add(mMessage);
         mFragments.add(mVideo);
         mFragments.add(mSet);
+        localVideoView.setListener(this);
         getSupportFragmentManager().beginTransaction().add(R.id.llContainer, mVideo).commit();
     }
 
@@ -103,5 +108,21 @@ public class MeetingActivity extends BaseActivity{
     }
     private void leaveConference(){
 
+    }
+
+    @Override
+    public void OnPreviewFrame(VideoBean videoBean) {
+        Fragment fragment = getSupportFragmentManager().getFragments().get(0);
+        if(fragment instanceof VideoFragment){
+            ((VideoFragment)fragment).setLocalData(videoBean);
+        }
+    }
+
+    @Override
+    public void OnResize(int width, int height) {
+        Fragment fragment = getSupportFragmentManager().getFragments().get(0);
+        if(fragment instanceof VideoFragment){
+            ((VideoFragment)fragment).setLocalSize(width, height);
+        }
     }
 }

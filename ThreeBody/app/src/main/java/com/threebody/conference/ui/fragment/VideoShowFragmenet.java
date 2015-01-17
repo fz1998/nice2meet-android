@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.threebody.conference.R;
-import com.threebody.conference.sdk.domain.User;
+import com.threebody.sdk.domain.User;
 
 import butterknife.InjectView;
 

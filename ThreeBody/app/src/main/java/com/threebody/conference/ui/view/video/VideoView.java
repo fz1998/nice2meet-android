@@ -1,6 +1,7 @@
 package com.threebody.conference.ui.view.video;
 
 
+import com.threebody.sdk.domain.VideoBean;
 
 public interface VideoView {
 	

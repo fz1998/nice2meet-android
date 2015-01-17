@@ -13,8 +13,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.ImageView;
 
 import com.threebody.conference.ui.util.LoggerUtil;
+import com.threebody.sdk.domain.VideoBean;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,7 +28,7 @@ PreviewCallback回到接口，用于显示预览框
 */
 public class LocalVideoView extends SurfaceView implements PreviewCallback, Callback, VideoView{
 	Context activity;
-	
+	OnFramenLister listener;
 	
 	/**
 	 * save device 
@@ -38,6 +40,8 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 	public final static String VIDEOFORMAT="videoFormat";
 	
 	public final static String ISFIRSTOPEN="isFirstOpen";
+    public  static int WIDTH = 176;
+    public  static int HEIGHT = 144;
 	
 	private int cameraFPS = 0, cameraWidth = 0, cameraHeight = 0;
 	
@@ -61,7 +65,8 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 	
 	public LocalVideoView(Context context) {
 		super(context);
-//		init();
+        activity = context;
+		init();
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -74,7 +79,7 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 	
 	public LocalVideoView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-//		init();
+		init();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -83,6 +88,8 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 		if(holder ==null){
 			holder = this.getHolder();
 		}
+        ImageView view ;
+        SurfaceView s;
         LoggerUtil.info(getClass().getName(), "holder = " + holder.toString());
 		
 		holder.addCallback(this);
@@ -95,7 +102,7 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 	}
 
 	public void openCamera(){
-		if(Integer.parseInt(Build.VERSION.SDK) > 8){
+		if(Build.VERSION.SDK_INT > 8){
 			numOfCamera = Camera.getNumberOfCameras();//返回数量的物理相机，在这个设备上
 			if(numOfCamera == 1){
                 LoggerUtil.info(getClass().getName(), "1111111111111111");
@@ -129,8 +136,9 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		changePreview(true);
-		setBackgroundColor(0);
+//		changePreview(true);
+        camera.startPreview();
+//		setBackgroundColor(0);
         LoggerUtil.info(getClass().getName(), "start camera");
 	}
 	
@@ -140,7 +148,7 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 	private void setCameraParameters() {
 		Camera.Parameters parameters = camera.getParameters();
 	    List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
-		
+
 	    cameraFPS = parameters.getPreviewFrameRate();
 	    for(Camera.Size size : previewSizes){
 	    	if(cameraWidth==0){
@@ -153,7 +161,8 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 	    	}
 //	    	log.info("Camera.Size = " + size.width + ", " + size.height + ", " + fps);
 	    }
-	    
+	    WIDTH = cameraWidth;
+        HEIGHT = cameraHeight;
 	    frameSize = cameraWidth * cameraHeight;
 	    rgba = new int[frameSize+1];
 	    
@@ -284,25 +293,25 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 	@Override
 	public synchronized void onPreviewFrame(byte[] data, Camera camera) {
 		
-//		log.info("onPreviewFrameonPreviewFrameonPreviewFrame");
+		LoggerUtil.info(getClass().getName(),"onPreviewFrameonPreviewFrameonPreviewFrame");
 		
 		if (data == null) {
 			return;
 		}
 		
-		/*System.out.println(Conference4PhoneActivity.isShareImageOpen);
-		if(Conference4PhoneActivity.isShareImageOpen){
+		//System.out.println(Conference4PhoneActivity.isShareImageOpen);
+//		if(Conference4PhoneActivity.isShareImageOpen){
 			rgba = decodeYUV420SP(rgba, data, cameraWidth, cameraHeight);
-			LocalCommonFactory.getInstance().getContactDataCommon().sendLocalCameraImage(rgba, cameraWidth, cameraHeight);			
-		}*/	
+//			LocalCommonFactory.getInstance().getContactDataCommon().sendLocalCameraImage(rgba, cameraWidth, cameraHeight);
+//		}
 		
-		if(isShareing){
+		if(true){
 			// 关闭摄像头预览回调
 			camera.setPreviewCallback(null);
 			
 			//转换后可以显示颜色，否则显示黑白
 			
-			if(isPortrait){
+//			if(isPortrait){
 				if(currentCamera == CameraInfo.CAMERA_FACING_BACK){
 					yv12buf = rotateYUV420SPBackfacing(data, cameraWidth, cameraHeight);
 				}else {
@@ -310,11 +319,11 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 				}
 //				videoCommon.sendMyVideoData(yv12buf, yv12buf.length, cameraHeight, cameraWidth);
 //				log.info("portrait data length = "+data.length);
-			}else{
-				yv12buf = changeYUV420SP2P(data, data.length);
-//				videoCommon.sendMyVideoData(yv12buf, yv12buf.length, cameraWidth, cameraHeight);
-//				log.info("landscape data length = "+data.length);
-			}	
+//			}else{
+//				yv12buf = changeYUV420SP2P(data, data.length);
+////				videoCommon.sendMyVideoData(yv12buf, yv12buf.length, cameraWidth, cameraHeight);
+////				log.info("landscape data length = "+data.length);
+//			}
 			
 //			log.info("yuv length = "+yv12buf.length);
 //			yv12buf = rotateYUV420(yv12buf, cameraWidth, cameraHeight);
@@ -328,12 +337,21 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 //			}
 			
 //			if(CommonFactory.getInstance().getMediaCommon().isLocal_video_channel_flag()){
-//				log.info("cameraWidth = "+cameraWidth +" cameraHeight = "+cameraHeight+" fps ="+cameraFPS+"video data length="+yv12buf.length);
+				LoggerUtil.info(getClass().getName(), "cameraWidth = "+cameraWidth +" cameraHeight = "+cameraHeight+" fps ="+cameraFPS+"video data length="+yv12buf.length);
 				
 				
 //			}
+
 		}
-		
+		if(listener != null){
+            VideoBean videoBean = new VideoBean();
+            videoBean.setVideoDataByInt(rgba);
+//            videoBean.setVideoData(yv12buf);
+            videoBean.setWidth(cameraWidth);
+            videoBean.setHeight(cameraHeight);
+            listener.OnPreviewFrame(videoBean);
+        }
+
 		// 打开摄像头预览回调
 		camera.setPreviewCallback(this);
 	}
@@ -604,6 +622,7 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
         LoggerUtil.info(getClass().getName(), "surfaceCreatedsurfaceCreatedsurfaceCreated");
+        startCamera();
 //		changeVedioState(true);
 //		((Conference4PhoneActivity)activity).checkSyncVideo();
 		isDestroyed = false;
@@ -744,7 +763,8 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 			changePreview(false);
 			setCameraOrientation(90);
 			camera.setPreviewCallback(this);
-			changePreview(true);
+//			changePreview(true);
+            camera.startPreview();
 		}
 	}
 	public void setParams(int width, int height){
@@ -792,4 +812,12 @@ public class LocalVideoView extends SurfaceView implements PreviewCallback, Call
 	public boolean isPreview(){
 		return isPreview;
 	}
+
+    public OnFramenLister getListener() {
+        return listener;
+    }
+
+    public void setListener(OnFramenLister listener) {
+        this.listener = listener;
+    }
 }

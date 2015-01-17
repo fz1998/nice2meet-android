@@ -153,8 +153,8 @@ public class RemoteVideoView extends View implements VideoView{
 			}else{
 //				width = ConferenceApplication.SCREEN_WIDTH;
 			}
-			
-			if (videoBean != null && videoBean.getVideoData() != null 
+
+			if (videoBean != null && videoBean.getVideoData() != null
 					&& videoBean.getVideoData().length > 0) {
 //				log.info("444444");
 				buffer = ByteBuffer.wrap(videoBean.getVideoData());
@@ -173,13 +173,15 @@ public class RemoteVideoView extends View implements VideoView{
 					canvas.drawBitmap(videoBit, m, null);
 //				}
 
-			} else if (videoBean != null && videoBean.getVideoDataByInt() != null 
+			} else if (videoBean != null && videoBean.getVideoDataByInt() != null
 					&& videoBean.getVideoDataByInt().length > 0) {
 				if(videoBit != null){
 					videoBit.recycle();
 				}
-				
+				LoggerUtil.info(getClass().getName(), "local");
 				videoBit = Bitmap.createBitmap(videoBean.getVideoDataByInt(), 176, 144, Config.RGB_565);
+//                buffer = ByteBuffer.wrap(videoBean.getVideoData());
+//                videoBit.copyPixelsFromBuffer(buffer);
 				Matrix m = new Matrix();
 				float scale = 1;
 				int xOff = 0;
@@ -189,10 +191,13 @@ public class RemoteVideoView extends View implements VideoView{
 				} else {
 //					scale = (float) findViewById(R.id.video_cell_item_videoView).getWidth() / videoBit.getWidth();
 				}
-		
-				m.postScale(scale, scale);
-				m.postTranslate(xOff, 0);
-				canvas.drawBitmap(videoBit, m, null);
+
+                m.setRotate(270);
+                videoBit = Bitmap.createBitmap(videoBit, 0,0, videoBit.getWidth(), videoBit.getHeight(), m, false);
+//				m.postScale(scale, scale);
+//				m.postTranslate(xOff, 0);
+//				canvas.drawBitmap(videoBit, m, null);
+                canvas.drawBitmap(videoBit, (float)0, (float)0.0, null);
 			} else {
 //				log.info("视频数据为空");
 				// 关闭视频

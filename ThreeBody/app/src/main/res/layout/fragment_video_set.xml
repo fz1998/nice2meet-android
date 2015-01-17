@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/TextSize10"
+        android:textSize="@dimen/TextSize17"
+        android:textColor="@color/white"
+        android:text="@string/selectVideo"
+        android:layout_gravity="center"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:id="@+id/userList"
+        android:listSelector="@null"
+        android:layout_weight="100"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@color/liquid">
+
+        <Button
+            android:id="@+id/btnAddIn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_7_80"
+            android:layout_margin="@dimen/TextSize10"
+            android:text="@android:string/ok"
+            android:padding="@dimen/TextSize05"
+            android:textSize="@dimen/TextSize17"
+            android:gravity="center"
+            android:background="@drawable/btn_selector"
+            android:textColor="@color/white"/>
+    </FrameLayout>
+</LinearLayout>

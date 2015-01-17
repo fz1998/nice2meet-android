@@ -25,4 +25,5 @@
     <string name="noMeetNum">请输入会议号</string>
     <string name="noUser">用户名为空！</string>
     <string name="noPswd">密码为空！</string>
+    <string name="selectVideo">请选择显示的视频，不超过两路</string>
 </resources>
