@@ -1,4 +1,4 @@
-package com.threebody.conference.ui.util.http;
+package com.threebody.sdk.http;
 
 /**
  * Created by xiaxin on 15-1-18.

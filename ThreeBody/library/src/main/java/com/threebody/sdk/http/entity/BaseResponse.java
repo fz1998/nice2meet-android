@@ -1,4 +1,4 @@
-package com.threebody.conference.ui.util.http.entity;
+package com.threebody.sdk.http.entity;
 
 
 import com.threebody.sdk.domain.BaseDomain;

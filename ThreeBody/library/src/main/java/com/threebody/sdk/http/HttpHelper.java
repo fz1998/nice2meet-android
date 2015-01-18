@@ -1,10 +1,10 @@
-package com.threebody.conference.ui.util.http;
+package com.threebody.sdk.http;
 
 import android.content.Context;
 
 import com.loopj.android.http.AsyncHttpClient;
-import com.threebody.conference.ui.util.http.listener.MyParser;
-import com.threebody.conference.ui.util.http.entity.LoginRequest;
+import com.threebody.sdk.http.listener.MyParser;
+import com.threebody.sdk.http.entity.LoginRequest;
 
 public class HttpHelper {
 
@@ -27,8 +27,8 @@ public class HttpHelper {
         }
     }
     //登录
-    public void login(Context context, LoginRequest request, MyParser parser, Class cls){
-        HttpUtil.httpActionText(false, "", context, client, UrlUtil.getUrl(UrlUtil.LOGIN), request, parser, null, cls, "", METHOD_GET);
+    public void login(LoginRequest request, MyParser parser, Class cls){
+        HttpUtil.httpActionText(client, UrlUtil.getUrl(UrlUtil.LOGIN), request, parser, null, cls, METHOD_GET);
     }
 
 

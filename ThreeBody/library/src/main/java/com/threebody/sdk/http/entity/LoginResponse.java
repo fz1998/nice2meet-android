@@ -1,4 +1,4 @@
-package com.threebody.conference.ui.util.http.entity;
+package com.threebody.sdk.http.entity;
 
 /**
  * Created by xiaxin on 15-1-18.

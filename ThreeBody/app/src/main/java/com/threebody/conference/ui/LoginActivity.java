@@ -6,11 +6,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.threebody.conference.R;
-import com.threebody.conference.ui.util.http.LoginHandle;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
-import com.threebody.conference.ui.util.http.entity.LoginRequest;
-import com.threebody.sdk.listener.OnJoinConferenceListener;
+import com.threebody.sdk.http.entity.LoginRequest;
 
 import butterknife.InjectView;
 
@@ -64,16 +62,16 @@ public class LoginActivity extends BaseActivity {
         String name = "admin";
         String password = "admin";
         LoginRequest request = new LoginRequest(name, password);
-        new LoginHandle(this, new OnJoinConferenceListener() {
-            @Override
-            public void onJoinResult(int result) {
-                if(result == 0){
+//        new LoginHandle(new OnJoinConferenceListener() {
+//            @Override
+//            public void onJoinResult(int result) {
+//                if(result == 0){
                     Intent intent = new Intent();
                     intent.setClass(LoginActivity.this, MeetingActivity.class);
                     startActivity(intent);
-                }
-            }
-        }).joinConference(request);
+//                }
+//            }
+//        }).joinConference(request);
     }
     //    @Ovde
 //    public boolean onCreateOptionsMenu(Menu menu) {

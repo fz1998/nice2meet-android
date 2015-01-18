@@ -1,15 +1,13 @@
-package com.threebody.conference.ui.util.http;
+package com.threebody.sdk.http;
 
 import android.content.Context;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
-import com.threebody.conference.R;
-import com.threebody.conference.ui.util.ToastUtil;
-import com.threebody.conference.ui.util.http.listener.DoubleParser;
-import com.threebody.conference.ui.util.http.listener.MyParser;
-import com.threebody.conference.ui.view.HttpProgressDialog;
+import com.threebody.sdk.R;
+import com.threebody.sdk.http.listener.DoubleParser;
+import com.threebody.sdk.http.listener.MyParser;
 import com.threebody.sdk.util.LoggerUtil;
 import com.threebody.sdk.util.StringUtil;
 
@@ -44,10 +42,10 @@ public class HttpUtil {
      * @throws NoSuchMethodException
      * @throws java.lang.reflect.InvocationTargetException
      */
-    public static RequestParams getParams(Object object,String[] strings, Context context) throws IllegalAccessException, IllegalArgumentException, NoSuchMethodException, InvocationTargetException {
-            return getParams(object, strings, context, true);
+    public static RequestParams getParams(Object object,String[] strings) throws IllegalAccessException, IllegalArgumentException, NoSuchMethodException, InvocationTargetException {
+            return getParams(object, strings, true);
     }
-    public static RequestParams getParams(Object object,String[] strings, Context context, boolean isCheck) throws IllegalAccessException, IllegalArgumentException, NoSuchMethodException, InvocationTargetException {
+    public static RequestParams getParams(Object object,String[] strings, boolean isCheck) throws IllegalAccessException, IllegalArgumentException, NoSuchMethodException, InvocationTargetException {
 //		RequestParams params = new RequestParams
         Map<String, String> paramMap = new TreeMap<String, String>(new Comparator<String>() {
 
@@ -147,45 +145,22 @@ public class HttpUtil {
         sb.append(text);
         return sb.toString();
     }
-    @SuppressWarnings("rawtypes")
-    public static void httpActionText( Context context, AsyncHttpClient client,  String url, Object object, MyParser parser, String[] strings, Class cls, int resId){
-        if(resId > 0){
-            httpActionText(true, null, context, client, url, object, parser, strings, cls, context.getString(resId), 0);
-        }else{
-            httpActionText(true, null, context, client, url, object, parser, strings, cls, "", 0);
-        }
-    }
-    @SuppressWarnings("rawtypes")
-    public static void httpActionText( Context context, AsyncHttpClient client,  String url, Object object, MyParser parser, String[] strings, Class cls, String errorStr){
-        httpActionText(true, null, context, client, url, object, parser, strings, cls, errorStr, 0);
-    }
-    @SuppressWarnings("rawtypes")
-    public static void httpActionText( boolean isShow,  String message,  Context context, AsyncHttpClient client,  String url, Object object, MyParser parser, String[] strings, Class cls, int resId){
-        httpActionText(isShow, message, context, client, url, object, parser, strings, cls, context.getString(resId), 0);
-    }
-    public static void httpActionText( boolean isShow,  String message,  Context context, AsyncHttpClient client,  String url, Object object, MyParser parser, String[] strings, Class cls, String errroMsg){
-        httpActionText(isShow, message, context, client, url, object, parser, strings, cls, errroMsg, 0);
-    }
+
     /**
      *
-     * @param isShow    是否显示dialog
-     * @param message	dialog中显示的文字（为null则没有文字）
-     * @param context	context对象
      * @param client    httpclient
      * @param url		请求的url
      * @param object	请求参数封装成的对象
      * @param parser	网络请求结果返回接口
      * @param strings	需要加密的字段
-     * @param cls		返回的json解析出的javabean对象
-     * @param errorStr	网络请求错误时的提示信息(不包括error msg)
      */
     @SuppressWarnings({ "deprecation", "rawtypes" })
-    public static void httpActionText(final boolean isShow, final String message, final Context context, AsyncHttpClient client, final String url,Object object,final MyParser parser,String[] strings, final Class cls, final String errorStr, int type){
+    public static void httpActionText(AsyncHttpClient client, final String url,Object object,final MyParser parser,String[] strings, final Class cls, int type){
 
 
         try{
 
-            final RequestParams params = getParams(object, strings, context);
+            final RequestParams params = getParams(object, strings);
 //			if(object instanceof Map){
 //				params = HttpUtil.getParams((Map<String, String>) object);
 //			}else{
@@ -196,26 +171,18 @@ public class HttpUtil {
             switch (type){
                 case METHOD_GET:
                     TextHttpResponseHandler handler = new TextHttpResponseHandler() {
-                        HttpProgressDialog dialog = null;
                         @Override
                         public void onSuccess(int arg0, Header[] arg1, String text) {
 
-                            MyAsyncTask task = new MyAsyncTask(text, context, cls, errorStr, parser, dialog);
+                            MyAsyncTask task = new MyAsyncTask(text, cls, parser);
                             task.execute();
                         }
 
                         @Override
                         public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
-                            LoggerUtil.error(getClass().getName(), " onFailure response = "+arg2);
                             parser.onFinish(null);
-                            if(context != null){
-                                ToastUtil.showToast(context, R.string.connectFailure);
-                            }
                             if(parser instanceof DoubleParser){
                                 ((DoubleParser)parser).onFailed(arg2);
-                            }
-                            if(isShow && dialog != null){
-                                dialog.dismissAllowingStateLoss();
                             }
                         }
                     };
@@ -256,7 +223,6 @@ public class HttpUtil {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseBody) {
                     super.onSuccess(statusCode, headers, responseBody);
-                    LoggerUtil.info(getClass().getName(), "onSuccess response = "+responseBody);
 //                    WXAsyncTask task = new WXAsyncTask(responseBody, cls, parser);
 //                    task.execute();
                 }
@@ -264,11 +230,7 @@ public class HttpUtil {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable error, String content) {
                     super.onFailure(statusCode, headers, error, content);
-                    LoggerUtil.error(getClass().getName(), " onFailure response = "+content);
                     parser.onFinish(null);
-                    if(context != null){
-                        ToastUtil.showToast(context, R.string.connectFailure);
-                    }
                     if(parser instanceof DoubleParser){
                         ((DoubleParser)parser).onFailed(content);
                     }

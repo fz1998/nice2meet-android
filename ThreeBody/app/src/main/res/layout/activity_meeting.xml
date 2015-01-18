@@ -5,16 +5,17 @@
     android:orientation="vertical"
     android:gravity="bottom"
     android:background="@color/meeting">
-    <com.threebody.conference.ui.view.video.LocalVideoView
+    <!--<com.threebody.conference.ui.view.video.LocalVideoView
         android:layout_width="1px"
         android:layout_height="1px"
-        android:id="@+id/localVideo"/>
+        android:id="@+id/localVideo"/>-->
     <LinearLayout
         android:id="@+id/llContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"/>
+    <LinearLayout style="@style/lineHorizontal"/>
     <include layout="@layout/layout_foot_bar"/>
 
 

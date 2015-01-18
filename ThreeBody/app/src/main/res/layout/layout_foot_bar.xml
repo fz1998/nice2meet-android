@@ -6,6 +6,7 @@
     android:background="@drawable/topbg"
     android:layout_gravity="bottom"
     android:gravity="center">
+
     <FrameLayout
         android:id="@+id/flMessage"
         android:layout_width="wrap_content"

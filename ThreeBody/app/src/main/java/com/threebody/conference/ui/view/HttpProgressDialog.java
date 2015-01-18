@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 
-import com.threebody.conference.ui.util.http.HttpHelper;
+import com.threebody.sdk.http.HttpHelper;
 
 
 public class HttpProgressDialog extends DialogFragment {

@@ -10,7 +10,6 @@ import com.threebody.conference.R;
 import com.threebody.conference.ui.BaseActivity;
 import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.conference.ui.view.video.LocalVideoView;
-import com.threebody.conference.ui.view.video.RemoteVideoView;
 import com.threebody.sdk.domain.VideoBean;
 
 /**
@@ -20,7 +19,7 @@ public class VideoFragment extends BaseFragment {
     VideoShowFragmenet videoUp;
     VideoShowFragmenet videoDown;
     LocalVideoView localVideo;
-    RemoteVideoView videoView;
+    LocalVideoView videoView;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_video, null);
@@ -34,7 +33,8 @@ public class VideoFragment extends BaseFragment {
         videoUp = (VideoShowFragmenet)getChildFragmentManager().findFragmentById(R.id.videoUp);
         videoDown = (VideoShowFragmenet)getChildFragmentManager().findFragmentById(R.id.videoDown);
 
-        videoView = new RemoteVideoView(getActivity());
+//        videoView = new RemoteVideoView(getActivity());
+        videoView = new LocalVideoView(getActivity());
         videoView.resetSize(LocalVideoView.WIDTH, LocalVideoView.HEIGHT);
         videoDown.getFlVideo().addView(videoView);
 
