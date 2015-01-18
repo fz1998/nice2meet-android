@@ -15,7 +15,7 @@ import android.view.SurfaceView;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 
-import com.threebody.conference.ui.util.LoggerUtil;
+import com.threebody.sdk.util.LoggerUtil;
 import com.threebody.sdk.domain.VideoBean;
 
 import java.io.File;

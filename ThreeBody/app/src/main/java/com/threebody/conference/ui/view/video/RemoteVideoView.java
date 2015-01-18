@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout.LayoutParams;
 
-import com.threebody.conference.ui.util.LoggerUtil;
+import com.threebody.sdk.util.LoggerUtil;
 import com.threebody.sdk.domain.VideoBean;
 
 import java.nio.ByteBuffer;

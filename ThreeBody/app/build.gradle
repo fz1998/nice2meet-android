@@ -23,4 +23,6 @@ dependencies {
     compile project(':library')
     compile 'com.jakewharton:butterknife:6.0.0'
     compile 'com.android.support:appcompat-v7:21.0.+'
+    compile files('libs/android-async-http-1.4.4-fix.jar')
+    compile files('libs/fastjson.jar')
 }

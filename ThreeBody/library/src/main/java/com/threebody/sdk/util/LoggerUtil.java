@@ -1,4 +1,4 @@
-package com.threebody.conference.ui.util;
+package com.threebody.sdk.util;
 
 import android.util.Log;
 

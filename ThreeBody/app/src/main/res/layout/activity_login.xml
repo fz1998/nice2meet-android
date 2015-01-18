@@ -31,6 +31,7 @@
         <EditText
             android:id="@+id/etNum"
             style="@style/loginInput"
+            android:inputType="number"
             android:hint="@string/inMeetignNum"/>
     </LinearLayout>
     <LinearLayout
@@ -69,6 +70,7 @@
         <EditText
             android:id="@+id/etPassword"
             style="@style/loginInput"
+            android:inputType="textPassword"
             android:hint="@string/inPswd"/>
     </LinearLayout>
     <Button

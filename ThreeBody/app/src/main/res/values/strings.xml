@@ -26,4 +26,8 @@
     <string name="noUser">用户名为空！</string>
     <string name="noPswd">密码为空！</string>
     <string name="selectVideo">请选择显示的视频，不超过两路</string>
+
+    <!-- error -->
+    <string name="connectFailure">网络连接不给力！</string>
+    <string name="responseNull">网络异常，请检查网络是否给力</string>
 </resources>

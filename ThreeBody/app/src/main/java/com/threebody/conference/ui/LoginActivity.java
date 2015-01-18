@@ -6,9 +6,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.threebody.conference.R;
+import com.threebody.conference.ui.util.http.LoginHandle;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
-import com.threebody.sdk.handle.LoginHandle;
+import com.threebody.conference.ui.util.http.entity.LoginRequest;
 import com.threebody.sdk.listener.OnJoinConferenceListener;
 
 import butterknife.InjectView;
@@ -26,6 +27,9 @@ public class LoginActivity extends BaseActivity {
         super.initUI();
         getSupportActionBar().hide();
         btnAddIn.setOnClickListener(this);
+        etNum.setText("123456");
+        etName.setText("admin");
+        etPassword.setText("admin");
     }
 
     @Override
@@ -33,9 +37,7 @@ public class LoginActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()){
             case R.id.btnAddIn:
-                Intent intent = new Intent();
-                intent.setClass(this, MeetingActivity.class);
-                startActivity(intent);
+
                 if(!TextViewUtil.isNullOrEmpty(etNum)){
                     ToastUtil.showToast(this, R.string.noMeetNum);
                     return;
@@ -57,14 +59,21 @@ public class LoginActivity extends BaseActivity {
     private void joinConference(){
 
         String num = etNum.getText().toString().trim();
-        String name = etName.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
-        new LoginHandle(new OnJoinConferenceListener() {
+//        String name = etName.getText().toString().trim();
+//        String password = etPassword.getText().toString().trim();
+        String name = "admin";
+        String password = "admin";
+        LoginRequest request = new LoginRequest(name, password);
+        new LoginHandle(this, new OnJoinConferenceListener() {
             @Override
-            public void onJoinResult() {
-
+            public void onJoinResult(int result) {
+                if(result == 0){
+                    Intent intent = new Intent();
+                    intent.setClass(LoginActivity.this, MeetingActivity.class);
+                    startActivity(intent);
+                }
             }
-        }).joinConference(num, name, password);
+        }).joinConference(request);
     }
     //    @Ovde
 //    public boolean onCreateOptionsMenu(Menu menu) {
