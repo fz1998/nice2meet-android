@@ -1,6 +1,5 @@
 package com.threebody.conference.ui;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,7 +7,15 @@ import android.widget.EditText;
 import com.threebody.conference.R;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
+import com.threebody.sdk.common.impl.RoomCommonImpl;
+import com.threebody.sdk.common.impl.SystemCommonImpl;
+import com.threebody.sdk.http.LoginHandle;
 import com.threebody.sdk.http.entity.LoginRequest;
+import com.threebody.sdk.http.entity.LoginResponse;
+import com.threebody.sdk.listener.OnJoinConferenceListener;
+import com.threebody.sdk.util.LoggerUtil;
+
+import org.st.RoomSystem;
 
 import butterknife.InjectView;
 
@@ -62,16 +69,29 @@ public class LoginActivity extends BaseActivity {
         String name = "admin";
         String password = "admin";
         LoginRequest request = new LoginRequest(name, password);
-//        new LoginHandle(new OnJoinConferenceListener() {
-//            @Override
-//            public void onJoinResult(int result) {
-//                if(result == 0){
-                    Intent intent = new Intent();
-                    intent.setClass(LoginActivity.this, MeetingActivity.class);
-                    startActivity(intent);
-//                }
-//            }
-//        }).joinConference(request);
+
+        new LoginHandle(new OnJoinConferenceListener() {
+            @Override
+            public void onJoinResult(LoginResponse result) {
+                if(result.getRet() == 0){
+//                    String url = result.getRoom_uri().substring(0, result.getRoom_uri().indexOf("/"));
+
+//                    LoggerUtil.info(getClass().getName(), "url = "+url);
+                    String url = "192.168.1.108:20009";
+                    String token = result.getAccess_tocken();
+                    new SystemCommonImpl(new RoomCommonImpl()).getRoomSystem().init(new RoomSystem.RoomSystemListener() {
+                        @Override
+                        public void onInit(int i) {
+//                            ToastUtil.showToast(LoginActivity.this, " i = "+i);
+                            LoggerUtil.info(getClass().getName(), "i = "+i);
+                        }
+                    }, url, token);
+//                    Intent intent = new Intent();
+//                    intent.setClass(LoginActivity.this, MeetingActivity.class);
+//                    startActivity(intent);
+                }
+            }
+        }).joinConference(request);
     }
     //    @Ovde
 //    public boolean onCreateOptionsMenu(Menu menu) {

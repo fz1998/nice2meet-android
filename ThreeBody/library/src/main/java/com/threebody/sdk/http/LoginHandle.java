@@ -23,7 +23,7 @@ public class LoginHandle {
             public void onFinish(BaseResponse result) {
                 if(result != null){
                     LoginResponse response = (LoginResponse)result;
-                    listener.onJoinResult(response.getRet());
+                    listener.onJoinResult(response);
                 }
 
             }

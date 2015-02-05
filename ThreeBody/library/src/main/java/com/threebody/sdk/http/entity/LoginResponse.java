@@ -5,7 +5,7 @@ package com.threebody.sdk.http.entity;
  */
 public class LoginResponse extends BaseResponse {
     String sid;
-    String access_token;
+    String access_tocken;
     String room_uri;
     int ret;
     String msg;
@@ -18,12 +18,12 @@ public class LoginResponse extends BaseResponse {
         this.sid = sid;
     }
 
-    public String getAccess_token() {
-        return access_token;
+    public String getAccess_tocken() {
+        return access_tocken;
     }
 
-    public void setAccess_token(String access_token) {
-        this.access_token = access_token;
+    public void setAccess_tocken(String access_tocken) {
+        this.access_tocken = access_tocken;
     }
 
     public String getRoom_uri() {
