@@ -8,12 +8,12 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/SwipeRefreshLayoutDemo02" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/cameratest" />
             <option value="$PROJECT_DIR$/eclipse" />
-            <option value="$PROJECT_DIR$/libraries" />
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/swipeRefreshLayoutDemomaster" />
+            <option value="$PROJECT_DIR$/swipelayout" />
           </set>
         </option>
       </GradleProjectSettings>
