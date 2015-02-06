@@ -61,8 +61,8 @@ public class LoginActivity extends BaseActivity {
                 break;
         }
     }
-    private void joinConference(){
 
+    private void joinConference(){
         String num = etNum.getText().toString().trim();
 //        String name = etName.getText().toString().trim();
 //        String password = etPassword.getText().toString().trim();
