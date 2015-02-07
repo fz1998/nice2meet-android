@@ -38,6 +38,7 @@ public class RoomSystem {
     
     public Room createRoom(Room.RoomObserver roomObserver, String roomId) 
     {
+
         long nativeRoomObserver = nativeCreateRoomObserver(roomObserver);
         long nativeRoom = nativeCreateRoom(nativeRoomObserver, roomId);
         return new Room(nativeRoom, nativeRoomObserver);

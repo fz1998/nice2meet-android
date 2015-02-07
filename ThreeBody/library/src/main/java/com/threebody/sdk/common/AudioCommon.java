@@ -3,55 +3,28 @@ package com.threebody.sdk.common;
 
 import org.st.Audio;
 
-public abstract class AudioCommon implements Audio.AudioListener{
+public abstract class AudioCommon {
     private Audio audio;
-    @Override
-    public void onOpenMicrophone(int i, int i2) {
-        onOpenMic(i, i2);
+    Audio.AudioListener listener;
+    AudioCallback callback;
+    public AudioCommon(RoomCommon roomCommon, AudioCallback callbak){
+        audio = roomCommon.getAudio();
+        this.callback = callbak;
+        initListener();
     }
-
-    @Override
-    public void onCloseMicrophone(int i, int i2) {
-        onCloseMic(i, i2);
-    }
-
-    @Override
-    public void onRequestOpenMicrophone(int i) {
-        onRequestMic(i);
-    }
-
-    /**
-     * 打开MIC结果
-     * @param result
-     * @param id
-     */
-    protected abstract void onOpenMic(int result, int id);
-
-    /**
-     * 关闭MIC结果
-     * @param resutl
-     * @param id
-     */
-    protected abstract void onCloseMic(int resutl, int id);
-
-    /**
-     * 请求打开音频设备，房间音频路数用完，主持人会接受到此请求，用于音频控制
-     * @param id
-     */
-    protected abstract void onRequestMic(int id);
-    protected boolean openMic(int id){
+    public boolean openMic(int id){
         if(audio != null){
             return audio.openMicrophone(id);
         }
         return false;
     }
-    protected boolean closeMic(int id){
+    public boolean closeMic(int id){
         if(audio != null){
             return audio.closeMicrophone(id);
         }
         return false;
     }
-    protected int getMaxAudio(){
+    public int getMaxAudio(){
         if(audio != null){
             return audio.getMaxAudio();
         }
@@ -68,5 +41,54 @@ public abstract class AudioCommon implements Audio.AudioListener{
         }
         return -1;
     }
-//    protected
+    private void initListener(){
+        listener = new Audio.AudioListener() {
+            @Override
+            public void onOpenMicrophone(int result, int nodeId) {
+                 if(checkCallback()){
+                     callback.onOpenMicrophone(result, nodeId);
+                 }
+            }
+
+            @Override
+            public void onCloseMicrophone(int result, int nodeId) {
+                if(checkCallback()){
+                    callback.onCloseMicrophone(result, nodeId);
+                }
+            }
+
+            @Override
+            public void onRequestOpenMicrophone(int nodeId) {
+                if(checkCallback()){
+                    callback.onRequestOpenMicrophone(nodeId);
+                }
+            }
+        };
+    }
+    private boolean checkCallback(){
+        if(callback == null){
+            return false;
+        }
+        return true;
+    }
+    public interface AudioCallback{
+        /**
+         * 打开MIC结果
+         * @param result
+         * @param nodeId
+         */
+        void onOpenMicrophone(int result, int nodeId);
+
+        /**
+         * 关闭MIC结果
+         * @param result
+         * @param nodeId
+         */
+        void onCloseMicrophone(int result, int nodeId);
+        /**
+         * 请求打开音频设备，房间音频路数用完，主持人会接受到此请求，用于音频控制
+         * @param nodeId
+         */
+        void onRequestOpenMicrophone(int nodeId);
+    }
 }

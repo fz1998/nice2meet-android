@@ -1,5 +1,5 @@
 package com.threebody.sdk.function;
-public class Room  {
+public class Room  extends Base{
     public class RoomInfo {
         String roomID;
         String roomName;
@@ -92,7 +92,7 @@ public class Room  {
     private final long nativeObserver;
     
     
-    public Room(long nativeRoom, long nativeObserver) {
+     Room(long nativeRoom, long nativeObserver) {
         this.nativeRoom = nativeRoom;
         this.nativeObserver = nativeObserver;
         

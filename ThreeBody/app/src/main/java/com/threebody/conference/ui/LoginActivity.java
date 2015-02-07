@@ -7,15 +7,12 @@ import android.widget.EditText;
 import com.threebody.conference.R;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
-import com.threebody.sdk.common.impl.RoomCommonImpl;
-import com.threebody.sdk.common.impl.SystemCommonImpl;
+import com.threebody.sdk.common.STSystem;
 import com.threebody.sdk.http.LoginHandle;
 import com.threebody.sdk.http.entity.LoginRequest;
 import com.threebody.sdk.http.entity.LoginResponse;
 import com.threebody.sdk.listener.OnJoinConferenceListener;
 import com.threebody.sdk.util.LoggerUtil;
-
-import org.st.RoomSystem;
 
 import butterknife.InjectView;
 
@@ -68,8 +65,7 @@ public class LoginActivity extends BaseActivity {
 //        String password = etPassword.getText().toString().trim();
         String name = "admin";
         String password = "admin";
-        LoginRequest request = new LoginRequest(name, password);
-
+        final LoginRequest request = new LoginRequest(name, password);
         new LoginHandle(new OnJoinConferenceListener() {
             @Override
             public void onJoinResult(LoginResponse result) {
@@ -79,13 +75,12 @@ public class LoginActivity extends BaseActivity {
 //                    LoggerUtil.info(getClass().getName(), "url = "+url);
                     String url = "192.168.1.108:20009";
                     String token = result.getAccess_tocken();
-                    new SystemCommonImpl(new RoomCommonImpl()).getRoomSystem().init(new RoomSystem.RoomSystemListener() {
-                        @Override
-                        public void onInit(int i) {
-//                            ToastUtil.showToast(LoginActivity.this, " i = "+i);
-                            LoggerUtil.info(getClass().getName(), "i = "+i);
-                        }
-                    }, url, token);
+                     STSystem.getInstance().init(new STSystem.ConferenceSystemCallback() {
+                         @Override
+                         public void onInitResult(int result) {
+                             LoggerUtil.info(getClass().getName(), "result = "+result);
+                         }
+                     }, url, token);
 //                    Intent intent = new Intent();
 //                    intent.setClass(LoginActivity.this, MeetingActivity.class);
 //                    startActivity(intent);

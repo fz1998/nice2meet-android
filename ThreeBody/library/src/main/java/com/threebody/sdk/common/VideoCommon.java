@@ -7,6 +7,7 @@ public class VideoCommon {
     private static VideoCommon instance = new VideoCommon();
     private VideoCommon(){}
     public static VideoCommon getInstance(){
+
         return instance;
     }
 }
