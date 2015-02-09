@@ -1,5 +1,6 @@
 package com.threebody.conference.ui;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -7,12 +8,16 @@ import android.widget.EditText;
 import com.threebody.conference.R;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
+import com.threebody.sdk.common.RoomCommon;
 import com.threebody.sdk.common.STSystem;
+import com.threebody.sdk.common.impl.RoomCommonImpl;
 import com.threebody.sdk.http.LoginHandle;
 import com.threebody.sdk.http.entity.LoginRequest;
 import com.threebody.sdk.http.entity.LoginResponse;
 import com.threebody.sdk.listener.OnJoinConferenceListener;
 import com.threebody.sdk.util.LoggerUtil;
+
+import org.st.RoomSystem;
 
 import butterknife.InjectView;
 
@@ -60,30 +65,45 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void joinConference(){
-        String num = etNum.getText().toString().trim();
+//        final String num = etNum.getText().toString().trim();
 //        String name = etName.getText().toString().trim();
 //        String password = etPassword.getText().toString().trim();
-        String name = "admin";
+        final String num = "r669";
+        final String name = "admin";
         String password = "admin";
+        RoomSystem.initializeAndroidGlobals(this, true, true);
         final LoginRequest request = new LoginRequest(name, password);
         new LoginHandle(new OnJoinConferenceListener() {
             @Override
             public void onJoinResult(LoginResponse result) {
                 if(result.getRet() == 0){
-//                    String url = result.getRoom_uri().substring(0, result.getRoom_uri().indexOf("/"));
 
-//                    LoggerUtil.info(getClass().getName(), "url = "+url);
-                    String url = "192.168.1.108:20009";
+//                }
+                    String url = result.getRoom_uri().substring(0, result.getRoom_uri().indexOf("/"));
+
+                    LoggerUtil.info(getClass().getName(), "url = "+url);
+//                    String url = "192.168.1.108:20009";
+//                    String token = result.getAccess_tocken();
+//                    String url = result.getRoom_uri();
                     String token = result.getAccess_tocken();
+                    STSystem.getInstance().initializeAndroidGlobals(this);
                      STSystem.getInstance().init(new STSystem.ConferenceSystemCallback() {
                          @Override
                          public void onInitResult(int result) {
                              LoggerUtil.info(getClass().getName(), "result = "+result);
+                             RoomCommonImpl roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
+                                 @Override
+                                 public void onJoinResult(int result) {
+                                     LoggerUtil.info(getClass().getName(), "join result = "+result);
+                                     Intent intent = new Intent();
+                                     intent.setClass(LoginActivity.this, MeetingActivity.class);
+                                     startActivity(intent);
+                                 }
+                             }, num);
+                             STSystem.getInstance().createRoom(roomCommon);
                          }
                      }, url, token);
-//                    Intent intent = new Intent();
-//                    intent.setClass(LoginActivity.this, MeetingActivity.class);
-//                    startActivity(intent);
+
                 }
             }
         }).joinConference(request);

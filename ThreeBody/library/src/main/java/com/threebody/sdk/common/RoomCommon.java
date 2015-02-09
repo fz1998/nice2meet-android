@@ -4,20 +4,71 @@ import org.st.Audio;
 import org.st.Chat;
 import org.st.Room;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by xiaxin on 15-2-4.
  */
 public abstract class RoomCommon {
     protected Room room;
+    List<Room.User> users;
     RoomCallback callback;
+    JoinResultListener joinListener;
     private Room.RoomListener listener;
-    protected Chat chat;
-    protected Audio audio;
-    public RoomCommon (RoomCallback callback){
+    protected ChatCommon chatCommon;
+    protected AudioCommon audioCommon;
+    protected String roomId;
+
+
+
+    protected RoomCommon (RoomCallback callback, String roomId){
         this.callback = callback;
+        this.roomId = roomId;
+        init();
+    }
+    protected RoomCommon(JoinResultListener joinListener, String roomId){
+        this.joinListener = joinListener;
+        this.roomId = roomId;
+        init();
+    }
+    private void init(){
+        if(users == null){
+            users = new ArrayList<>();
+        }
         initListener();
     }
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+    public void setCallback(RoomCallback callback) {
+        this.callback = callback;
+        joinListener = null;
+    }
 
+    public ChatCommon getChatCommon() {
+        return chatCommon;
+    }
+
+    public void setChatCommon(ChatCommon chatCommon) {
+        this.chatCommon = chatCommon;
+    }
+
+    public AudioCommon getAudioCommon() {
+        return audioCommon;
+    }
+
+    public void setAudioCommon(AudioCommon audioCommon) {
+        this.audioCommon = audioCommon;
+    }
+
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public List<Room.User> getUsers() {
+        return users;
+    }
 
     /**
      * 加入会议
@@ -75,6 +126,9 @@ public abstract class RoomCommon {
                 if(checkCallback()){
                     listener.onJoin(result);
                 }
+                if(joinListener != null){
+                    joinListener.onJoinResult(result);
+                }
             }
 
             @Override
@@ -93,6 +147,7 @@ public abstract class RoomCommon {
 
             @Override
             public void onUserJoin(Room.User user) {
+                users.add(user);
                 if(checkCallback()){
                     callback.onUserJoin(user);
                 }
@@ -100,6 +155,13 @@ public abstract class RoomCommon {
 
             @Override
             public void onUserLeave(Room.User user) {
+                if(users != null && !users.isEmpty()){
+                    for (Room.User u : users){
+                        if(u.getNodeId() == user.getNodeId()){
+                            users.remove(u);
+                        }
+                    }
+                }
                 if(checkCallback()){
                     callback.onUserLeave(user);
                 }
@@ -107,20 +169,42 @@ public abstract class RoomCommon {
 
             @Override
             public void onUserUpdate(Room.User user) {
+                if(users != null && !users.isEmpty()){
+                    for(Room.User u : users){
+                        if(u.getNodeId() == user.getNodeId()){
+                            users.remove(u);
+                            users.add(user);
+                        }
+                    }
+                }
                 if(checkCallback()){
                     callback.onUserUpdate(user);
                 }
             }
 
             @Override
-            public void onUpdateRole(int nodeId, int newRole) {
+            public void onUpdateRole(int nodeId, Room.User.Role newRole) {
+                if(users != null && !users.isEmpty()){
+                    for(Room.User user : users){
+                        if(nodeId == user.getNodeId()){
+                            user.setRole(newRole);
+                        }
+                    }
+                }
                 if(checkCallback()){
                     callback.onUpdateRole(nodeId, newRole);
                 }
             }
 
             @Override
-            public void onUpdateStatus(int nodeId, int status) {
+            public void onUpdateStatus(int nodeId, Room.User.Status status) {
+                if(users != null && !users.isEmpty()){
+                    for(Room.User user : users){
+                        if(nodeId == user.getNodeId()){
+                          user.setState(status);
+                        }
+                    }
+                }
                 if(checkCallback()){
                     callback.onUpdateStatus(nodeId, status);
                 }
@@ -135,6 +219,9 @@ public abstract class RoomCommon {
             return false;
         }
         return true;
+    }
+    public interface JoinResultListener{
+        void onJoinResult(int result);
     }
     public interface RoomCallback{
         /**
@@ -172,13 +259,13 @@ public abstract class RoomCommon {
          * @param nodeId       用户id
          * @param newRole  user角色
          */
-        void onUpdateRole(int nodeId, int newRole);
+        void onUpdateRole(int nodeId, Room.User.Role newRole);
         /**
          * 用户状态改变
          * @param nodeId      用户id
          * @param status  用户状态
          */
-        void onUpdateStatus(int nodeId, int status);
+        void onUpdateStatus(int nodeId, Room.User.Status status);
     }
 
 }

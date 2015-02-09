@@ -40,8 +40,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/tvMessage"
             android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
             android:textSize="@dimen/TextSize14"
             android:text="@string/hello_world"
-            android:layout_marginLeft="@dimen/TextSize10"/>
+            android:layout_marginLeft="@dimen/TextSize10"
+            android:background="@drawable/chatfrom_bg_normal"/>
     </LinearLayout>
 </LinearLayout>

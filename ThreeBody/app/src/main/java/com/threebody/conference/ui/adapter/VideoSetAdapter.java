@@ -8,7 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 
 import com.threebody.conference.R;
-import com.threebody.sdk.domain.User;
+
+import org.st.Room;
 
 import java.util.List;
 
@@ -17,10 +18,10 @@ import java.util.List;
  */
 public class VideoSetAdapter extends BaseAdapter {
     Context context;
-    List<User> users;
+    List<Room.User> users;
     int firstCheck, secondCheck;
     int checkCount = 0;
-    public VideoSetAdapter(Context context, List<User> users) {
+    public VideoSetAdapter(Context context, List<Room.User> users) {
         this.context = context;
         this.users = users;
     }
@@ -50,9 +51,9 @@ public class VideoSetAdapter extends BaseAdapter {
     }
     private void initView(View view, final int position){
         final CheckBox cb = (CheckBox)view.findViewById(R.id.cbUser);
-        final User user = users.get(position);
-        cb.setText(user.getName());
-        cb.setChecked(user.isVideoChecked());
+        final Room.User user = users.get(position);
+        cb.setText(user.getUserName());
+//        cb.setChecked(user.());
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +66,7 @@ public class VideoSetAdapter extends BaseAdapter {
                         secondCheck = position;
                         checkCount++;
                     }else {
-                        users.get(firstCheck).setVideoChecked(false);
+//                        users.get(firstCheck).setVideoChecked(false);
                         firstCheck = secondCheck;
                         secondCheck = position;
                     }
@@ -76,7 +77,7 @@ public class VideoSetAdapter extends BaseAdapter {
                     }
 
                 }
-                user.setVideoChecked(cb.isChecked());
+//                user.setVideoChecked(cb.isChecked());
                 notifyDataSetChanged();
             }
         });

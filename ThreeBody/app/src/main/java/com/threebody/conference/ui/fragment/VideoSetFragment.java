@@ -9,10 +9,7 @@ import android.widget.ListView;
 
 import com.threebody.conference.R;
 import com.threebody.conference.ui.adapter.VideoSetAdapter;
-import com.threebody.sdk.domain.User;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.threebody.sdk.common.STSystem;
 
 import butterknife.InjectView;
 
@@ -32,13 +29,13 @@ public class VideoSetFragment extends BaseFragment{
     @Override
     protected void initView(View view) {
         super.initView(view);
-        List<User> users = new ArrayList<>();
-        for(int i = 0; i < 25; i++){
-            User user = new User();
-            user.setName("user"+i);
-            users.add(user);
-        }
-        adapter = new VideoSetAdapter(getActivity(), users);
+//        List<User> users = new ArrayList<>();
+//        for(int i = 0; i < 25; i++){
+//            User user = new User();
+//            user.setName("user"+i);
+//            users.add(user);
+//        }
+        adapter = new VideoSetAdapter(getActivity(), STSystem.getInstance().getRoomCommons().get(0).getUsers());
         userList.setAdapter(adapter);
     }
 

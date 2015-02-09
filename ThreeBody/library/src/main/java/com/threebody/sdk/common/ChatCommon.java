@@ -1,6 +1,12 @@
 package com.threebody.sdk.common;
 
+import com.threebody.sdk.domain.Message;
+
 import org.st.Chat;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by xiaxin on 15-2-4.
@@ -9,10 +15,14 @@ public abstract class ChatCommon {
     protected Chat chat;
     private Chat.ChatListener listener;
     ChatCallback callback;
+    Map<Integer, List<Message>> messageMap;
     protected ChatCommon(RoomCommon roomCommon, ChatCallback callback){
         this.callback = callback;
         chat = roomCommon.getChat();
+        roomCommon.setChatCommon(this);
+        messageMap = new HashMap<>();
         initListener();
+
     }
 
 
@@ -39,6 +49,7 @@ public abstract class ChatCommon {
         listener = new Chat.ChatListener() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
+                addMessage(nodeId, message);
                 if(checkCallback()){
                     callback.onReceivePublicMessage(nodeId, message);
                 }
@@ -64,6 +75,11 @@ public abstract class ChatCommon {
             return false;
         }
         return true;
+    }
+    private void addMessage(int nodeId, String message){
+//        for (String key : messageMap.keySet()){
+//            if(nodeId)
+//        }
     }
     public interface ChatCallback{
         void onReceivePublicMessage(int nodeId, java.lang.String message);

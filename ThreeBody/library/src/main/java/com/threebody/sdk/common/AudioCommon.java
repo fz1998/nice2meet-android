@@ -4,12 +4,14 @@ package com.threebody.sdk.common;
 import org.st.Audio;
 
 public abstract class AudioCommon {
+    public static boolean IS_MIC_ON = false;
     private Audio audio;
     Audio.AudioListener listener;
     AudioCallback callback;
     public AudioCommon(RoomCommon roomCommon, AudioCallback callbak){
         audio = roomCommon.getAudio();
         this.callback = callbak;
+        roomCommon.setAudioCommon(this);
         initListener();
     }
     public boolean openMic(int id){
