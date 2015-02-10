@@ -22,12 +22,12 @@ public class RoomSystem {
     
 	public static native boolean initializeAndroidGlobals(Object context, boolean initializeAudio, boolean initializeVideo);
 	
-	public void init(RoomSystemListener listener, String serverurl, String accessToken)
+	public void init(RoomSystem.RoomSystemListener listener, String serverurl, String accessToken)
 	{
         nativeListener = nativeCreateRoomSystemListener(listener);
 		nativeInit(nativeListener, serverurl, accessToken);
 	}
-    private static native long nativeCreateRoomSystemListener(RoomSystemListener listener);
+    private static native long nativeCreateRoomSystemListener(RoomSystem.RoomSystemListener listener);
     private native void nativeInit(long nativeListener, String serverurl, String accessToken);
     
     public void unInit() {
