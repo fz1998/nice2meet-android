@@ -31,7 +31,6 @@
         <EditText
             android:id="@+id/etNum"
             style="@style/loginInput"
-            android:inputType="number"
             android:hint="@string/inMeetignNum"/>
     </LinearLayout>
     <LinearLayout

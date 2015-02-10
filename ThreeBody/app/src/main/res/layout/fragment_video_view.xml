@@ -8,5 +8,16 @@
         android:id="@+id/flVideoView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/TextSize10"/>
+        android:layout_margin="@dimen/TextSize10">
+        <com.threebody.conference.ui.view.video.RemoteVideoView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/videoView"/>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/progressBar"
+            android:visibility="gone"/>
+    </FrameLayout>
 </LinearLayout>
