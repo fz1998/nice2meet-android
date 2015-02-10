@@ -1,8 +1,13 @@
 package com.threebody.sdk.common;
 
+import com.threebody.sdk.util.LoggerUtil;
+
 import org.st.Audio;
 import org.st.Chat;
 import org.st.Room;
+import org.st.RoomInfo;
+import org.st.User;
+import org.st.Video;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +16,16 @@ import java.util.List;
  * Created by xiaxin on 15-2-4.
  */
 public abstract class RoomCommon {
+    String tag = getClass().getName();
     protected Room room;
-    Room.User me;
-    List<Room.User> users;
+    User me;
+    List<User> users;
     RoomCallback callback;
     JoinResultListener joinListener;
     private Room.RoomListener listener;
     protected ChatCommon chatCommon;
     protected AudioCommon audioCommon;
+    protected VideoCommon videoCommon;
     protected String roomId;
 
 
@@ -39,11 +46,11 @@ public abstract class RoomCommon {
         initListener();
     }
 
-    public Room.User getMe() {
+    public User getMe() {
         return me;
     }
 
-    public void setMe(Room.User me) {
+    public void setMe(User me) {
         this.me = me;
         users.add(me);
     }
@@ -72,11 +79,19 @@ public abstract class RoomCommon {
         this.audioCommon = audioCommon;
     }
 
+    public VideoCommon getVideoCommon() {
+        return videoCommon;
+    }
+
+    public void setVideoCommon(VideoCommon videoCommon) {
+        this.videoCommon = videoCommon;
+    }
+
     public String getRoomId() {
         return roomId;
     }
 
-    public List<Room.User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
@@ -96,8 +111,10 @@ public abstract class RoomCommon {
      * @return
      */
     public  boolean leave(){
-        STSystem.getInstance().getRoomCommons().remove(this);
-        return room.leave();
+        if(room.leave()){
+            STSystem.getInstance().getRoomCommons().remove(this);
+        }
+        return false;
     }
 
     /**
@@ -111,7 +128,7 @@ public abstract class RoomCommon {
      * 获取房间信息
      * @return
      */
-    public Room.RoomInfo getRoomInfo(){
+    public RoomInfo getRoomInfo(){
         return room.getRoomInfo();
     }
 
@@ -122,7 +139,9 @@ public abstract class RoomCommon {
      Chat getChat(){
         return room.getChat();
     }
-
+    Video getVideo(){
+        return room.getVideo();
+    }
     /**
      * 获取音频模块
      * @return
@@ -130,10 +149,27 @@ public abstract class RoomCommon {
      Audio getAudio(){
         return room.getAudio();
     }
+
+    /**
+     * 获取自己
+     * @return
+     */
+    User getSelf(){
+       return room.getSelf();
+    }
+
+    public User findUserById(int nodeId){
+        return room.getUser(nodeId);
+    }
     private void initListener(){
         listener = new Room.RoomListener() {
             @Override
             public void onJoin(int result) {
+                LoggerUtil.info(tag, "onJoin result = "+result);
+                me = getSelf();
+                if(me != null){
+                    users.add(me);
+                }
                 if(checkCallback()){
                     listener.onJoin(result);
                 }
@@ -144,6 +180,7 @@ public abstract class RoomCommon {
 
             @Override
             public void onLeave(int reason) {
+//                LoggerUtil.info(tag, "onLeave result = "+ reason);
                 if(checkCallback()){
                     callback.onLeave(reason);
                 }
@@ -151,13 +188,15 @@ public abstract class RoomCommon {
 
             @Override
             public void onConnectionChange(int state) {
+                LoggerUtil.info(tag, "onConnectionChange state = "+state);
                 if(checkCallback()){
                     callback.onConnectionChange(state);
                 }
             }
 
             @Override
-            public void onUserJoin(Room.User user) {
+            public void onUserJoin(User user) {
+                LoggerUtil.info(tag, "onUserJoin nodeId = "+user.getNodeId()+" name = "+user.getUserName());
                 users.add(user);
                 if(checkCallback()){
                     callback.onUserJoin(user);
@@ -165,9 +204,10 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onUserLeave(Room.User user) {
+            public void onUserLeave(User user) {
+                LoggerUtil.info(tag, "onUserLeave nodeId = "+user.getNodeId()+" name = "+user.getUserName());
                 if(users != null && !users.isEmpty()){
-                    for (Room.User u : users){
+                    for (User u : users){
                         if(u.getNodeId() == user.getNodeId()){
                             users.remove(u);
                         }
@@ -179,9 +219,10 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onUserUpdate(Room.User user) {
+            public void onUserUpdate(User user) {
+                LoggerUtil.info(tag, "onUserUpdate nodeId = "+user.getNodeId()+" name = "+user.getUserName());
                 if(users != null && !users.isEmpty()){
-                    for(Room.User u : users){
+                    for(User u : users){
                         if(u.getNodeId() == user.getNodeId()){
                             users.remove(u);
                             users.add(user);
@@ -194,9 +235,10 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onUpdateRole(int nodeId, Room.User.Role newRole) {
+            public void onUpdateRole(int nodeId, User.Role newRole) {
+                LoggerUtil.info(tag, "onUpdateRole nodeId = "+nodeId+" newRole = "+newRole.toString());
                 if(users != null && !users.isEmpty()){
-                    for(Room.User user : users){
+                    for(User user : users){
                         if(nodeId == user.getNodeId()){
                             user.setRole(newRole);
                         }
@@ -208,9 +250,10 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onUpdateStatus(int nodeId, Room.User.Status status) {
+            public void onUpdateStatus(int nodeId, User.Status status) {
+                LoggerUtil.info(tag, "onUpdatestatus nodeId = "+nodeId+" status = "+status.toString());
                 if(users != null && !users.isEmpty()){
-                    for(Room.User user : users){
+                    for(User user : users){
                         if(nodeId == user.getNodeId()){
                           user.setState(status);
                         }
@@ -254,29 +297,29 @@ public abstract class RoomCommon {
          * 新用户加入
          * @param user
          */
-        void onUserJoin(org.st.Room.User user);
+        void onUserJoin(User user);
         /**
          * 用户离开会议
          * @param user
          */
-        void onUserLeave(org.st.Room.User user);
+        void onUserLeave(User user);
         /**
          * 用户状态改变
          * @param user
          */
-        void onUserUpdate(org.st.Room.User user);
+        void onUserUpdate(User user);
         /**
          * 本地角色改变
          * @param nodeId       用户id
          * @param newRole  user角色
          */
-        void onUpdateRole(int nodeId, Room.User.Role newRole);
+        void onUpdateRole(int nodeId, User.Role newRole);
         /**
          * 用户状态改变
          * @param nodeId      用户id
          * @param status  用户状态
          */
-        void onUpdateStatus(int nodeId, Room.User.Status status);
+        void onUpdateStatus(int nodeId, User.Status status);
     }
 
 }

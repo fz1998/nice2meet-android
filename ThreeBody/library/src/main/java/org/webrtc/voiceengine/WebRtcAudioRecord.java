@@ -10,15 +10,14 @@
 
 package org.webrtc.voiceengine;
 
-import java.nio.ByteBuffer;
-import java.util.concurrent.locks.ReentrantLock;
-
 import android.content.Context;
 import android.media.AudioFormat;
-import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.MediaRecorder.AudioSource;
 import android.util.Log;
+
+import java.nio.ByteBuffer;
+import java.util.concurrent.locks.ReentrantLock;
 
 class WebRtcAudioRecord {
     private AudioRecord _audioRecord = null;

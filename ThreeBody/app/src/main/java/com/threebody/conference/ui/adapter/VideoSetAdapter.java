@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 
 import com.threebody.conference.R;
 
-import org.st.Room;
+import org.st.User;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import java.util.List;
  */
 public class VideoSetAdapter extends BaseAdapter {
     Context context;
-    List<Room.User> users;
+    List<User> users;
     int firstCheck, secondCheck;
     int checkCount = 0;
-    public VideoSetAdapter(Context context, List<Room.User> users) {
+    public VideoSetAdapter(Context context, List<User> users) {
         this.context = context;
         this.users = users;
     }
@@ -51,7 +51,7 @@ public class VideoSetAdapter extends BaseAdapter {
     }
     private void initView(View view, final int position){
         final CheckBox cb = (CheckBox)view.findViewById(R.id.cbUser);
-        final Room.User user = users.get(position);
+        final User user = users.get(position);
         cb.setText(user.getUserName());
         cb.setChecked(user.isVideoChecked());
         cb.setOnClickListener(new View.OnClickListener() {

@@ -3,8 +3,8 @@ package com.threebody.sdk.http;
 import android.content.Context;
 
 import com.loopj.android.http.AsyncHttpClient;
-import com.threebody.sdk.http.listener.MyParser;
 import com.threebody.sdk.http.entity.LoginRequest;
+import com.threebody.sdk.http.listener.MyParser;
 
 public class HttpHelper {
 

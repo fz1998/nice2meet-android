@@ -1,5 +1,5 @@
 package org.st;
-import java.lang.String;
+
 public class User {
 	
 	public static enum Role
@@ -19,6 +19,9 @@ public class User {
 	int		nodeId;
     Role	role;
     Status	state;
+    boolean isVideoChecked;
+    boolean isVideoOn;
+    boolean isAudioOn;
     public User(String userId, String userName, int nodeId, Role role,Status state) {
         this.userId = userId;
         this.userName = userName;
@@ -31,7 +34,31 @@ public class User {
         this.userName = "";
         this.nodeId = 0;
     }
-	
+
+    public boolean isVideoOn() {
+        return isVideoOn;
+    }
+
+    public void setVideoOn(boolean isVideoOn) {
+        this.isVideoOn = isVideoOn;
+    }
+
+    public boolean isAudioOn() {
+        return isAudioOn;
+    }
+
+    public void setAudioOn(boolean isAudioOn) {
+        this.isAudioOn = isAudioOn;
+    }
+
+    public boolean isVideoChecked() {
+        return isVideoChecked;
+    }
+
+    public void setVideoChecked(boolean isVideoChecked) {
+        this.isVideoChecked = isVideoChecked;
+    }
+
     public void setUserId(String userId) {
         this.userId = userId;
     }

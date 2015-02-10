@@ -5,7 +5,6 @@ import android.content.Context;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
-import com.threebody.sdk.R;
 import com.threebody.sdk.http.listener.DoubleParser;
 import com.threebody.sdk.http.listener.MyParser;
 import com.threebody.sdk.util.LoggerUtil;
