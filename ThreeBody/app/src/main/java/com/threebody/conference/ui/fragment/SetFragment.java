@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,8 +21,8 @@ import butterknife.InjectView;
  * Created by xiaxin on 15-1-14.
  */
 public class SetFragment extends BaseFragment {
-    @InjectView(R.id.ivVideo)TextView ivVideo;
-    @InjectView(R.id.ivAudio)TextView ivAudio;
+    @InjectView(R.id.ivVideo)Button ivVideo;
+    @InjectView(R.id.ivAudio)Button ivAudio;
     @InjectView(R.id.llHelp)LinearLayout llHelp;
     RoomCommon roomCommon;
     @Override
@@ -75,15 +76,26 @@ public class SetFragment extends BaseFragment {
         return roomCommon.getAudioCommon().closeMic(roomCommon.getMe().getNodeId());
     }
     public void openLocalAudio(){
-        ivAudio.setText(R.string.closeAudio);
+        if(ivAudio != null){
+            ivAudio.setText(R.string.closeAudio);
+        }
 
     }
     public void closeLocalAudio(){
-        ivAudio.setText(R.string.openAudio);
+        if(ivAudio != null ){
+            ivAudio.setText(R.string.openAudio);
+        }
 
     }
     public void openLocalVideo(){
-//        ivVideo
+        if(ivVideo != null){
+            ivVideo.setText(R.string.openVideo);
+        }
+    }
+    public void closeLoacalVideo(){
+        if(ivVideo != null){
+            ivVideo.setText(R.string.closeVideo);
+        }
     }
 //    private boolean openVideo(){
 //

@@ -217,7 +217,7 @@ public class MeetingActivity extends BaseActivity {
             @Override
             public void onCloseVideo(int result, int nodeId, String deviceId) {
                 if(nodeId == roomCommon.getMe().getNodeId()){
-                    mSet.closeLocalAudio();
+                    mSet.closeLoacalVideo();
                 }
             }
 
