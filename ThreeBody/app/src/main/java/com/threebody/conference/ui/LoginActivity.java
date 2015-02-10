@@ -17,8 +17,6 @@ import com.threebody.sdk.http.entity.LoginResponse;
 import com.threebody.sdk.listener.OnJoinConferenceListener;
 import com.threebody.sdk.util.LoggerUtil;
 
-import org.st.RoomSystem;
-
 import butterknife.InjectView;
 
 
@@ -71,7 +69,8 @@ public class LoginActivity extends BaseActivity {
         final String num = "r669";
         final String name = "admin";
         String password = "admin";
-        RoomSystem.initializeAndroidGlobals(this, true, true);
+//        RoomSystem.initializeAndroidGlobals(this, true, true);
+        STSystem.getInstance().initializeAndroidGlobals(this);
         final LoginRequest request = new LoginRequest(name, password);
         new LoginHandle(new OnJoinConferenceListener() {
             @Override
@@ -86,7 +85,7 @@ public class LoginActivity extends BaseActivity {
 //                    String token = result.getAccess_tocken();
 //                    String url = result.getRoom_uri();
                     String token = result.getAccess_tocken();
-                    STSystem.getInstance().initializeAndroidGlobals(this);
+
                      STSystem.getInstance().init(new STSystem.ConferenceSystemCallback() {
                          @Override
                          public void onInitResult(int result) {

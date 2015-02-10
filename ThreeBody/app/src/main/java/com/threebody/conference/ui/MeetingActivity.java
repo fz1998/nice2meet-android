@@ -17,12 +17,13 @@ import com.threebody.sdk.common.AudioCommon;
 import com.threebody.sdk.common.ChatCommon;
 import com.threebody.sdk.common.RoomCommon;
 import com.threebody.sdk.common.STSystem;
+import com.threebody.sdk.common.VideoCommon;
 import com.threebody.sdk.common.impl.AudioCommonImpl;
 import com.threebody.sdk.common.impl.ChatCommonImpl;
 import com.threebody.sdk.common.impl.RoomCommonImpl;
 import com.threebody.sdk.common.impl.VideoCommonImpl;
 
-import org.st.Room;
+import org.st.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,22 +70,7 @@ public class MeetingActivity extends BaseActivity {
         mFragments.add(mMessage);
         mFragments.add(mVideo);
         mFragments.add(mSet);
-//        localVideoView.setListener(new OnFramenLister() {
-//            @Override
-//            public void OnPreviewFrame(VideoBean videoBean) {
-//                if(index == 1){
-//                    mVideo.setLocalData(videoBean);
-//                }
-//            }
-//
-//            @Override
-//            public void OnResize(int width, int height) {
-//                Fragment fragment = getSupportFragmentManager().getFragments().get(0);
-//                if(fragment instanceof VideoFragment){
-//                    ((VideoFragment)fragment).setLocalSize(width, height);
-//                }
-//            }
-//        });
+
         initData();
         getSupportFragmentManager().beginTransaction().add(R.id.llContainer, mVideo).commit();
     }
@@ -147,7 +133,7 @@ public class MeetingActivity extends BaseActivity {
 
             @Override
             public void onLeave(int reason) {
-                roomCommon.leave();
+//                roomCommon.leave();
             }
 
             @Override
@@ -156,27 +142,27 @@ public class MeetingActivity extends BaseActivity {
             }
 
             @Override
-            public void onUserJoin(Room.User user) {
+            public void onUserJoin(User user) {
 
             }
 
             @Override
-            public void onUserLeave(Room.User user) {
+            public void onUserLeave(User user) {
 
             }
 
             @Override
-            public void onUserUpdate(Room.User user) {
+            public void onUserUpdate(User user) {
 
             }
 
             @Override
-            public void onUpdateRole(int nodeId, Room.User.Role newRole) {
+            public void onUpdateRole(int nodeId, User.Role newRole) {
 
             }
 
             @Override
-            public void onUpdateStatus(int nodeId, Room.User.Status status) {
+            public void onUpdateStatus(int nodeId, User.Status status) {
 
             }
         });
@@ -209,6 +195,27 @@ public class MeetingActivity extends BaseActivity {
 
             @Override
             public void onRequestOpenMicrophone(int nodeId) {
+
+            }
+        });
+        videoCommon = new VideoCommonImpl(roomCommon, new VideoCommon.VideoCallback() {
+            @Override
+            public void onOpenVideo(int result, int nodeId, String deviceId) {
+
+            }
+
+            @Override
+            public void onCloseVideo(int result, int nodeId, String deviceId) {
+
+            }
+
+            @Override
+            public void onRequestOpenVideo(int nodeId, String deviceId) {
+
+            }
+
+            @Override
+            public void onVideoData(int nodeId, String deviceId, char[] data, int len, int width, int height) {
 
             }
         });

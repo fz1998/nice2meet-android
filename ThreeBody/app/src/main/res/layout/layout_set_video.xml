@@ -22,24 +22,13 @@
             android:layout_marginLeft="@dimen/TextSize10"
             android:layout_weight="1"/>
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/off"
-            android:textColor="@color/white"
-            android:textSize="@dimen/TextSize14"/>
-        <ImageView
             android:id="@+id/ivVideo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/status_off"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/openVideo"
             android:layout_marginLeft="@dimen/TextSize05"
             android:layout_marginRight="@dimen/TextSize05"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/on"
-            android:textColor="@color/white"
-            android:textSize="@dimen/TextSize14"/>
     </LinearLayout>
     <LinearLayout style="@style/lineHorizontal"/>
 </LinearLayout>

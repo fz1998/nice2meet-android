@@ -34,9 +34,9 @@ public class VideoFragment extends BaseFragment {
         videoDown = (VideoShowFragmenet)getChildFragmentManager().findFragmentById(R.id.videoDown);
 
 //        videoView = new RemoteVideoView(getActivity());
-        videoView = new LocalVideoView(getActivity());
-        videoView.resetSize(LocalVideoView.WIDTH, LocalVideoView.HEIGHT);
-        videoDown.getFlVideo().addView(videoView);
+//        videoView = new LocalVideoView(getActivity());
+//        videoView.resetSize(LocalVideoView.WIDTH, LocalVideoView.HEIGHT);
+//        videoDown.getFlVideo().addView(videoView);
 
 //        localVideo = new LocalVideoView(getActivity());
 //        videoDown.getFlVideo().addView(localVideo);

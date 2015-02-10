@@ -1,5 +1,4 @@
 package org.st;
-import java.lang.String;
 
 public class RoomInfo {
 	String	roomID;
