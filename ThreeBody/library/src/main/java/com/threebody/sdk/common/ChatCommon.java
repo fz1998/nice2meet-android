@@ -13,6 +13,7 @@ import java.util.Map;
  * Created by xiaxin on 15-2-4.
  */
 public abstract class ChatCommon {
+    public static final int PUBLIC = 0;
     protected Chat chat;
     private Chat.ChatListener listener;
     ChatCallback callback;
@@ -28,10 +29,12 @@ public abstract class ChatCommon {
 
     }
 
-
+    public Map<Integer, List<Message>> getMessageMap() {
+        return messageMap;
+    }
 
     public boolean sendPublicMessage(String message){
-        Message msg = new Message(message, "", roomCommon.getMe().getNodeId(), true, true);
+        Message msg = new Message(message, "", 0, true, true);
         addMessage(msg);
         if(chat != null){
            return chat.sendPublicMessage(message);
@@ -80,6 +83,7 @@ public abstract class ChatCommon {
                 }
             }
         };
+        chat.setListener(listener);
     }
     private boolean checkCallback(){
         if(callback == null){

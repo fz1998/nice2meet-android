@@ -1,10 +1,14 @@
 package com.threebody.sdk.common;
 
+import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
 import com.threebody.sdk.util.LoggerUtil;
 
 import org.st.User;
 import org.st.Video;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by xiaxin on 15-2-4.
@@ -15,10 +19,11 @@ public class VideoCommon {
     protected VideoCallback callback;
     Video.VideoListener listener;
     Video video;
+    List<DeviceBean> devices;
     protected VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
         this.roomCommon = roomCommon;
         this.callback = callback;
-
+        video = roomCommon.getVideo();
         init();
     }
 
@@ -27,35 +32,68 @@ public class VideoCommon {
     }
 
     private void init(){
+        if(devices == null){
+            devices = new ArrayList<>();
+        }
         video = roomCommon.getVideo();
         roomCommon.setVideoCommon(this);
         initListener();
     }
+    private DeviceBean findDeviceById(String deviceId){
+        if(devices != null && !devices.isEmpty()){
+            for (DeviceBean deviceBean : devices){
+                if(deviceId.equals(deviceBean.getDeviceId())){
+                    return deviceBean;
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<DeviceBean> getDevices() {
+        return devices;
+    }
+
     protected void initListener(){
         listener = new Video.VideoListener() {
             @Override
             public void onOpenVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onOpenVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
-                User user = roomCommon.findUserById(nodeId);
-//                DeviceBean deviceBean
-                if(user != null){
-                    user.setVideoOn(true);
-                }
-                    if(checkCallback()){
-                        callback.onOpenVideo(result, nodeId, deviceId);
+
+                if(result == 0){
+                    User user = roomCommon.findUserById(nodeId);
+                    if(user != null){
+                        user.setVideoOn(true);
+                        DeviceBean deviceBean = new DeviceBean(nodeId, deviceId);
+                        deviceBean.setUser(user);
+                        devices.add(deviceBean);
                     }
+
+
+                }
+
+                if(checkCallback()){
+                    callback.onOpenVideo(result, nodeId, deviceId);
+                }
             }
 
             @Override
             public void onCloseVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onCloseVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
-                User user = roomCommon.findUserById(nodeId);
-                if(user != null){
-                    user.setVideoOn(false);
-                }
                 if(checkCallback()){
                     callback.onCloseVideo(result, nodeId, deviceId);
                 }
+                if(result == 0){
+                    User user = roomCommon.findUserById(nodeId);
+                    if(user != null){
+                        user.setVideoOn(false);
+                    }
+                    DeviceBean deviceBean = findDeviceById(deviceId);
+                    if(deviceBean != null){
+                        devices.remove(deviceBean);
+                    }
+                }
+
             }
 
             @Override
@@ -68,7 +106,7 @@ public class VideoCommon {
 
             @Override
             public void onVideoData(int nodeId, String deviceId, byte[] data, int len, int width, int height) {
-                LoggerUtil.info(tag, "onVideoData nodeId = "+nodeId+" deviceId = "+deviceId+" len = "+len+" width = "+width+" height = "+height);
+                LoggerUtil.info(tag, "onVideoData nodeId = "+nodeId+" deviceId = "+deviceId+" length = "+data.length+" len = "+len+" width = "+width+" height = "+height);
                 VideoBean videoBean = new VideoBean();
                 videoBean.setNodeId(nodeId);
                 videoBean.setDeviceId(deviceId);
@@ -81,6 +119,7 @@ public class VideoCommon {
                 }
             }
         };
+        video.setListener(listener);
     }
     //
     public int getMaxVideo(){

@@ -19,9 +19,9 @@ public class User {
 	int		nodeId;
     Role	role;
     Status	state;
-    boolean isVideoChecked;
     boolean isVideoOn;
     boolean isAudioOn;
+
     public User(String userId, String userName, int nodeId, Role role,Status state) {
         this.userId = userId;
         this.userName = userName;
@@ -51,13 +51,6 @@ public class User {
         this.isAudioOn = isAudioOn;
     }
 
-    public boolean isVideoChecked() {
-        return isVideoChecked;
-    }
-
-    public void setVideoChecked(boolean isVideoChecked) {
-        this.isVideoChecked = isVideoChecked;
-    }
 
     public void setUserId(String userId) {
         this.userId = userId;

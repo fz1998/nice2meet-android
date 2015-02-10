@@ -120,6 +120,7 @@ public abstract class AudioCommon {
                 }
             }
         };
+        audio.setListener(listener);
     }
     private boolean checkCallback(){
         if(callback == null){

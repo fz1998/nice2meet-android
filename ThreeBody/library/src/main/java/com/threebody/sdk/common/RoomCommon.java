@@ -112,6 +112,7 @@ public abstract class RoomCommon {
      */
     public  boolean leave(){
         if(room.leave()){
+            dispose();
             STSystem.getInstance().getRoomCommons().remove(this);
         }
         return false;
@@ -171,7 +172,7 @@ public abstract class RoomCommon {
                     users.add(me);
                 }
                 if(checkCallback()){
-                    listener.onJoin(result);
+                    callback.onJoin(result);
                 }
                 if(joinListener != null){
                     joinListener.onJoinResult(result);
