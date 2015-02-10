@@ -31,7 +31,7 @@ public abstract class ChatCommon {
 
 
     public boolean sendPublicMessage(String message){
-        Message msg = new Message(message, roomCommon.getMe().getUserName(), roomCommon.getMe().getNodeId(), true, true);
+        Message msg = new Message(message, "", roomCommon.getMe().getNodeId(), true, true);
         addMessage(msg);
         if(chat != null){
            return chat.sendPublicMessage(message);
