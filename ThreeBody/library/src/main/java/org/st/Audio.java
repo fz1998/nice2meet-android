@@ -32,6 +32,16 @@ public class Audio {
     }
     private native int nativeGetSurplusAudio();
     
+	public boolean getLocalMicphoneCount() {
+        return nativeGetLocalMicphoneCount();
+    }
+    private native boolean nativeGetLocalMicphoneCount();
+	
+	public boolean getUserMicphoneCount(int nodeId) {
+        return nativeGetUserMicphoneCount(nodeId);
+    }
+    private native boolean nativeGetUserMicphoneCount(int nodeId);
+	
     public boolean openMicrophone(int nodeId) {
         return nativeOpenMicrophone(nodeId);
     }
