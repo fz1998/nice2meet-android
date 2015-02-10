@@ -134,7 +134,7 @@ public class RemoteVideoView extends View implements VideoView{
 //			invalidate();
 //		}else{
 //			setBackgroundColor(0);
-			videoBit = Bitmap.createBitmap(width, height, Config.RGB_565);
+			videoBit = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 			isDrawing = true;
 //		}
 				
