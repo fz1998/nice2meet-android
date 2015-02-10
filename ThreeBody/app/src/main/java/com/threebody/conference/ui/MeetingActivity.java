@@ -22,6 +22,7 @@ import com.threebody.sdk.common.impl.AudioCommonImpl;
 import com.threebody.sdk.common.impl.ChatCommonImpl;
 import com.threebody.sdk.common.impl.RoomCommonImpl;
 import com.threebody.sdk.common.impl.VideoCommonImpl;
+import com.threebody.sdk.domain.VideoBean;
 
 import org.st.User;
 
@@ -92,21 +93,7 @@ public class MeetingActivity extends BaseActivity {
                 }
                 break;
             case R.id.flExit:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.tip)
-                       .setIcon(R.drawable.ic_launcher)
-                       .setMessage(R.string.exitTip)
-                       .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface dialog, int which) {
-                               dialog.dismiss();
-                           }
-                       }).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        leaveConference();
-                    }
-                }).create().show();
+               showDialog();
                 break;
             default:
                 break;
@@ -118,6 +105,23 @@ public class MeetingActivity extends BaseActivity {
         }else{
             FragmentUtil.moveToRightFragment(this, R.id.llContainer, mFragments.get(index));
         }
+    }
+    private void showDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.tip)
+                .setIcon(R.drawable.ic_launcher)
+                .setMessage(R.string.exitTip)
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                leaveConference();
+            }
+        }).create().show();
     }
     private void leaveConference(){
         roomCommon.leave();
@@ -133,7 +137,7 @@ public class MeetingActivity extends BaseActivity {
 
             @Override
             public void onLeave(int reason) {
-//                roomCommon.leave();
+                ToastUtil.showToast(MeetingActivity.this, "退出会议");
             }
 
             @Override
@@ -185,12 +189,16 @@ public class MeetingActivity extends BaseActivity {
         audioCommon = new AudioCommonImpl(roomCommon, new AudioCommon.AudioCallback() {
             @Override
             public void onOpenMicrophone(int result, int nodeId) {
-
+                if(nodeId == roomCommon.getMe().getNodeId()){
+                    mSet.openLocalAudio();
+                }
             }
 
             @Override
             public void onCloseMicrophone(int result, int nodeId) {
-
+                if(nodeId == roomCommon.getMe().getNodeId()){
+                    mSet.closeLocalAudio();
+                }
             }
 
             @Override
@@ -201,12 +209,16 @@ public class MeetingActivity extends BaseActivity {
         videoCommon = new VideoCommonImpl(roomCommon, new VideoCommon.VideoCallback() {
             @Override
             public void onOpenVideo(int result, int nodeId, String deviceId) {
-
+                if(nodeId == roomCommon.getMe().getNodeId()){
+                    mSet.openLocalVideo();
+                }
             }
 
             @Override
             public void onCloseVideo(int result, int nodeId, String deviceId) {
-
+                if(nodeId == roomCommon.getMe().getNodeId()){
+                    mSet.closeLocalAudio();
+                }
             }
 
             @Override
@@ -215,12 +227,30 @@ public class MeetingActivity extends BaseActivity {
             }
 
             @Override
-            public void onVideoData(int nodeId, String deviceId, char[] data, int len, int width, int height) {
-
+            public void onVideoData(VideoBean videoBean) {
+                mVideo.receiVideoBean(videoBean);
             }
         });
     }
+
+    public VideoCommonImpl getVideoCommon() {
+        return videoCommon;
+    }
+
+    public ChatCommonImpl getChatCommon() {
+        return chatCommon;
+    }
+
     public void sendMessage(String message){
         chatCommon.sendPublicMessage(message);
+    }
+
+    public void refreshVideo(){
+        mVideo.refresh(videoCommon.getDevices());
+    }
+
+    @Override
+    public void onBackPressed() {
+        showDialog();
     }
 }

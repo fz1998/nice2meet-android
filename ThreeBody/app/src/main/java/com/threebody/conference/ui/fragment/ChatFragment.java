@@ -74,7 +74,7 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         super.onClick(v);
         switch (v.getId()){
             case R.id.btnSend:
-                sendMessage();
+//                sendMessage();
                 break;
             default:
                 break;

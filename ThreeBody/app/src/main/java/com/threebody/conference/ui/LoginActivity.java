@@ -14,7 +14,7 @@ import com.threebody.sdk.common.impl.RoomCommonImpl;
 import com.threebody.sdk.http.LoginHandle;
 import com.threebody.sdk.http.entity.LoginRequest;
 import com.threebody.sdk.http.entity.LoginResponse;
-import com.threebody.sdk.listener.OnJoinConferenceListener;
+import com.threebody.sdk.listener.LoginListener;
 import com.threebody.sdk.util.LoggerUtil;
 
 import butterknife.InjectView;
@@ -32,7 +32,7 @@ public class LoginActivity extends BaseActivity {
         super.initUI();
         getSupportActionBar().hide();
         btnAddIn.setOnClickListener(this);
-        etNum.setText("123456");
+        etNum.setText("r669");
         etName.setText("admin");
         etPassword.setText("admin");
     }
@@ -66,15 +66,16 @@ public class LoginActivity extends BaseActivity {
 //        final String num = etNum.getText().toString().trim();
 //        String name = etName.getText().toString().trim();
 //        String password = etPassword.getText().toString().trim();
-        final String num = "r669";
-        final String name = "admin";
-        String password = "admin";
+        final String num = etNum.getText().toString();
+
+        final String name = etName.getText().toString();
+        final String password = etPassword.getText().toString();
 //        RoomSystem.initializeAndroidGlobals(this, true, true);
         STSystem.getInstance().initializeAndroidGlobals(this);
         final LoginRequest request = new LoginRequest(name, password);
-        new LoginHandle(new OnJoinConferenceListener() {
+        new LoginHandle(new LoginListener() {
             @Override
-            public void onJoinResult(LoginResponse result) {
+            public void onLoginResult(LoginResponse result) {
                 if(result.getRet() == 0){
 
 //                }
@@ -100,12 +101,13 @@ public class LoginActivity extends BaseActivity {
                                  }
                              }, num);
                              STSystem.getInstance().createRoom(roomCommon);
+                             roomCommon.join("12221",name, password);
                          }
                      }, url, token);
 
                 }
             }
-        }).joinConference(request);
+        }).login(request);
     }
     //    @Ovde
 //    public boolean onCreateOptionsMenu(Menu menu) {

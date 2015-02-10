@@ -5,10 +5,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.threebody.conference.R;
+import com.threebody.conference.ui.BaseActivity;
+import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.conference.ui.adapter.VideoSetAdapter;
+import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.sdk.common.STSystem;
 
 import butterknife.InjectView;
@@ -18,6 +22,7 @@ import butterknife.InjectView;
  */
 public class VideoSetFragment extends BaseFragment{
     @InjectView(R.id.userList)ListView userList;
+    @InjectView(R.id.btnAddIn)Button btnAddIn;
     VideoSetAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,8 +40,22 @@ public class VideoSetFragment extends BaseFragment{
 //            user.setName("user"+i);
 //            users.add(user);
 //        }
-        adapter = new VideoSetAdapter(getActivity(), STSystem.getInstance().getRoomCommons().get(0).getUsers());
+
+        adapter = new VideoSetAdapter(getActivity(), STSystem.getInstance().getRoomCommons().get(0).getVideoCommon().getDevices());
         userList.setAdapter(adapter);
+        btnAddIn.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.btnAddIn:
+                FragmentUtil.moveToLeftFragment((BaseActivity) getActivity(), R.id.llContainer, new VideoFragment());
+                ((MeetingActivity)getActivity()).refreshVideo();
+                break;
+            default:
+                break;
+        }
+    }
 }

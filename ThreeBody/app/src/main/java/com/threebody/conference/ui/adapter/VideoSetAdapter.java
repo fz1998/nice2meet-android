@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 
 import com.threebody.conference.R;
+import com.threebody.sdk.domain.DeviceBean;
 
 import org.st.User;
 
@@ -18,22 +19,22 @@ import java.util.List;
  */
 public class VideoSetAdapter extends BaseAdapter {
     Context context;
-    List<User> users;
+    List<DeviceBean> deviceBeans;
     int firstCheck, secondCheck;
     int checkCount = 0;
-    public VideoSetAdapter(Context context, List<User> users) {
+    public VideoSetAdapter(Context context, List<DeviceBean> deviceBeans) {
         this.context = context;
-        this.users = users;
+        this.deviceBeans = deviceBeans;
     }
 
     @Override
     public int getCount() {
-        return users.size();
+        return deviceBeans.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return users.get(position);
+        return deviceBeans.get(position);
     }
 
     @Override
@@ -51,9 +52,10 @@ public class VideoSetAdapter extends BaseAdapter {
     }
     private void initView(View view, final int position){
         final CheckBox cb = (CheckBox)view.findViewById(R.id.cbUser);
-        final User user = users.get(position);
+        final DeviceBean deviceBean = deviceBeans.get(position);
+        final User user = deviceBean.getUser();
         cb.setText(user.getUserName());
-        cb.setChecked(user.isVideoChecked());
+        cb.setChecked(deviceBean.isVideoChecked());
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +68,7 @@ public class VideoSetAdapter extends BaseAdapter {
                         secondCheck = position;
                         checkCount++;
                     }else {
-                        users.get(firstCheck).setVideoChecked(false);
+                        deviceBeans.get(firstCheck).setVideoChecked(false);
                         firstCheck = secondCheck;
                         secondCheck = position;
                     }
@@ -77,7 +79,7 @@ public class VideoSetAdapter extends BaseAdapter {
                     }
 
                 }
-                user.setVideoChecked(cb.isChecked());
+                deviceBean.setVideoChecked(cb.isChecked());
                 notifyDataSetChanged();
             }
         });

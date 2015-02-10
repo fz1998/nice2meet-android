@@ -7,11 +7,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout.LayoutParams;
 
-import com.threebody.sdk.util.LoggerUtil;
 import com.threebody.sdk.domain.VideoBean;
+import com.threebody.sdk.util.LoggerUtil;
 
 import java.nio.ByteBuffer;
 
@@ -85,13 +86,19 @@ public class RemoteVideoView extends View implements VideoView{
 	public void setVideoBean(VideoBean videoBean) {
 		try{
 //			log.info("videoBean.getWidth() === " + videoBean.getWidth());
+            checkSize(videoBean);
 			if(videoBit != null){
 				videoBean.setWidth(videoBit.getWidth());
 				videoBean.setHeight(videoBit.getHeight());
 				this.videoBean = videoBean;
 //				log.info("video length = "+videoBean.getVideoData().length);
 				if(!isMove){
-					this.invalidate();
+					post(new Runnable() {
+                        @Override
+                        public void run() {
+                            invalidate();
+                        }
+                    });
 				}
 			}
 		}catch(ClassCastException e){
@@ -99,7 +106,13 @@ public class RemoteVideoView extends View implements VideoView{
 			e.printStackTrace();
 		}
 	}
-
+    private boolean checkSize(VideoBean videoBean){
+        if(videoBean.getWidth() != bitWidth || videoBean.getHeight() != bitHeight){
+            resetSize(videoBean.getWidth(), videoBean.getHeight());
+            return true;
+        }
+        return false;
+    }
 	/**
 	 * 重置视频分辨率
 	 * 
@@ -114,40 +127,39 @@ public class RemoteVideoView extends View implements VideoView{
 			videoBit.recycle();
 		}
 		
-		if( width * height > 352 * 288 && width > 0){
-//			setBackgroundResource(R.drawable.video_nosupport);
-			videoBit = null;
-			isDrawing = false;
-			invalidate();
-		}else{
-			setBackgroundColor(0);
-			videoBit = Bitmap.createBitmap(width, height, Config.RGB_565);	
+//		if( width * height > 352 * 288 && width > 0){
+////			setBackgroundResource(R.drawable.video_nosupport);
+//			videoBit = null;
+//			isDrawing = false;
+//			invalidate();
+//		}else{
+//			setBackgroundColor(0);
+			videoBit = Bitmap.createBitmap(width, height, Config.RGB_565);
 			isDrawing = true;
-		}
+//		}
 				
 	}
 
-	public Bitmap getVideoBit() {
-		return videoBit;
-	}
 
-	public void onDraw(Canvas canvas) {
-//		Log.e(VIEW_LOG_TAG, "onDraw 111111111111111");
+    @Override
+    protected void onDraw(Canvas canvas) {
+//        super.onDraw(canvas);
+        Log.e(VIEW_LOG_TAG, "onDraw 111111111111111");
 //		log.info("222222");
-		if(isDrawing){
-			if(videoBit != null){
-				drawBitmap(canvas);
-			}else{
-				canvas.drawColor(Color.WHITE);
-			}
-		}
-	}
-	
-//	private PaintFlagsDrawFilter pfdf = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);
+        if(isDrawing){
+            if(videoBit != null){
+                drawBitmap(canvas);
+            }else{
+                canvas.drawColor(Color.WHITE);
+            }
+        }
+    }
+
+    //	private PaintFlagsDrawFilter pfdf = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);
 	private void drawBitmap(Canvas canvas){
 		try {
 //			canvas.setDrawFilter(pfdf);
-//			log.info("3333333");
+			LoggerUtil.info(getClass().getName(), "3333333");
 			if(!isLarge){
 //				width = ConferenceApplication.SCREEN_HEIGHT < 480 ? 180f : 300f;				
 			}else{
@@ -156,7 +168,7 @@ public class RemoteVideoView extends View implements VideoView{
 
 			if (videoBean != null && videoBean.getVideoData() != null
 					&& videoBean.getVideoData().length > 0) {
-//				log.info("444444");
+				LoggerUtil.info(getClass().getName(), "444444");
 				buffer = ByteBuffer.wrap(videoBean.getVideoData());
 //				log.info("555555");
 //				if(buffer != null && videoBit != null){

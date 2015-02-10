@@ -86,6 +86,9 @@ public class MessageAdapter extends BaseAdapter {
         holder.tvMessage.setText(message.getMessage());
         return convertView;
     }
+    public void refresh(){
+
+    }
     class ViewHolder {
         TextView tvName;
         ImageView ivHead;
