@@ -10,13 +10,16 @@ import java.util.List;
  * Created by xiaxin on 15-2-5.
  */
 public class STSystem {
-    private static STSystem instance = new STSystem();
+    private static STSystem instance ;
     protected RoomSystem roomSystem;
     static List<RoomCommon> roomCommons;
     private RoomSystem.RoomSystemListener listener;
     ConferenceSystemCallback callback;
     public static boolean isInit = false;
     public static STSystem getInstance(){
+       if(instance == null){
+           instance = new STSystem();
+       }
         return instance;
     }
     private STSystem(){

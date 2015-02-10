@@ -292,6 +292,8 @@ public class RemoteVideoView extends View implements VideoView{
 	}
 
 	public void setLayoutParam(int width, int height) {
+        mWidth = width;
+        mHeight = height;
 		LayoutParams params = (LayoutParams) getLayoutParams();
 		params.width = LayoutParams.MATCH_PARENT;
 		params.height = LayoutParams.MATCH_PARENT;

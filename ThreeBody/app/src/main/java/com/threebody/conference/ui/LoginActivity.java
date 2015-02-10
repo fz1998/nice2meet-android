@@ -17,6 +17,8 @@ import com.threebody.sdk.http.entity.LoginResponse;
 import com.threebody.sdk.listener.LoginListener;
 import com.threebody.sdk.util.LoggerUtil;
 
+import org.st.RoomSystem;
+
 import butterknife.InjectView;
 
 
@@ -32,7 +34,7 @@ public class LoginActivity extends BaseActivity {
         super.initUI();
         getSupportActionBar().hide();
         btnAddIn.setOnClickListener(this);
-        etNum.setText("r669");
+        etNum.setText("r668");
         etName.setText("admin");
         etPassword.setText("admin");
     }
@@ -70,8 +72,8 @@ public class LoginActivity extends BaseActivity {
 
         final String name = etName.getText().toString();
         final String password = etPassword.getText().toString();
-//        RoomSystem.initializeAndroidGlobals(this, true, true);
-        STSystem.getInstance().initializeAndroidGlobals(this);
+        RoomSystem.initializeAndroidGlobals(this, true, true);
+//        STSystem.getInstance().initializeAndroidGlobals(this);
         final LoginRequest request = new LoginRequest(name, password);
         new LoginHandle(new LoginListener() {
             @Override
