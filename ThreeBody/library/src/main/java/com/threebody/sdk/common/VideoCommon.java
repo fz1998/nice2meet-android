@@ -1,5 +1,6 @@
 package com.threebody.sdk.common;
 
+import com.threebody.sdk.domain.VideoBean;
 import com.threebody.sdk.util.LoggerUtil;
 
 import org.st.User;
@@ -9,9 +10,9 @@ import org.st.Video;
  * Created by xiaxin on 15-2-4.
  */
 public class VideoCommon {
-    String tag = getClass().getName();
+    protected String tag = getClass().getName();
     RoomCommon roomCommon;
-    VideoCallback callback;
+    protected VideoCallback callback;
     Video.VideoListener listener;
     Video video;
     protected VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
@@ -20,17 +21,23 @@ public class VideoCommon {
 
         init();
     }
+
+    public RoomCommon getRoomCommon() {
+        return roomCommon;
+    }
+
     private void init(){
         video = roomCommon.getVideo();
         roomCommon.setVideoCommon(this);
         initListener();
     }
-    private void initListener(){
+    protected void initListener(){
         listener = new Video.VideoListener() {
             @Override
             public void onOpenVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onOpenVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
                 User user = roomCommon.findUserById(nodeId);
+//                DeviceBean deviceBean
                 if(user != null){
                     user.setVideoOn(true);
                 }
@@ -60,10 +67,17 @@ public class VideoCommon {
             }
 
             @Override
-            public void onVideoData(int nodeId, String deviceId, char[] data, int len, int width, int height) {
+            public void onVideoData(int nodeId, String deviceId, byte[] data, int len, int width, int height) {
                 LoggerUtil.info(tag, "onVideoData nodeId = "+nodeId+" deviceId = "+deviceId+" len = "+len+" width = "+width+" height = "+height);
+                VideoBean videoBean = new VideoBean();
+                videoBean.setNodeId(nodeId);
+                videoBean.setDeviceId(deviceId);
+                videoBean.setVideoData(data);
+                videoBean.setLength(len);
+                videoBean.setWidth(width);
+                videoBean.setHeight(height);
                 if(checkCallback()){
-                    callback.onVideoData(nodeId, deviceId, data, len, width, height);
+                    callback.onVideoData(videoBean);
                 }
             }
         };
@@ -81,7 +95,7 @@ public class VideoCommon {
     public boolean closeVideo(int nodeId, String deviceId){
         return video.closeVideo(nodeId, deviceId);
     }
-    private boolean checkCallback(){
+    protected boolean checkCallback(){
         if(callback == null){
             return false;
         }
@@ -91,7 +105,7 @@ public class VideoCommon {
          void onOpenVideo(int result, int nodeId, String deviceId);
          void onCloseVideo(int result, int nodeId, String deviceId);
          void onRequestOpenVideo(int nodeId, String deviceId);
-         void onVideoData(int nodeId, String deviceId, char[] data, int len, int width, int height);
+         void onVideoData(VideoBean videoBean);
     }
     private boolean checkMe(int nodeId){
         User me = roomCommon.getSelf();

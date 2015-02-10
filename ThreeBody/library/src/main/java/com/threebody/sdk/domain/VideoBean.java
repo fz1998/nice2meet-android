@@ -24,7 +24,12 @@ public class VideoBean implements Serializable {
 	/**
 	 * 视频用户的id
 	 */
-	private int userId;
+	private int nodeId;
+    //设备id
+    private String deviceId;
+    //数据长度
+    private int length;
+
 
 	public byte[] getVideoData() {
 		return videoData;
@@ -58,15 +63,23 @@ public class VideoBean implements Serializable {
 		this.width = width;
 	}
 
-	public int getUserId() {
-		return userId;
-	}
+    public int getNodeId() {
+        return nodeId;
+    }
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+    public void setNodeId(int nodeId) {
+        this.nodeId = nodeId;
+    }
 
-	public int[] getVideoDataByInt() {
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public int[] getVideoDataByInt() {
 		return videoDataByInt;
 	}
 
@@ -74,4 +87,11 @@ public class VideoBean implements Serializable {
 		this.videoDataByInt = videoDataByInt;
 	}
 
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
 }

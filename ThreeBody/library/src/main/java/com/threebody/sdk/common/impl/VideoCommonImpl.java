@@ -10,4 +10,5 @@ public class VideoCommonImpl extends VideoCommon {
     public VideoCommonImpl(RoomCommon roomCommon, VideoCallback callback) {
         super(roomCommon, callback);
     }
+
 }
