@@ -53,7 +53,7 @@ public class VideoSetAdapter extends BaseAdapter {
         final CheckBox cb = (CheckBox)view.findViewById(R.id.cbUser);
         final Room.User user = users.get(position);
         cb.setText(user.getUserName());
-//        cb.setChecked(user.());
+        cb.setChecked(user.isVideoChecked());
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +66,7 @@ public class VideoSetAdapter extends BaseAdapter {
                         secondCheck = position;
                         checkCount++;
                     }else {
-//                        users.get(firstCheck).setVideoChecked(false);
+                        users.get(firstCheck).setVideoChecked(false);
                         firstCheck = secondCheck;
                         secondCheck = position;
                     }
@@ -77,7 +77,7 @@ public class VideoSetAdapter extends BaseAdapter {
                     }
 
                 }
-//                user.setVideoChecked(cb.isChecked());
+                user.setVideoChecked(cb.isChecked());
                 notifyDataSetChanged();
             }
         });

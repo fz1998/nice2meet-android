@@ -7,7 +7,21 @@ public class Message {
     String uid;
     String message;
     String name;
+    int nodeId;
+    int toNodeId;
+    boolean isPublic;
     boolean isMe;
+
+    public Message() {
+    }
+
+    public Message(String message, String name, int nodeId, boolean isPublic, boolean isMe) {
+        this.message = message;
+        this.name = name;
+        this.nodeId = nodeId;
+        this.isPublic = isPublic;
+        this.isMe = isMe;
+    }
 
     public String getUid() {
         return uid;
@@ -39,5 +53,29 @@ public class Message {
 
     public void setMe(boolean isMe) {
         this.isMe = isMe;
+    }
+
+    public int getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(int nodeId) {
+        this.nodeId = nodeId;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public int getToNodeId() {
+        return toNodeId;
+    }
+
+    public void setToNodeId(int toNodeId) {
+        this.toNodeId = toNodeId;
     }
 }

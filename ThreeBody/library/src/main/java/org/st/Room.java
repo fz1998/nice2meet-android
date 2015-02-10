@@ -215,7 +215,15 @@ public class Room  {
             return state;
         }
 
-       public enum Role
+        public boolean isVideoChecked() {
+            return isVideoChecked;
+        }
+
+        public void setVideoChecked(boolean isVideoChecked) {
+            this.isVideoChecked = isVideoChecked;
+        }
+
+        public enum Role
         {
             host,
             presenter,
@@ -233,6 +241,7 @@ public class Room  {
 		int		nodeId;
         Role	role;
         Status	state;
+        boolean isVideoChecked;
 		
         
         public User(String userId, String userName, int nodeId, int role,int state) {

@@ -134,7 +134,8 @@ public class MeetingActivity extends BaseActivity {
         }
     }
     private void leaveConference(){
-
+        roomCommon.leave();
+        finish();
     }
     private void initData(){
        roomCommon = (RoomCommonImpl)STSystem.getInstance().getRoomCommons().get(0);
@@ -146,7 +147,7 @@ public class MeetingActivity extends BaseActivity {
 
             @Override
             public void onLeave(int reason) {
-
+                roomCommon.leave();
             }
 
             @Override
@@ -170,12 +171,12 @@ public class MeetingActivity extends BaseActivity {
             }
 
             @Override
-            public void onUpdateRole(int nodeId, int newRole) {
+            public void onUpdateRole(int nodeId, Room.User.Role newRole) {
 
             }
 
             @Override
-            public void onUpdateStatus(int nodeId, int status) {
+            public void onUpdateStatus(int nodeId, Room.User.Status status) {
 
             }
         });
@@ -212,5 +213,7 @@ public class MeetingActivity extends BaseActivity {
             }
         });
     }
-
+    public void sendMessage(String message){
+        chatCommon.sendPublicMessage(message);
+    }
 }

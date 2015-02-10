@@ -12,6 +12,7 @@ import java.util.List;
  */
 public abstract class RoomCommon {
     protected Room room;
+    Room.User me;
     List<Room.User> users;
     RoomCallback callback;
     JoinResultListener joinListener;
@@ -19,7 +20,6 @@ public abstract class RoomCommon {
     protected ChatCommon chatCommon;
     protected AudioCommon audioCommon;
     protected String roomId;
-
 
 
     protected RoomCommon (RoomCallback callback, String roomId){
@@ -38,6 +38,16 @@ public abstract class RoomCommon {
         }
         initListener();
     }
+
+    public Room.User getMe() {
+        return me;
+    }
+
+    public void setMe(Room.User me) {
+        this.me = me;
+        users.add(me);
+    }
+
     public void setRoom(Room room) {
         this.room = room;
     }
@@ -86,6 +96,7 @@ public abstract class RoomCommon {
      * @return
      */
     public  boolean leave(){
+        STSystem.getInstance().getRoomCommons().remove(this);
         return room.leave();
     }
 
