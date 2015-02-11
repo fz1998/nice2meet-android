@@ -128,7 +128,7 @@ public class RemoteVideoView extends View implements VideoView{
 //			invalidate();
 //		}else{
 //			setBackgroundColor(0);
-			videoBit = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+			videoBit = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 			isDrawing = true;
 //		}
 				
@@ -180,32 +180,34 @@ public class RemoteVideoView extends View implements VideoView{
 					canvas.drawBitmap(videoBit, m, null);
 //				}
 
-			} else if (videoBean != null && videoBean.getVideoDataByInt() != null
-					&& videoBean.getVideoDataByInt().length > 0) {
-				if(videoBit != null){
-					videoBit.recycle();
-				}
-				LoggerUtil.info(getClass().getName(), "local");
-				videoBit = Bitmap.createBitmap(videoBean.getVideoDataByInt(), 176, 144, Bitmap.Config.RGB_565);
-//                buffer = ByteBuffer.wrap(videoBean.getVideoData());
-//                videoBit.copyPixelsFromBuffer(buffer);
-				Matrix m = new Matrix();
-				float scale = 1;
-				int xOff = 0;
-				if (isLarge) {
-//					scale = (float) ConferenceApplication.SCREEN_WIDTH / videoBit.getWidth();
-					xOff = (int) ((width - videoBit.getWidth() * scale) / 2);
-				} else {
-//					scale = (float) findViewById(R.id.video_cell_item_videoView).getWidth() / videoBit.getWidth();
-				}
-
-                m.setRotate(270);
-                videoBit = Bitmap.createBitmap(videoBit, 0,0, videoBit.getWidth(), videoBit.getHeight(), m, false);
-//				m.postScale(scale, scale);
-//				m.postTranslate(xOff, 0);
-//				canvas.drawBitmap(videoBit, m, null);
-                canvas.drawBitmap(videoBit, (float)0, (float)0.0, null);
-			} else {
+			}
+// else if (videoBean != null && videoBean.getVideoDataByInt() != null
+//					&& videoBean.getVideoDataByInt().length > 0) {
+//				if(videoBit != null){
+//					videoBit.recycle();
+//				}
+//				LoggerUtil.info(getClass().getName(), "local");
+//				videoBit = Bitmap.createBitmap(videoBean.getVideoDataByInt(), 176, 144, Bitmap.Config.RGB_565);
+////                buffer = ByteBuffer.wrap(videoBean.getVideoData());
+////                videoBit.copyPixelsFromBuffer(buffer);
+//				Matrix m = new Matrix();
+//				float scale = 1;
+//				int xOff = 0;
+//				if (isLarge) {
+////					scale = (float) ConferenceApplication.SCREEN_WIDTH / videoBit.getWidth();
+//					xOff = (int) ((width - videoBit.getWidth() * scale) / 2);
+//				} else {
+////					scale = (float) findViewById(R.id.video_cell_item_videoView).getWidth() / videoBit.getWidth();
+//				}
+//
+//                m.setRotate(270);
+//                videoBit = Bitmap.createBitmap(videoBit, 0,0, videoBit.getWidth(), videoBit.getHeight(), m, false);
+////				m.postScale(scale, scale);
+////				m.postTranslate(xOff, 0);
+////				canvas.drawBitmap(videoBit, m, null);
+//                canvas.drawBitmap(videoBit, (float)0, (float)0.0, null);
+//			}
+            else {
 //				log.info("视频数据为空");
 				// 关闭视频
 //				Matrix m = new Matrix();

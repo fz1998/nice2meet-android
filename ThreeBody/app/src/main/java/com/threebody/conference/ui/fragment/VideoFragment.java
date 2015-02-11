@@ -25,12 +25,25 @@ public class VideoFragment extends BaseFragment {
     DeviceBean deviceUp, deviceDown;
     DeviceBean device1, device2;
     VideoCommonImpl videoCommon;
+    boolean isCanShow = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_video, null);
         initView(view);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(deviceUp != null){
+            videoUp.setDevice(deviceUp);
+        }
+        if(deviceDown != null){
+            videoDown.setDevice(deviceDown);
+        }
+
     }
 
     @Override
@@ -56,7 +69,37 @@ public class VideoFragment extends BaseFragment {
         });
         videoCommon = ((MeetingActivity)getActivity()).getVideoCommon();
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        isCanShow = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isCanShow = false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        isCanShow = true;
+    }
     public void receiVideoBean(VideoBean videoBean){
+        if(isCanShow){
+            if(deviceUp != null){
+                if(deviceUp.getDeviceId().equals(videoBean.getDeviceId())){
+                    videoUp.setVideoBean(videoBean);
+                    return;
+                }
+            }
+            if(deviceDown != null){
+                if(deviceDown.getDeviceId().equals(videoBean.getDeviceId())){
+                    videoDown.setVideoBean(videoBean);
+                }
+            }
+        }
 
     }
 
@@ -81,18 +124,59 @@ public class VideoFragment extends BaseFragment {
         if(device1 == null){
             return;
         }else if(device2 == null){
-
+            checkOne();
+        }else{
+            checkTwo();
         }
     }
-
-
+    private void checkOne(){
+        if(deviceUp != null && deviceUp.getDeviceId().equals(device1.getDeviceId())){
+            return;
+        }else if(deviceDown != null && deviceDown.getDeviceId().equals(device1.getDeviceId())){
+            return;
+        }else{
+            deviceUp = device1;
+        }
+    }
+    private void checkTwo(){
+        if(deviceUp != null && deviceUp.getDeviceId().equals(device1.getDeviceId())){
+            if(deviceDown != null && deviceDown.getDeviceId().equals(device2.getDeviceId())){
+                return;
+            }else {
+                deviceDown = device2;
+            }
+        }else{
+            if(deviceDown != null && deviceDown.getDeviceId().equals(device1.getDeviceId())){
+                if(deviceUp != null && deviceUp.getDeviceId().equals(device2.getDeviceId())){
+                    return;
+                }else {
+                    deviceUp = device2;
+                }
+            }else if(deviceDown != null && deviceDown.getDeviceId().equals(device2.getDeviceId())){
+                deviceUp = device1;
+            }else {
+                if(deviceUp != null && deviceUp.getDeviceId().equals(device2.getDeviceId())){
+                    deviceDown = device1;
+                    return;
+                }
+                deviceUp = device1;
+                deviceDown = device2;
+            }
+        }
+    }
     public void addDevice(DeviceBean deviceBean) {
-        if(deviceUp == null){
-            deviceUp = deviceBean;
-            videoUp.setDevice(deviceUp);
-        }else if(deviceDown == null){
-            deviceDown = deviceBean;
-            videoDown.setDevice(deviceBean);
+        if(deviceBean != null){
+            if(deviceUp == null){
+                deviceUp = deviceBean;
+                if(videoUp != null){
+                    videoUp.setDevice(deviceUp);
+                }
+            }else if(deviceDown == null){
+                deviceDown = deviceBean;
+                if(videoDown != null){
+                    videoDown.setDevice(deviceBean);
+                }
+            }
         }
     }
 }

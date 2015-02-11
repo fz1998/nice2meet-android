@@ -15,6 +15,10 @@ import java.util.List;
  */
 public class VideoCommon {
     protected String tag = getClass().getName();
+    public static final int CAMERA_OFF = 0;
+    public static final int CAMERA_ON = 1;
+    public static final int CAMERA_HOLD = 2;
+    public static  int IS_CAMERA_OPEN ;
     RoomCommon roomCommon;
     protected VideoCallback callback;
     Video.VideoListener listener;
@@ -63,18 +67,22 @@ public class VideoCommon {
                 if(result == 0){
                     User user = roomCommon.findUserById(nodeId);
                     if(user != null){
+                        if(user.getNodeId() == roomCommon.getMe().getNodeId()){
+                            IS_CAMERA_OPEN = CAMERA_ON;
+                        }
                         user.setVideoOn(true);
                         DeviceBean deviceBean = new DeviceBean(nodeId, deviceId);
                         deviceBean.setUser(user);
                         devices.add(deviceBean);
+                        if(checkCallback()){
+                            callback.onOpenVideo(deviceBean);
+                        }
                     }
 
 
                 }
 
-                if(checkCallback()){
-                    callback.onOpenVideo(result, nodeId, deviceId);
-                }
+
             }
 
             @Override
@@ -86,6 +94,9 @@ public class VideoCommon {
                 if(result == 0){
                     User user = roomCommon.findUserById(nodeId);
                     if(user != null){
+                        if(user.getNodeId() == getRoomCommon().getMe().getNodeId()){
+                            IS_CAMERA_OPEN = CAMERA_OFF;
+                        }
                         user.setVideoOn(false);
                     }
                     DeviceBean deviceBean = findDeviceById(deviceId);
@@ -128,10 +139,24 @@ public class VideoCommon {
     public int getSurplusVideo(){
         return video.getSurplusVideo();
     }
+    public boolean openVideo(int nodeId){
+        if(video.openVideo(nodeId)){
+            IS_CAMERA_OPEN = CAMERA_ON;
+            return true;
+        }
+        return false;
+    }
+    public boolean closeVideo(int nodeId){
+        if(video.closeVideo(nodeId)){
+            IS_CAMERA_OPEN = CAMERA_OFF;
+            return true;
+        }
+        return false;
+    }
     public boolean openVideo(int nodeId, String deviceId){
         return video.openVideo(nodeId, deviceId);
     }
-    public boolean closeVideo(int nodeId, String deviceId){
+    public  boolean closeVideo(int nodeId, String deviceId){
         return video.closeVideo(nodeId, deviceId);
     }
     protected boolean checkCallback(){
@@ -141,7 +166,7 @@ public class VideoCommon {
         return true;
     }
     public interface VideoCallback{
-         void onOpenVideo(int result, int nodeId, String deviceId);
+         void onOpenVideo(DeviceBean deviceBean);
          void onCloseVideo(int result, int nodeId, String deviceId);
          void onRequestOpenVideo(int nodeId, String deviceId);
          void onVideoData(VideoBean videoBean);

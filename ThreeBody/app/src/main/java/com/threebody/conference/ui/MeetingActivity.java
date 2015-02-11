@@ -41,6 +41,7 @@ public class MeetingActivity extends BaseActivity {
     @InjectView(R.id.flVideo)FrameLayout flVideo;
     @InjectView(R.id.flSet)FrameLayout flSet;
     @InjectView(R.id.flExit)FrameLayout flExit;
+
     RoomCommonImpl roomCommon;
     ChatCommonImpl chatCommon;
     AudioCommonImpl audioCommon;
@@ -250,6 +251,8 @@ public class MeetingActivity extends BaseActivity {
     public void refreshVideo(){
         mVideo.refresh(videoCommon.getDevices());
     }
+
+
 
     @Override
     public void onBackPressed() {
