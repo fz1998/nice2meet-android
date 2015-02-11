@@ -1,6 +1,6 @@
 package com.threebody.sdk.common;
 
-import com.threebody.sdk.domain.Message;
+import com.threebody.sdk.domain.MessageBean;
 
 import org.st.Chat;
 
@@ -19,7 +19,7 @@ public abstract class ChatCommon {
     protected Chat chat;
     private Chat.ChatListener listener;
     ChatCallback callback;
-    Map<Integer, List<Message>> messageMap;
+    Map<Integer, List<MessageBean>> messageMap;
     RoomCommon roomCommon;
     protected ChatCommon(RoomCommon roomCommon, ChatCallback callback){
         this.callback = callback;
@@ -31,12 +31,12 @@ public abstract class ChatCommon {
 
     }
 
-    public Map<Integer, List<Message>> getMessageMap() {
+    public Map<Integer, List<MessageBean>> getMessageMap() {
         return messageMap;
     }
 
     public boolean sendPublicMessage(String message){
-        Message msg = new Message(message, "", 0, true, true);
+        MessageBean msg = new MessageBean(message, "", 0, true, true);
         addMessage(msg);
         if(chat != null){
            return chat.sendPublicMessage(message);
@@ -44,7 +44,7 @@ public abstract class ChatCommon {
         return false;
     }
     public boolean sendPrivateMessage(int nodeId, String message){
-        Message msg = new Message(message, roomCommon.getMe().getUserName(), roomCommon.getMe().getNodeId(), false, true);
+        MessageBean msg = new MessageBean(message, roomCommon.getMe().getUserName(), roomCommon.getMe().getNodeId(), false, true);
         msg.setToNodeId(nodeId);
         addMessage(msg);
         if(chat != null){
@@ -62,7 +62,7 @@ public abstract class ChatCommon {
         listener = new Chat.ChatListener() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
-                Message msg = new Message(message, "", nodeId, true, false);
+                MessageBean msg = new MessageBean(message, "", nodeId, true, false);
                 addMessage(msg);
                 if(checkCallback()){
                     callback.onReceivePublicMessage(nodeId, message);
@@ -71,7 +71,7 @@ public abstract class ChatCommon {
 
             @Override
             public void onReceivePrivateMessage(int nodeId, String message) {
-                Message msg = new Message(message,"",nodeId, false, false);
+                MessageBean msg = new MessageBean(message,"",nodeId, false, false);
                 addMessage(msg);
                 if(checkCallback()){
                     callback.onReceivePrivateMessage(nodeId, message);
@@ -93,12 +93,12 @@ public abstract class ChatCommon {
         }
         return true;
     }
-    private void addMessage(Message message){
-        if(!checkUser(message.getNodeId())){
-            messageMap.put(message.getNodeId(), new ArrayList<Message>());
+    private void addMessage(MessageBean messageBean){
+        if(!checkUser(messageBean.getNodeId())){
+            messageMap.put(messageBean.getNodeId(), new ArrayList<MessageBean>());
         }
-        List<Message> messages = messageMap.get(message.getNodeId());
-        messages.add(message);
+        List<MessageBean> messageBeans = messageMap.get(messageBean.getNodeId());
+        messageBeans.add(messageBean);
     }
     private boolean checkUser(int nodeId){
         for (Integer key : messageMap.keySet()){

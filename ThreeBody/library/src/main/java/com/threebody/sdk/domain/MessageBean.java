@@ -3,7 +3,7 @@ package com.threebody.sdk.domain;
 /**
  * Created by xiaxin on 15-1-17.
  */
-public class Message {
+public class MessageBean {
     String uid;
     String message;
     String name;
@@ -12,10 +12,10 @@ public class Message {
     boolean isPublic;
     boolean isMe;
 
-    public Message() {
+    public MessageBean() {
     }
 
-    public Message(String message, String name, int nodeId, boolean isPublic, boolean isMe) {
+    public MessageBean(String message, String name, int nodeId, boolean isPublic, boolean isMe) {
         this.message = message;
         this.name = name;
         this.nodeId = nodeId;
