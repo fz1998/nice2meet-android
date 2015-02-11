@@ -76,7 +76,7 @@ public class MeetingActivity extends BaseActivity {
         mFragments.add(mVideo);
         mFragments.add(mSet);
         getSupportFragmentManager().beginTransaction().add(R.id.llContainer, mVideo).commit();
-//        initData();
+        initData();
     }
 
     @Override
@@ -176,7 +176,7 @@ public class MeetingActivity extends BaseActivity {
         chatCommon = new ChatCommonImpl(roomCommon, new ChatCommon.ChatCallback() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
-//                    mMessage.receivePublicMessage();
+                    mMessage.receivePublicMessage();
             }
 
             @Override
@@ -232,7 +232,7 @@ public class MeetingActivity extends BaseActivity {
 
             @Override
             public void onVideoData(VideoBean videoBean) {
-//                mVideo.receiVideoBean(videoBean);
+                mVideo.receiVideoBean(videoBean);
             }
         });
     }
