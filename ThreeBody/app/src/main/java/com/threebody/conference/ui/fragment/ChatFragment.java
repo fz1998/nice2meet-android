@@ -15,9 +15,10 @@ import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.conference.ui.adapter.MessageAdapter;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
+import com.threebody.sdk.common.ChatCommon;
+import com.threebody.sdk.common.impl.ChatCommonImpl;
 import com.threebody.sdk.domain.Message;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.InjectView;
@@ -31,6 +32,8 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @InjectView(R.id.btnSend)Button btnSend;
     @InjectView(R.id.etSend)EditText etSend;
     MessageAdapter adapter;
+    List<Message> messages;
+    ChatCommonImpl chatCommon;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, null);
@@ -44,17 +47,7 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         srl.setOnRefreshListener(this);
         srl.setColorScheme(android.R.color.holo_green_dark, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        List<Message> messages = new ArrayList<>();
-        for(int i = 0; i < 25; i++){
-            Message message = new Message();
-            message.setName("user"+i%2);
-            message.setMe(i%2 == 0);
-            message.setMessage("Hello World!");
-            messages.add(message);
-        }
-        adapter = new MessageAdapter(getActivity(), messages);
-        lvChat.setAdapter(adapter);
-        btnSend.setOnClickListener(this);
+        chatCommon = ((MeetingActivity)getActivity()).getChatCommon();
     }
 
     @Override
@@ -74,10 +67,20 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         super.onClick(v);
         switch (v.getId()){
             case R.id.btnSend:
-//                sendMessage();
+                sendMessage();
                 break;
             default:
                 break;
+        }
+    }
+    public void receivePublicMessage(){
+        messages = chatCommon.getMessageMap().get(ChatCommon.PUBLIC);
+        if(messages != null){
+            if(adapter == null){
+                adapter = new MessageAdapter(getActivity(), messages);
+            }else{
+                adapter.refresh(messages);
+            }
         }
     }
 }

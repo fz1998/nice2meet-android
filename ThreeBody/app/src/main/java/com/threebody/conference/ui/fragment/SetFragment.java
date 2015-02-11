@@ -7,13 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.threebody.conference.R;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.sdk.common.AudioCommon;
 import com.threebody.sdk.common.RoomCommon;
 import com.threebody.sdk.common.STSystem;
+import com.threebody.sdk.common.VideoCommon;
 
 import butterknife.InjectView;
 
@@ -51,6 +51,7 @@ public class SetFragment extends BaseFragment {
                         ivAudio.setText(R.string.closeAudio);
 
                     }else{
+                        AudioCommon.IS_MIC_ON = AudioCommon.MIC_HANDS_UP;
                         ivAudio.setText(R.string.handsup);
 
                     }
@@ -65,7 +66,23 @@ public class SetFragment extends BaseFragment {
                 }
                 break;
             case R.id.ivVideo:
+                if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_OFF){
+                    if(openVideo()){
+                        ivAudio.setText(R.string.closeAudio);
+                    }else{
+                        VideoCommon.IS_CAMERA_OPEN = VideoCommon.CAMERA_HOLD;
+                        ivAudio.setText(R.string.handsup);
 
+                    }
+                }else if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_ON){
+                    if(closeVideo()){
+                        ivAudio.setText(R.string.openAudio);
+                    }else{
+                        ToastUtil.showToast(getActivity(), R.string.closefailed);
+                    }
+                }else{
+                    ToastUtil.showToast(getActivity(), R.string.handsTip);
+                }
                 break;
         }
     }
@@ -86,6 +103,12 @@ public class SetFragment extends BaseFragment {
             ivAudio.setText(R.string.openAudio);
         }
 
+    }
+    private boolean openVideo(){
+        return roomCommon.getVideoCommon().openVideo(roomCommon.getMe().getNodeId());
+    }
+    private boolean closeVideo(){
+        return roomCommon.getVideoCommon().closeVideo(roomCommon.getMe().getNodeId());
     }
     public void openLocalVideo(){
         if(ivVideo != null){

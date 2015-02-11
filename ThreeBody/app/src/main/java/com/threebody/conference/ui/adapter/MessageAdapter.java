@@ -86,8 +86,9 @@ public class MessageAdapter extends BaseAdapter {
         holder.tvMessage.setText(message.getMessage());
         return convertView;
     }
-    public void refresh(){
-
+    public void refresh(List<Message> messages){
+        this.messages = messages;
+        notifyDataSetChanged();
     }
     class ViewHolder {
         TextView tvName;

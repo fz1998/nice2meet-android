@@ -23,6 +23,7 @@ public class VideoFragment extends BaseFragment {
     VideoShowFragmenet videoUp;
     VideoShowFragmenet videoDown;
     DeviceBean deviceUp, deviceDown;
+    DeviceBean device1, device2;
     VideoCommonImpl videoCommon;
 
     @Override
@@ -56,18 +57,12 @@ public class VideoFragment extends BaseFragment {
         videoCommon = ((MeetingActivity)getActivity()).getVideoCommon();
     }
     public void receiVideoBean(VideoBean videoBean){
-//        if(deviceUp != null && deviceUp.getDeviceId().equals(videoBean.getDeviceId())){
-//            videoUp.setVideoBean(videoBean);
-//        }else if(deviceDown != null && deviceDown.getDeviceId().equals(videoBean.getDeviceId())){
-//            videoDown.setVideoBean(videoBean);
-//        }
-        videoUp.setVideoBean(videoBean);
+
     }
 
     public void refresh(List<DeviceBean> devices) {
          int i = 0;
-        DeviceBean device1 = null;
-        DeviceBean device2 = null;
+
         if(devices != null && !devices.isEmpty()){
             for (DeviceBean deviceBean : devices){
                if(deviceBean.isVideoChecked()){
@@ -83,29 +78,21 @@ public class VideoFragment extends BaseFragment {
         checkDevice(device1, device2);
     }
     private void checkDevice(DeviceBean device1, DeviceBean device2){
+        if(device1 == null){
+            return;
+        }else if(device2 == null){
 
-        if(deviceUp != null){
-           if(deviceUp.isVideoChecked()){
-               videoCommon.closeVideo(deviceUp.getNodeId(), deviceUp.getDeviceId());
-           }
         }
-        if(deviceDown != null){
-            if(deviceDown.isVideoChecked()){
-                videoCommon.closeVideo(deviceDown.getNodeId(), deviceDown.getDeviceId());
-            }
-        }
-        if(device1 != null){
-            deviceUp = device1;
-            videoCommon.openVideo(deviceUp.getNodeId(), deviceUp.getDeviceId());
-            videoUp.setDevice(deviceUp);
-        }
-        if(device2 != null){
-            deviceDown = device2;
-            videoCommon.openVideo(deviceDown.getNodeId(), deviceDown.getDeviceId());
-            videoDown.setDevice(deviceDown);
-        }
-
     }
 
 
+    public void addDevice(DeviceBean deviceBean) {
+        if(deviceUp == null){
+            deviceUp = deviceBean;
+            videoUp.setDevice(deviceUp);
+        }else if(deviceDown == null){
+            deviceDown = deviceBean;
+            videoDown.setDevice(deviceBean);
+        }
+    }
 }

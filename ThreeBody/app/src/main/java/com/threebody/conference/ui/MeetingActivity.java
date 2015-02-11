@@ -22,6 +22,7 @@ import com.threebody.sdk.common.impl.AudioCommonImpl;
 import com.threebody.sdk.common.impl.ChatCommonImpl;
 import com.threebody.sdk.common.impl.RoomCommonImpl;
 import com.threebody.sdk.common.impl.VideoCommonImpl;
+import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
 
 import org.st.User;
@@ -173,7 +174,7 @@ public class MeetingActivity extends BaseActivity {
         chatCommon = new ChatCommonImpl(roomCommon, new ChatCommon.ChatCallback() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
-
+                    mMessage.receivePublicMessage();
             }
 
             @Override
@@ -208,8 +209,9 @@ public class MeetingActivity extends BaseActivity {
         });
         videoCommon = new VideoCommonImpl(roomCommon, new VideoCommon.VideoCallback() {
             @Override
-            public void onOpenVideo(int result, int nodeId, String deviceId) {
-                if(nodeId == roomCommon.getMe().getNodeId()){
+            public void onOpenVideo(DeviceBean deviceBean) {
+                mVideo.addDevice(deviceBean);
+                if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
                     mSet.openLocalVideo();
                 }
             }

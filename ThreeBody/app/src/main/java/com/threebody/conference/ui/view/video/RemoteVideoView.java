@@ -1,27 +1,21 @@
 package com.threebody.conference.ui.view.video;
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout.LayoutParams;
+import android.widget.FrameLayout;
 
 import com.threebody.sdk.domain.VideoBean;
 import com.threebody.sdk.util.LoggerUtil;
 
 import java.nio.ByteBuffer;
 
-/**
- * 视频视图
- * 
- * @author Sean.xie
- * 
- */
 public class RemoteVideoView extends View implements VideoView{
 	private Bitmap videoBit = null;
 	private Context context;
@@ -134,7 +128,7 @@ public class RemoteVideoView extends View implements VideoView{
 //			invalidate();
 //		}else{
 //			setBackgroundColor(0);
-			videoBit = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+			videoBit = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 			isDrawing = true;
 //		}
 				
@@ -170,6 +164,7 @@ public class RemoteVideoView extends View implements VideoView{
 					&& videoBean.getVideoData().length > 0) {
 				LoggerUtil.info(getClass().getName(), "444444");
 				buffer = ByteBuffer.wrap(videoBean.getVideoData());
+                LoggerUtil.info(getClass().getName(), "buffer length = "+buffer.remaining());
 //				log.info("555555");
 //				if(buffer != null && videoBit != null){
 					videoBit.copyPixelsFromBuffer(buffer);
@@ -191,7 +186,7 @@ public class RemoteVideoView extends View implements VideoView{
 					videoBit.recycle();
 				}
 				LoggerUtil.info(getClass().getName(), "local");
-				videoBit = Bitmap.createBitmap(videoBean.getVideoDataByInt(), 176, 144, Config.RGB_565);
+				videoBit = Bitmap.createBitmap(videoBean.getVideoDataByInt(), 176, 144, Bitmap.Config.RGB_565);
 //                buffer = ByteBuffer.wrap(videoBean.getVideoData());
 //                videoBit.copyPixelsFromBuffer(buffer);
 				Matrix m = new Matrix();
@@ -294,9 +289,9 @@ public class RemoteVideoView extends View implements VideoView{
 	public void setLayoutParam(int width, int height) {
         mWidth = width;
         mHeight = height;
-		LayoutParams params = (LayoutParams) getLayoutParams();
-		params.width = LayoutParams.MATCH_PARENT;
-		params.height = LayoutParams.MATCH_PARENT;
+		FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
+		params.width = FrameLayout.LayoutParams.MATCH_PARENT;
+		params.height = FrameLayout.LayoutParams.MATCH_PARENT;
 		params.setMargins(0, 0, 0, 0);
 		setLayoutParams(params);
 	}
