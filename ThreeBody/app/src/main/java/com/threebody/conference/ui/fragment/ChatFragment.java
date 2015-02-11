@@ -1,6 +1,7 @@
 package com.threebody.conference.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -74,13 +75,26 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
     }
     public void receivePublicMessage(){
-        messages = chatCommon.getMessageMap().get(ChatCommon.PUBLIC);
-        if(messages != null){
-            if(adapter == null){
-                adapter = new MessageAdapter(getActivity(), messages);
-            }else{
-                adapter.refresh(messages);
+        android.os.Message msg = new android.os.Message();
+        msg.what = ChatCommon.RECEIVE_PUBLIC_MESSAGE;
+        handler.sendMessage(msg);
+    }
+    public Handler handler = new Handler(){
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case ChatCommon.RECEIVE_PUBLIC_MESSAGE:
+                    messages = chatCommon.getMessageMap().get(ChatCommon.PUBLIC);
+                    if(messages != null){
+                        if(adapter == null){
+                            adapter = new MessageAdapter(getActivity(), messages);
+                        }else{
+                            adapter.refresh(messages);
+                        }
+                    }
+                    break;
             }
         }
-    }
+    };
 }

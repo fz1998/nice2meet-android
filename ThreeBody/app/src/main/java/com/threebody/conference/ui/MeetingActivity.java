@@ -73,9 +73,8 @@ public class MeetingActivity extends BaseActivity {
         mFragments.add(mMessage);
         mFragments.add(mVideo);
         mFragments.add(mSet);
-
-        initData();
-        getSupportFragmentManager().beginTransaction().add(R.id.llContainer, mVideo).commit();
+//        getSupportFragmentManager().beginTransaction().add(R.id.llContainer, mVideo).commit();
+//        initData();
     }
 
     @Override
@@ -175,7 +174,7 @@ public class MeetingActivity extends BaseActivity {
         chatCommon = new ChatCommonImpl(roomCommon, new ChatCommon.ChatCallback() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
-                    mMessage.receivePublicMessage();
+//                    mMessage.receivePublicMessage();
             }
 
             @Override
@@ -253,6 +252,11 @@ public class MeetingActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 
     @Override
     public void onBackPressed() {

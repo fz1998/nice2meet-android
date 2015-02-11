@@ -19,6 +19,7 @@ public class VideoCommon {
     public static final int CAMERA_ON = 1;
     public static final int CAMERA_HOLD = 2;
     public static  int IS_CAMERA_OPEN ;
+    public static final int NEW_DEVICE = 40001;
     RoomCommon roomCommon;
     protected VideoCallback callback;
     Video.VideoListener listener;

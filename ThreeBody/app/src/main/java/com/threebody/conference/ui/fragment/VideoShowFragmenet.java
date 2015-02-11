@@ -1,6 +1,8 @@
 package com.threebody.conference.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +10,13 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.threebody.conference.R;
 import com.threebody.conference.ui.view.video.RemoteVideoView;
+import com.threebody.sdk.common.VideoCommon;
 import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
 
@@ -23,6 +27,7 @@ import butterknife.InjectView;
  */
 public class VideoShowFragmenet extends BaseFragment {
     @InjectView(R.id.tvUserName)TextView tvUserName;
+    @InjectView(R.id.flVideoFragment)LinearLayout llFlFragment;
     @InjectView(R.id.ivVideoStatus)ImageView ivVideoStatus;
     @InjectView(R.id.ivAudioStatus)ImageView ivAudioStatus;
     @InjectView(R.id.flVideoView)FrameLayout flVideo;
@@ -69,11 +74,27 @@ public class VideoShowFragmenet extends BaseFragment {
         videoView.setVideoBean(videoBean);
     }
     public void setDevice(DeviceBean device){
-        tvUserName.setText(device.getUser().getUserName());
-        if(device.getUser().isAudioOn()){
-            ivAudioStatus.setImageResource(R.drawable.status_sound);
-        }else{
-            ivAudioStatus.setImageResource(R.drawable.status_soundoff);
-        }
+        Message msg = new Message();
+        msg.what = VideoCommon.NEW_DEVICE;
+        msg.obj = device;
+        handler.sendMessage(msg);
     }
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case VideoCommon.NEW_DEVICE:
+                    llFlFragment.setVisibility(View.VISIBLE);
+                    DeviceBean device = (DeviceBean)msg.obj;
+                    tvUserName.setText(device.getUser().getUserName());
+                    if(device.getUser().isAudioOn()){
+                        ivAudioStatus.setImageResource(R.drawable.status_sound);
+                    }else{
+                        ivAudioStatus.setImageResource(R.drawable.status_soundoff);
+                    }
+                    break;
+            }
+        }
+    };
 }

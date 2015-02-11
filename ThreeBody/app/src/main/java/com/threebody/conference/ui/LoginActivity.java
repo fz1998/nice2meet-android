@@ -23,11 +23,12 @@ import butterknife.InjectView;
 
 
 public class LoginActivity extends BaseActivity {
+    public static boolean IS_SYSTEM_INIT = false;
     @InjectView(R.id.etNum)EditText etNum;
     @InjectView(R.id.etName)EditText etName;
     @InjectView(R.id.etPassword)EditText etPassword;
     @InjectView(R.id.btnAddIn)Button btnAddIn;
-
+    RoomCommonImpl roomCommon ;
     @Override
     protected void initUI() {
         setContentView(R.layout.activity_login);
@@ -88,24 +89,43 @@ public class LoginActivity extends BaseActivity {
 //                    String token = result.getAccess_tocken();
 //                    String url = result.getRoom_uri();
                     String token = result.getAccess_tocken();
-
-                     STSystem.getInstance().init(new STSystem.ConferenceSystemCallback() {
-                         @Override
-                         public void onInitResult(int result) {
-                             LoggerUtil.info(getClass().getName(), "result = "+result);
-                             RoomCommonImpl roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
-                                 @Override
-                                 public void onJoinResult(int result) {
-                                     LoggerUtil.info(getClass().getName(), "join result = "+result);
-                                     Intent intent = new Intent();
-                                     intent.setClass(LoginActivity.this, MeetingActivity.class);
-                                     startActivity(intent);
-                                 }
-                             }, num);
-                             STSystem.getInstance().createRoom(roomCommon);
-                             roomCommon.join("12221",name, password);
-                         }
-                     }, url, token);
+                    if(!IS_SYSTEM_INIT){
+                        STSystem.getInstance().init(new STSystem.ConferenceSystemCallback() {
+                            @Override
+                            public void onInitResult(int result) {
+                                LoggerUtil.info(getClass().getName(), "result = "+result);
+                                IS_SYSTEM_INIT = true;
+                                roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
+                                    @Override
+                                    public void onJoinResult(int result) {
+                                        LoggerUtil.info(getClass().getName(), "join result = "+result);
+                                        Intent intent = new Intent();
+                                        intent.setClass(LoginActivity.this, MeetingActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }, num);
+                                STSystem.getInstance().createRoom(roomCommon);
+                                roomCommon.join("12221",name, password);
+                            }
+                        }, url, token);
+                    }else{
+                        roomCommon = (RoomCommonImpl)STSystem.getInstance().findCommonById(num);
+                        if(roomCommon == null){
+                            roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
+                                @Override
+                                public void onJoinResult(int result) {
+                                    LoggerUtil.info(getClass().getName(), "join result = "+result);
+                                    Intent intent = new Intent();
+                                    intent.setClass(LoginActivity.this, MeetingActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }, num);
+                        }
+                        STSystem.getInstance().createRoom(roomCommon);
+                        roomCommon.join("11221", name, password);
+                    }
 
                 }
             }

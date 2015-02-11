@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public abstract class ChatCommon {
     public static final int PUBLIC = 0;
+    public static final int RECEIVE_PUBLIC_MESSAGE = 10000;
+    public static final int RECEIVI_PRIVATE_MESSAG = 10001;
     protected Chat chat;
     private Chat.ChatListener listener;
     ChatCallback callback;
