@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/flVideoFragment"
-    android:visibility="gone">
+    android:visibility="visible">
     <include layout="@layout/layout_video_title"/>
     <FrameLayout
         android:id="@+id/flVideoView"

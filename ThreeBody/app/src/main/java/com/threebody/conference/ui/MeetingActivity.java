@@ -2,6 +2,8 @@ package com.threebody.conference.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -73,7 +75,7 @@ public class MeetingActivity extends BaseActivity {
         mFragments.add(mMessage);
         mFragments.add(mVideo);
         mFragments.add(mSet);
-//        getSupportFragmentManager().beginTransaction().add(R.id.llContainer, mVideo).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.llContainer, mVideo).commit();
 //        initData();
     }
 
@@ -210,10 +212,10 @@ public class MeetingActivity extends BaseActivity {
         videoCommon = new VideoCommonImpl(roomCommon, new VideoCommon.VideoCallback() {
             @Override
             public void onOpenVideo(DeviceBean deviceBean) {
-                mVideo.addDevice(deviceBean);
-                if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
-                    mSet.openLocalVideo();
-                }
+                Message msg = new Message();
+                msg.what = VideoCommon.NEW_DEVICE;
+                msg.obj = deviceBean;
+                handler.sendMessage(msg);
             }
 
             @Override
@@ -230,7 +232,7 @@ public class MeetingActivity extends BaseActivity {
 
             @Override
             public void onVideoData(VideoBean videoBean) {
-                mVideo.receiVideoBean(videoBean);
+//                mVideo.receiVideoBean(videoBean);
             }
         });
     }
@@ -262,4 +264,19 @@ public class MeetingActivity extends BaseActivity {
     public void onBackPressed() {
         showDialog();
     }
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.what){
+                case VideoCommon.NEW_DEVICE:
+                    DeviceBean deviceBean = (DeviceBean)msg.obj;
+                    mVideo.addDevice(deviceBean);
+                    if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
+                        mSet.openLocalVideo();
+                    }
+                    break;
+            }
+        }
+    };
 }

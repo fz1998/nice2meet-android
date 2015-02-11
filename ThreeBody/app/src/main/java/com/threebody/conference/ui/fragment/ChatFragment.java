@@ -18,7 +18,7 @@ import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.sdk.common.ChatCommon;
 import com.threebody.sdk.common.impl.ChatCommonImpl;
-import com.threebody.sdk.domain.Message;
+import com.threebody.sdk.domain.MessageBean;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @InjectView(R.id.btnSend)Button btnSend;
     @InjectView(R.id.etSend)EditText etSend;
     MessageAdapter adapter;
-    List<Message> messages;
+    List<MessageBean> messageBeans;
     ChatCommonImpl chatCommon;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -85,12 +85,12 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             super.handleMessage(msg);
             switch (msg.what){
                 case ChatCommon.RECEIVE_PUBLIC_MESSAGE:
-                    messages = chatCommon.getMessageMap().get(ChatCommon.PUBLIC);
-                    if(messages != null){
+                    messageBeans = chatCommon.getMessageMap().get(ChatCommon.PUBLIC);
+                    if(messageBeans != null){
                         if(adapter == null){
-                            adapter = new MessageAdapter(getActivity(), messages);
+                            adapter = new MessageAdapter(getActivity(), messageBeans);
                         }else{
-                            adapter.refresh(messages);
+                            adapter.refresh(messageBeans);
                         }
                     }
                     break;

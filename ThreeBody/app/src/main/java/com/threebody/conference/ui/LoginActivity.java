@@ -109,23 +109,24 @@ public class LoginActivity extends BaseActivity {
                                 roomCommon.join("12221",name, password);
                             }
                         }, url, token);
-                    }else{
-                        roomCommon = (RoomCommonImpl)STSystem.getInstance().findCommonById(num);
-                        if(roomCommon == null){
-                            roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
-                                @Override
-                                public void onJoinResult(int result) {
-                                    LoggerUtil.info(getClass().getName(), "join result = "+result);
-                                    Intent intent = new Intent();
-                                    intent.setClass(LoginActivity.this, MeetingActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }, num);
-                        }
-                        STSystem.getInstance().createRoom(roomCommon);
-                        roomCommon.join("11221", name, password);
                     }
+//                    else{
+//                        roomCommon = (RoomCommonImpl)STSystem.getInstance().findCommonById(num);
+//                        if(roomCommon == null){
+//                            roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
+//                                @Override
+//                                public void onJoinResult(int result) {
+//                                    LoggerUtil.info(getClass().getName(), "join result = "+result);
+//                                    Intent intent = new Intent();
+//                                    intent.setClass(LoginActivity.this, MeetingActivity.class);
+//                                    startActivity(intent);
+//                                    finish();
+//                                }
+//                            }, num);
+//                        }
+//                        STSystem.getInstance().createRoom(roomCommon);
+//                        roomCommon.join("11221", name, password);
+//                    }
 
                 }
             }

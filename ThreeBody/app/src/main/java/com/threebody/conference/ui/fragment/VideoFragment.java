@@ -37,12 +37,12 @@ public class VideoFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(deviceUp != null){
-            videoUp.setDevice(deviceUp);
-        }
-        if(deviceDown != null){
-            videoDown.setDevice(deviceDown);
-        }
+//        if(deviceUp != null){
+//            videoUp.setDevice(deviceUp);
+//        }
+//        if(deviceDown != null){
+//            videoDown.setDevice(deviceDown);
+//        }
 
     }
 

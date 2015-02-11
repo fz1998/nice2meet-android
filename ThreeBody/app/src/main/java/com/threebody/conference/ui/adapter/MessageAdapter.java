@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.threebody.conference.R;
-import com.threebody.sdk.domain.Message;
+import com.threebody.sdk.domain.MessageBean;
 
 import java.util.List;
 
@@ -18,21 +18,21 @@ import java.util.List;
  */
 public class MessageAdapter extends BaseAdapter {
     Context context;
-    List<Message> messages;
+    List<MessageBean> messageBeans;
 
-    public MessageAdapter(Context context, List<Message> messages) {
+    public MessageAdapter(Context context, List<MessageBean> messageBeans) {
         this.context = context;
-        this.messages = messages;
+        this.messageBeans = messageBeans;
     }
 
     @Override
     public int getCount() {
-        return messages.size();
+        return messageBeans.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return messages.get(position);
+        return messageBeans.get(position);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MessageAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if(messages.get(position).isMe()){
+        if(messageBeans.get(position).isMe()){
             return 1;
         }
         return 2;
@@ -57,7 +57,7 @@ public class MessageAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         int type = getItemViewType(position);
         ViewHolder holder = null;
-        Message message = messages.get(position);
+        MessageBean messageBean = messageBeans.get(position);
         if(type == 1){
             if(convertView == null){
                 convertView = LayoutInflater.from(context).inflate(R.layout.item_message_left, null);
@@ -82,12 +82,12 @@ public class MessageAdapter extends BaseAdapter {
                 holder = (ViewHolder)convertView.getTag();
             }
         }
-        holder.tvName.setText(message.getName());
-        holder.tvMessage.setText(message.getMessage());
+        holder.tvName.setText(messageBean.getName());
+        holder.tvMessage.setText(messageBean.getMessage());
         return convertView;
     }
-    public void refresh(List<Message> messages){
-        this.messages = messages;
+    public void refresh(List<MessageBean> messageBeans){
+        this.messageBeans = messageBeans;
         notifyDataSetChanged();
     }
     class ViewHolder {
