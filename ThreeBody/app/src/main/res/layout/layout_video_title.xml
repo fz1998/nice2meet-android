@@ -10,8 +10,7 @@
         android:layout_weight="1"
         android:id="@+id/tvUserName"
         android:textSize="@dimen/TextSize17"
-        android:textColor="@color/white"
-        android:text="alice"/>
+        android:textColor="@color/white"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

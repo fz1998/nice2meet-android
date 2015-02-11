@@ -8,6 +8,7 @@ import android.widget.EditText;
 import com.threebody.conference.R;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
+import com.threebody.conference.ui.view.HttpProgressDialog;
 import com.threebody.sdk.common.RoomCommon;
 import com.threebody.sdk.common.STSystem;
 import com.threebody.sdk.common.impl.RoomCommonImpl;
@@ -29,6 +30,7 @@ public class LoginActivity extends BaseActivity {
     @InjectView(R.id.etPassword)EditText etPassword;
     @InjectView(R.id.btnAddIn)Button btnAddIn;
     RoomCommonImpl roomCommon ;
+    HttpProgressDialog dialog;
     @Override
     protected void initUI() {
         setContentView(R.layout.activity_login);
@@ -66,6 +68,10 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void joinConference(){
+        if(dialog == null){
+            dialog = new HttpProgressDialog("");
+        }
+        getSupportFragmentManager().beginTransaction().add(dialog,"").commit();
 //        final String num = etNum.getText().toString().trim();
 //        String name = etName.getText().toString().trim();
 //        String password = etPassword.getText().toString().trim();
