@@ -13,6 +13,7 @@ import com.threebody.conference.R;
 import com.threebody.conference.ui.fragment.ChatFragment;
 import com.threebody.conference.ui.fragment.SetFragment;
 import com.threebody.conference.ui.fragment.VideoFragment;
+import com.threebody.conference.ui.fragment.VideoSetFragment;
 import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.sdk.common.AudioCommon;
@@ -52,6 +53,7 @@ public class MeetingActivity extends BaseActivity {
     ChatFragment mMessage;
     VideoFragment mVideo;
     SetFragment mSet;
+    VideoSetFragment mVideoSet;
     List<FrameLayout> tabs;
     List<Fragment> mFragments;
     int index = 1;
@@ -71,6 +73,7 @@ public class MeetingActivity extends BaseActivity {
         mMessage = new ChatFragment();
         mVideo = new VideoFragment();
         mSet = new SetFragment();
+        mVideoSet = new VideoSetFragment();
         mFragments = new ArrayList<Fragment>();
         mFragments.add(mMessage);
         mFragments.add(mVideo);
@@ -235,6 +238,18 @@ public class MeetingActivity extends BaseActivity {
                 mVideo.receiVideoBean(videoBean);
             }
         });
+//        initDevice();
+    }
+    private void initDevice(){
+        for(int i = 0; i < 10; i++){
+            User user = new User();
+            user.setUserName("user"+i);
+            user.setNodeId(1000+i);
+            roomCommon.listener.onUserJoin(user);
+        }
+        for(int i = 0; i < 10; i++){
+            videoCommon.listener.onOpenVideo(0, 1000+i, "device"+i);
+        }
     }
 
     public VideoCommonImpl getVideoCommon() {
@@ -245,11 +260,15 @@ public class MeetingActivity extends BaseActivity {
         return chatCommon;
     }
 
-    public void sendMessage(String message){
-        chatCommon.sendPublicMessage(message);
+    public RoomCommonImpl getRoomCommon() {
+        return roomCommon;
     }
 
+
+
     public void refreshVideo(){
+
+        FragmentUtil.moveToLeftFragment(this, R.id.llContainer, mVideo);
         mVideo.refresh(videoCommon.getDevices());
     }
 
@@ -279,4 +298,8 @@ public class MeetingActivity extends BaseActivity {
             }
         }
     };
+
+    public void changeToVideoSet() {
+        FragmentUtil.moveToRightFragment(this, R.id.llContainer, mVideoSet);
+    }
 }

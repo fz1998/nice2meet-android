@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.threebody.conference.R;
-import com.threebody.conference.ui.BaseActivity;
 import com.threebody.conference.ui.MeetingActivity;
-import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.sdk.common.impl.VideoCommonImpl;
 import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
@@ -37,12 +35,12 @@ public class VideoFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        if(deviceUp != null){
-//            videoUp.setDevice(deviceUp);
-//        }
-//        if(deviceDown != null){
-//            videoDown.setDevice(deviceDown);
-//        }
+        if(deviceUp != null){
+            videoUp.setDevice(deviceUp);
+        }
+        if(deviceDown != null){
+            videoDown.setDevice(deviceDown);
+        }
 
     }
 
@@ -63,7 +61,7 @@ public class VideoFragment extends BaseFragment {
         videoDown.getView().setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                FragmentUtil.moveToRightFragment((BaseActivity)getActivity(), R.id.llContainer, new VideoSetFragment());
+                ((MeetingActivity)getActivity()).changeToVideoSet();
                 return true;
             }
         });
@@ -119,6 +117,12 @@ public class VideoFragment extends BaseFragment {
             }
         }
         checkDevice(device1, device2);
+        if(deviceUp != null){
+            videoUp.setDevice(deviceUp);
+        }
+        if(deviceDown != null){
+            videoDown.setDevice(deviceDown);
+        }
     }
     private void checkDevice(DeviceBean device1, DeviceBean device2){
         if(device1 == null){
@@ -131,8 +135,10 @@ public class VideoFragment extends BaseFragment {
     }
     private void checkOne(){
         if(deviceUp != null && deviceUp.getDeviceId().equals(device1.getDeviceId())){
+
             return;
         }else if(deviceDown != null && deviceDown.getDeviceId().equals(device1.getDeviceId())){
+            deviceDown = device1;
             return;
         }else{
             deviceUp = device1;

@@ -18,6 +18,7 @@ import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.sdk.common.ChatCommon;
 import com.threebody.sdk.common.impl.ChatCommonImpl;
+import com.threebody.sdk.common.impl.RoomCommonImpl;
 import com.threebody.sdk.domain.MessageBean;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     MessageAdapter adapter;
     List<MessageBean> messageBeans;
     ChatCommonImpl chatCommon;
+    RoomCommonImpl roomCommon;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, null);
@@ -49,6 +51,11 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         srl.setColorScheme(android.R.color.holo_green_dark, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
         chatCommon = ((MeetingActivity)getActivity()).getChatCommon();
+        roomCommon = ((MeetingActivity)getActivity()).getRoomCommon();
+        btnSend.setOnClickListener(this);
+        messageBeans = chatCommon.getMessageList(ChatCommon.PUBLIC);
+        adapter = new MessageAdapter(getActivity(), messageBeans);
+        lvChat.setAdapter(adapter);
     }
 
     @Override
@@ -60,7 +67,16 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             ToastUtil.showToast(getActivity(), R.string.noSendMessage);
             return;
         }
-        ((MeetingActivity)getActivity()).sendMessage(etSend.getText().toString());
+        MessageBean messageBean = new MessageBean();
+        messageBean.setMe(true);
+        messageBean.setMessage(etSend.getText().toString());
+        messageBean.setPublic(true);
+        messageBean.setName(roomCommon.getMe().getUserName());
+        messageBean.setNodeId(ChatCommon.PUBLIC);
+        messageBeans.add(messageBean);
+        adapter.refresh(messageBeans);
+        chatCommon.sendMessage(messageBean);
+
     }
 
     @Override
@@ -85,13 +101,8 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             super.handleMessage(msg);
             switch (msg.what){
                 case ChatCommon.RECEIVE_PUBLIC_MESSAGE:
-                    messageBeans = chatCommon.getMessageMap().get(ChatCommon.PUBLIC);
                     if(messageBeans != null){
-                        if(adapter == null){
-                            adapter = new MessageAdapter(getActivity(), messageBeans);
-                        }else{
-                            adapter.refresh(messageBeans);
-                        }
+                       adapter.refresh(messageBeans);
                     }
                     break;
             }

@@ -9,10 +9,8 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.threebody.conference.R;
-import com.threebody.conference.ui.BaseActivity;
 import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.conference.ui.adapter.VideoSetAdapter;
-import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.sdk.common.STSystem;
 
 import butterknife.InjectView;
@@ -41,7 +39,9 @@ public class VideoSetFragment extends BaseFragment{
 //            users.add(user);
 //        }
 
-        adapter = new VideoSetAdapter(getActivity(), STSystem.getInstance().getRoomCommons().get(0).getVideoCommon().getDevices());
+        if(adapter == null){
+            adapter = new VideoSetAdapter(getActivity(), STSystem.getInstance().getRoomCommons().get(0).getVideoCommon().getDevices());
+        }
         userList.setAdapter(adapter);
         btnAddIn.setOnClickListener(this);
     }
@@ -51,7 +51,6 @@ public class VideoSetFragment extends BaseFragment{
         super.onClick(v);
         switch (v.getId()){
             case R.id.btnAddIn:
-                FragmentUtil.moveToLeftFragment((BaseActivity) getActivity(), R.id.llContainer, new VideoFragment());
                 ((MeetingActivity)getActivity()).refreshVideo();
                 break;
             default:

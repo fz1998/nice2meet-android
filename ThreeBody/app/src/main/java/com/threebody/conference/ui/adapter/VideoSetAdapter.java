@@ -25,8 +25,21 @@ public class VideoSetAdapter extends BaseAdapter {
     public VideoSetAdapter(Context context, List<DeviceBean> deviceBeans) {
         this.context = context;
         this.deviceBeans = deviceBeans;
+//        checkDevice();
     }
-
+    private void checkDevice(){
+        for(int i = 0; i < deviceBeans.size(); i++){
+            DeviceBean deviceBean = deviceBeans.get(i);
+            if(deviceBean.isVideoChecked()){
+                if(checkCount == 0){
+                    firstCheck = i;
+                }else if(checkCount == 1){
+                    secondCheck = i;
+                }
+                checkCount++;
+            }
+        }
+    }
     @Override
     public int getCount() {
         return deviceBeans.size();
