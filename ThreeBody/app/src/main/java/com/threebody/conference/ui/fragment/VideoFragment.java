@@ -185,4 +185,22 @@ public class VideoFragment extends BaseFragment {
             }
         }
     }
+    public void setVideoStataus(){
+
+    }
+    public void setAudioStatus(boolean isOpen, int nodeId){
+        if(deviceUp != null && deviceUp.getUser() != null){
+            if(deviceUp.getUser().getNodeId() == nodeId){
+                videoUp.setStatus(isOpen);
+                return;
+            }
+        }
+        if(deviceDown != null && deviceDown.getUser() != null){
+            if(deviceDown.getUser().getNodeId() == nodeId){
+                videoDown.setStatus(isOpen);
+            }
+        }
+
+    }
+
 }

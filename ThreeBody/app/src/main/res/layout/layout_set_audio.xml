@@ -28,7 +28,7 @@
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
             android:src="@drawable/status_off"
-            android:text="@string/openVideo"
+            android:text="@string/openAudio"
             android:layout_marginLeft="@dimen/TextSize05"
             android:layout_marginRight="@dimen/TextSize05"/>
     </LinearLayout>

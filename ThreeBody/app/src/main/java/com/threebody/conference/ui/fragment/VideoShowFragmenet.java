@@ -99,4 +99,12 @@ public class VideoShowFragmenet extends BaseFragment {
             ivAudioStatus.setImageResource(R.drawable.status_soundoff);
         }
     }
+
+    public void setStatus(boolean isOpen) {
+        if(isOpen){
+            ivAudioStatus.setImageResource(R.drawable.status_sound);
+        }else{
+            ivAudioStatus.setImageResource(R.drawable.status_soundoff);
+        }
+    }
 }

@@ -198,12 +198,26 @@ public class MeetingActivity extends BaseActivity {
                 if(nodeId == roomCommon.getMe().getNodeId()){
                     mSet.openLocalAudio();
                 }
+                if(result == 0){
+                    Message msg = new Message();
+                    msg.what = VideoCommon.VIDEO_STATUS;
+                    msg.obj = true;
+                    msg.arg1 = nodeId;
+                    handler.sendMessage(msg);
+                }
             }
 
             @Override
             public void onCloseMicrophone(int result, int nodeId) {
                 if(nodeId == roomCommon.getMe().getNodeId()){
                     mSet.closeLocalAudio();
+                }
+                if(result == 0){
+                    Message msg = new Message();
+                    msg.what = VideoCommon.VIDEO_STATUS;
+                    msg.obj = false;
+                    msg.arg1 = nodeId;
+                    handler.sendMessage(msg);
                 }
             }
 
@@ -241,15 +255,15 @@ public class MeetingActivity extends BaseActivity {
 //        initDevice();
     }
     private void initDevice(){
-        for(int i = 0; i < 10; i++){
-            User user = new User();
-            user.setUserName("user"+i);
-            user.setNodeId(1000+i);
-            roomCommon.listener.onUserJoin(user);
-        }
-        for(int i = 0; i < 10; i++){
-            videoCommon.listener.onOpenVideo(0, 1000+i, "device"+i);
-        }
+//        for(int i = 0; i < 10; i++){
+//            User user = new User();
+//            user.setUserName("user"+i);
+//            user.setNodeId(1000+i);
+//            roomCommon.li.onUserJoin(user);
+//        }
+//        for(int i = 0; i < 10; i++){
+//            videoCommon.listener.onOpenVideo(0, 1000+i, "device"+i);
+//        }
     }
 
     public VideoCommonImpl getVideoCommon() {
@@ -294,6 +308,10 @@ public class MeetingActivity extends BaseActivity {
                     if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
                         mSet.openLocalVideo();
                     }
+                    break;
+                case VideoCommon.VIDEO_STATUS:
+                    boolean isOpen = (Boolean)msg.obj;
+                    mVideo.setAudioStatus(isOpen, msg.arg1);
                     break;
             }
         }

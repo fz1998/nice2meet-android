@@ -67,16 +67,16 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             ToastUtil.showToast(getActivity(), R.string.noSendMessage);
             return;
         }
-        MessageBean messageBean = new MessageBean();
-        messageBean.setMe(true);
-        messageBean.setMessage(etSend.getText().toString());
-        messageBean.setPublic(true);
-        messageBean.setName(roomCommon.getMe().getUserName());
-        messageBean.setNodeId(ChatCommon.PUBLIC);
-        messageBeans.add(messageBean);
-        adapter.refresh(messageBeans);
-        chatCommon.sendMessage(messageBean);
+//        MessageBean messageBean = new MessageBean();
+//        messageBean.setMe(true);
+//        messageBean.setMessage(etSend.getText().toString());
+//        messageBean.setPublic(true);
+//        messageBean.setName(roomCommon.getMe().getUserName());
+//        messageBean.setNodeId(ChatCommon.PUBLIC);
 
+        chatCommon
+                .sendPublicMessage(etSend.getText().toString());
+        adapter.refresh(chatCommon.getMessageList(ChatCommon.PUBLIC));
     }
 
     @Override
