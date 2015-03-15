@@ -27,6 +27,7 @@ public abstract class ChatCommon {
         chat = roomCommon.getChat();
         roomCommon.setChatCommon(this);
         messageMap = new HashMap<>();
+        messageMap.put(PUBLIC, new ArrayList<MessageBean>());
         initListener();
 
     }
@@ -36,7 +37,7 @@ public abstract class ChatCommon {
     }
 
     public boolean sendPublicMessage(String message){
-        MessageBean msg = new MessageBean(message, "", 0, true, true);
+        MessageBean msg = new MessageBean(message, "", PUBLIC, true, true);
         addMessage(msg);
         if(chat != null){
            return chat.sendPublicMessage(message);
@@ -108,6 +109,11 @@ public abstract class ChatCommon {
         }
         return false;
     }
+
+    public List<MessageBean> getMessageList(int aPublic) {
+        return messageMap.get(PUBLIC);
+    }
+
     public interface ChatCallback{
         void onReceivePublicMessage(int nodeId, java.lang.String message);
 
