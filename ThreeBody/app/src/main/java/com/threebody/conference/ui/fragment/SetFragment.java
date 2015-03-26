@@ -56,6 +56,7 @@ public class SetFragment extends BaseFragment {
         super.onClick(v);
         switch (v.getId()){
             case R.id.ivAudio:
+                ivAudio.setEnabled(false);
                 if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_OFF){
                     if(openAudio()){
                         ivAudio.setText(R.string.closeAudio);
@@ -74,8 +75,10 @@ public class SetFragment extends BaseFragment {
                 }else{
                     ToastUtil.showToast(getActivity(), R.string.handsTip);
                 }
+                ivAudio.setEnabled(true);
                 break;
             case R.id.ivVideo:
+                ivVideo.setEnabled(false);
                 if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_OFF){
                     if(openVideo()){
                         ivAudio.setText(R.string.closeAudio);
@@ -93,6 +96,7 @@ public class SetFragment extends BaseFragment {
                 }else{
                     ToastUtil.showToast(getActivity(), R.string.handsTip);
                 }
+                ivVideo.setEnabled(true);
                 break;
         }
     }
