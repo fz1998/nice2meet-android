@@ -11,7 +11,8 @@
         android:layout_margin="@dimen/TextSize10"
         android:textSize="@dimen/TextSize14"
         android:text="今天是2014-09-91"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

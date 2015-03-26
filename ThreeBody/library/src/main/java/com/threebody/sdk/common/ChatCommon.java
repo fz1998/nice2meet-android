@@ -1,8 +1,11 @@
 package com.threebody.sdk.common;
 
+import android.os.Message;
+
 import com.threebody.sdk.domain.MessageBean;
 
 import org.st.Chat;
+import org.st.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,17 +40,20 @@ public abstract class ChatCommon {
     }
 
     public boolean sendPublicMessage(String message){
-        MessageBean msg = new MessageBean(message, "", PUBLIC, true, true);
-        addMessage(msg);
-        if(chat != null){
-           return chat.sendPublicMessage(message);
+        User user = roomCommon.getMe();
+        if(user != null){
+            MessageBean msg = new MessageBean(message, user.getUserName(), user.getNodeId(), true, true);
+            addPublicMessage(msg);
+            if(chat != null){
+                return chat.sendPublicMessage(message);
+            }
         }
         return false;
     }
     public boolean sendPrivateMessage(int nodeId, String message){
         MessageBean msg = new MessageBean(message, roomCommon.getMe().getUserName(), roomCommon.getMe().getNodeId(), false, true);
         msg.setToNodeId(nodeId);
-        addMessage(msg);
+        addPrivateMessage(msg);
         if(chat != null){
 //            return chat.sendPrivateMessage(id, message);
         }
@@ -63,8 +69,13 @@ public abstract class ChatCommon {
         listener = new Chat.ChatListener() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
-                MessageBean msg = new MessageBean(message, "", nodeId, true, false);
-                addMessage(msg);
+                User user = roomCommon.findUserById(nodeId);
+                String name = "";
+                if(user != null){
+                    name = user.getUserName();
+                }
+                MessageBean msg = new MessageBean(message, name, nodeId, true, false);
+                addPublicMessage(msg);
                 if(checkCallback()){
                     callback.onReceivePublicMessage(nodeId, message);
                 }
@@ -73,7 +84,7 @@ public abstract class ChatCommon {
             @Override
             public void onReceivePrivateMessage(int nodeId, String message) {
                 MessageBean msg = new MessageBean(message,"",nodeId, false, false);
-                addMessage(msg);
+                addPrivateMessage(msg);
                 if(checkCallback()){
                     callback.onReceivePrivateMessage(nodeId, message);
                 }
@@ -94,7 +105,11 @@ public abstract class ChatCommon {
         }
         return true;
     }
-    private void addMessage(MessageBean messageBean){
+    private void addPublicMessage(MessageBean messsageBean){
+        List<MessageBean> messageBeans = messageMap.get(PUBLIC);
+        messageBeans.add(messsageBean);
+    }
+    private void addPrivateMessage(MessageBean messageBean){
         if(!checkUser(messageBean.getNodeId())){
             messageMap.put(messageBean.getNodeId(), new ArrayList<MessageBean>());
         }

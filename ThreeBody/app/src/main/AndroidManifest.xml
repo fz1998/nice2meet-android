@@ -34,7 +34,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.MeetingActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".ui.HelpActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.VideoSetActivity"

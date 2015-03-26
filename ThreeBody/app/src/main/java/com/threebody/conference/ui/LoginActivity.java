@@ -37,7 +37,7 @@ public class LoginActivity extends BaseActivity {
         super.initUI();
         getSupportActionBar().hide();
         btnAddIn.setOnClickListener(this);
-        etNum.setText("r668");
+        etNum.setText("r1821");
         etName.setText("admin");
         etPassword.setText("admin");
     }

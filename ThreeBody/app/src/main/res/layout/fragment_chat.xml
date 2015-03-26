@@ -32,16 +32,18 @@
             android:textSize="@dimen/TextSize14"
             android:text="@string/send"/>
     </LinearLayout>
-    <android.support.v4.widget.SwipeRefreshLayout
+   <!-- <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
         android:layout_above="@id/llSend"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+    </android.support.v4.widget.SwipeRefreshLayout>-->
         <ListView
             android:id="@+id/lvChat"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="wrap_content"
+            android:layout_above="@id/llSend"
+            android:layout_alignParentTop="true"/>
 </RelativeLayout>
 

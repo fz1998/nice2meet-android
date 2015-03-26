@@ -93,10 +93,12 @@ public class VideoShowFragmenet extends BaseFragment {
     private void showVideoLayout(){
         llFlFragment.setVisibility(View.VISIBLE);
         tvUserName.setText(deviceBean.getUser().getUserName());
-        if(deviceBean.getUser().isAudioOn()){
-            ivAudioStatus.setImageResource(R.drawable.status_sound);
-        }else{
-            ivAudioStatus.setImageResource(R.drawable.status_soundoff);
+        if(deviceBean.getUser().getRole() != null){
+            if(deviceBean.getUser().isAudioOn()){
+                ivAudioStatus.setImageResource(R.drawable.status_sound);
+            }else{
+                ivAudioStatus.setImageResource(R.drawable.status_soundoff);
+            }
         }
     }
 
