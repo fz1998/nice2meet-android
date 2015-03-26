@@ -186,6 +186,7 @@ public class VideoFragment extends BaseFragment {
         }
     }
     public void setVideoStataus(){
+        
 
     }
     public void setAudioStatus(boolean isOpen, int nodeId){

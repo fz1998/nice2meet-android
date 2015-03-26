@@ -137,9 +137,6 @@ public class RemoteVideoView extends View implements VideoView{
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
-        Log.e(VIEW_LOG_TAG, "onDraw 111111111111111");
-//		log.info("222222");
         if(isDrawing){
             if(videoBit != null){
                 drawBitmap(canvas);
@@ -152,20 +149,15 @@ public class RemoteVideoView extends View implements VideoView{
     //	private PaintFlagsDrawFilter pfdf = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);
 	private void drawBitmap(Canvas canvas){
 		try {
-//			canvas.setDrawFilter(pfdf);
-			LoggerUtil.info(getClass().getName(), "3333333");
 			if(!isLarge){
-//				width = ConferenceApplication.SCREEN_HEIGHT < 480 ? 180f : 300f;				
+//				width = ConferenceApplication.SCREEN_HEIGHT < 480 ? 180f : 300f;
 			}else{
 //				width = ConferenceApplication.SCREEN_WIDTH;
 			}
 
 			if (videoBean != null && videoBean.getVideoData() != null
 					&& videoBean.getVideoData().length > 0) {
-				LoggerUtil.info(getClass().getName(), "444444");
 				buffer = ByteBuffer.wrap(videoBean.getVideoData());
-                LoggerUtil.info(getClass().getName(), "buffer length = "+buffer.remaining());
-//				log.info("555555");
 //				if(buffer != null && videoBit != null){
 					videoBit.copyPixelsFromBuffer(buffer);
 //					log.info("666666");
@@ -243,7 +235,7 @@ public class RemoteVideoView extends View implements VideoView{
 		return isLarge;
 	}
 
-	
+
 
 	@Override
 	public void setStatus(boolean isMove) {

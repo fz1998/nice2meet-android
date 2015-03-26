@@ -112,12 +112,12 @@ public class SetFragment extends BaseFragment {
     }
     public void openLocalVideo(){
         if(ivVideo != null){
-            ivVideo.setText(R.string.openVideo);
+            ivVideo.setText(R.string.closeVideo);
         }
     }
     public void closeLoacalVideo(){
         if(ivVideo != null){
-            ivVideo.setText(R.string.closeVideo);
+            ivVideo.setText(R.string.openVideo);
         }
     }
 //    private boolean openVideo(){

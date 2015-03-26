@@ -195,9 +195,7 @@ public class MeetingActivity extends BaseActivity {
         audioCommon = new AudioCommonImpl(roomCommon, new AudioCommon.AudioCallback() {
             @Override
             public void onOpenMicrophone(int result, int nodeId) {
-                if(nodeId == roomCommon.getMe().getNodeId()){
-                    mSet.openLocalAudio();
-                }
+
                 if(result == 0){
                     Message msg = new Message();
                     msg.what = VideoCommon.VIDEO_STATUS;
@@ -209,9 +207,7 @@ public class MeetingActivity extends BaseActivity {
 
             @Override
             public void onCloseMicrophone(int result, int nodeId) {
-                if(nodeId == roomCommon.getMe().getNodeId()){
-                    mSet.closeLocalAudio();
-                }
+
                 if(result == 0){
                     Message msg = new Message();
                     msg.what = VideoCommon.VIDEO_STATUS;
@@ -230,16 +226,20 @@ public class MeetingActivity extends BaseActivity {
             @Override
             public void onOpenVideo(DeviceBean deviceBean) {
                 Message msg = new Message();
-                msg.what = VideoCommon.NEW_DEVICE;
+                msg.what = VideoCommon.VIDEO_OPEN;
                 msg.obj = deviceBean;
                 handler.sendMessage(msg);
             }
 
             @Override
             public void onCloseVideo(int result, int nodeId, String deviceId) {
-                if(nodeId == roomCommon.getMe().getNodeId()){
-                    mSet.closeLoacalVideo();
-                }
+
+                DeviceBean deviceBean = new DeviceBean(nodeId,deviceId);
+                Message msg = new Message();
+                msg.what = VideoCommon.VIDEO_CLOSE;
+                msg.obj = deviceBean;
+                handler.sendMessage(msg);
+
             }
 
             @Override
@@ -302,16 +302,29 @@ public class MeetingActivity extends BaseActivity {
         public void handleMessage(Message msg) {
 
             switch (msg.what){
-                case VideoCommon.NEW_DEVICE:
+                case VideoCommon.VIDEO_OPEN:
                     DeviceBean deviceBean = (DeviceBean)msg.obj;
                     mVideo.addDevice(deviceBean);
                     if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
                         mSet.openLocalVideo();
                     }
+
+                    break;
+                case VideoCommon.VIDEO_CLOSE:
+                    deviceBean = (DeviceBean)msg.obj;
+                    if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
+                        mSet.closeLoacalVideo();
+                    }
                     break;
                 case VideoCommon.VIDEO_STATUS:
                     boolean isOpen = (Boolean)msg.obj;
                     mVideo.setAudioStatus(isOpen, msg.arg1);
+                    if(isOpen && msg.arg1 == roomCommon.getMe().getNodeId()){
+                        mSet.openLocalAudio();
+                    }
+                    else if (!isOpen && msg.arg1 == roomCommon.getMe().getNodeId()){
+                        mSet.closeLocalAudio();
+                    }
                     break;
             }
         }

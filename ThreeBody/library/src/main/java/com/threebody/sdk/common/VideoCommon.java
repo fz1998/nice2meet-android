@@ -19,8 +19,9 @@ public class VideoCommon {
     public static final int CAMERA_ON = 1;
     public static final int CAMERA_HOLD = 2;
     public static  int IS_CAMERA_OPEN ;
-    public static final int NEW_DEVICE = 40001;
-    public static final int VIDEO_STATUS = 40002;
+    public static final int VIDEO_OPEN= 40001;
+    public static final int VIDEO_CLOSE= 40002;
+    public static final int VIDEO_STATUS = 40003;
     RoomCommon roomCommon;
     protected VideoCallback callback;
     Video.VideoListener listener;
@@ -119,7 +120,6 @@ public class VideoCommon {
 
             @Override
             public void onVideoData(int nodeId, String deviceId, byte[] data, int len, int width, int height) {
-                LoggerUtil.info(tag, "onVideoData nodeId = "+nodeId+" deviceId = "+deviceId+" length = "+data.length+" len = "+len+" width = "+width+" height = "+height);
                 VideoBean videoBean = new VideoBean();
                 videoBean.setNodeId(nodeId);
                 videoBean.setDeviceId(deviceId);
