@@ -94,7 +94,7 @@ public class MeetingActivity extends BaseActivity {
                 tabs.get(index).setBackgroundResource(R.color.liquid);
                 index = Integer.parseInt((String)v.getTag());
                 if(oldIndex != index){
-                    ToastUtil.showToast(this, "old = "+oldIndex +" new  ="+index);
+//                    ToastUtil.showToast(this, "old = "+oldIndex +" new  ="+index);
                     v.setBackgroundResource(R.drawable.topbg);
                     changeFragment(oldIndex,index);
                 }
