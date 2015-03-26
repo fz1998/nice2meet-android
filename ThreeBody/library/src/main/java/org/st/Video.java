@@ -48,9 +48,9 @@ public class Video{
     private native boolean nativeOpenVideo(int nodeId, String deviceId);
     
 	public boolean openVideo(int nodeId) {
-        return nativeOpenVideo(nodeId);
+        return nativeOpenUserVideo(nodeId);
     }
-    private native boolean nativeOpenVideo(int nodeId);
+    private native boolean nativeOpenUserVideo(int nodeId);
 	
     public boolean closeVideo(int nodeId, String deviceId) {
         return nativeCloseVideo(nodeId, deviceId);
@@ -58,7 +58,7 @@ public class Video{
     private native boolean nativeCloseVideo(int nodeId, String deviceId);
 	
 	public boolean closeVideo(int nodeId) {
-        return nativeCloseVideo(nodeId);
+        return nativeCloseUserVideo(nodeId);
     }
-    private native boolean nativeCloseVideo(int nodeId);
+    private native boolean nativeCloseUserVideo(int nodeId);
 }

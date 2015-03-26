@@ -1,9 +1,6 @@
 package org.st;
 
 public class Room  {
-    static {
-        System.loadLibrary("mcu1.3_sdk_so");
-    }
    // public enum RoomState { INIT, OPEN, LOCKED,CLOSED };
     /** Java version of RoomListener. */
     public static interface RoomListener {
