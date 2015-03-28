@@ -29,12 +29,11 @@ import butterknife.InjectView;
  * Created by xiaxin on 15-1-14.
  */
 public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
-    @InjectView(R.id.swipe)SwipeRefreshLayout srl;
+//    @InjectView(R.id.swipe)SwipeRefreshLayout srl;
     @InjectView(R.id.lvChat)ListView lvChat;
     @InjectView(R.id.btnSend)Button btnSend;
     @InjectView(R.id.etSend)EditText etSend;
     MessageAdapter adapter;
-    List<MessageBean> messageBeans;
     ChatCommonImpl chatCommon;
     RoomCommonImpl roomCommon;
     @Override
@@ -47,20 +46,19 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     protected void initView(View view) {
         super.initView(view);
-        srl.setOnRefreshListener(this);
-        srl.setColorScheme(android.R.color.holo_green_dark, android.R.color.holo_green_light,
-                android.R.color.holo_orange_light, android.R.color.holo_red_light);
+//        srl.setOnRefreshListener(this);
+//        srl.setColorScheme(android.R.color.holo_green_dark, android.R.color.holo_green_light,
+//                android.R.color.holo_orange_light, android.R.color.holo_red_light);
         chatCommon = ((MeetingActivity)getActivity()).getChatCommon();
         roomCommon = ((MeetingActivity)getActivity()).getRoomCommon();
         btnSend.setOnClickListener(this);
-        messageBeans = chatCommon.getMessageList(ChatCommon.PUBLIC);
-        adapter = new MessageAdapter(getActivity(), messageBeans);
+        adapter = new MessageAdapter(getActivity(), chatCommon.getMessageList(ChatCommon.PUBLIC));
         lvChat.setAdapter(adapter);
     }
 
     @Override
     public void onRefresh() {
-        srl.setRefreshing(true);
+//        srl.setRefreshing(true);
     }
     private void sendMessage(){
         if(!TextViewUtil.isNullOrEmpty(etSend)){
@@ -77,6 +75,8 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         chatCommon
                 .sendPublicMessage(etSend.getText().toString());
         adapter.refresh(chatCommon.getMessageList(ChatCommon.PUBLIC));
+        etSend.setText("");
+        lvChat.smoothScrollToPosition(adapter.getCount() - 1);
     }
 
     @Override
@@ -101,8 +101,11 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             super.handleMessage(msg);
             switch (msg.what){
                 case ChatCommon.RECEIVE_PUBLIC_MESSAGE:
-                    if(messageBeans != null){
-                       adapter.refresh(messageBeans);
+                    if(chatCommon != null){
+                        if(chatCommon.getMessageList(ChatCommon.PUBLIC) != null){
+                            adapter.refresh(chatCommon.getMessageList(ChatCommon.PUBLIC));
+                            lvChat.smoothScrollToPosition(adapter.getCount() - 1);
+                        }
                     }
                     break;
             }

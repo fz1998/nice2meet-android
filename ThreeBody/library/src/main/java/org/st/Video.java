@@ -1,8 +1,12 @@
 package org.st;
+import org.webrtc.VideoRenderer;
+import java.util.LinkedList;
 public class Video{
 	private final long nativeVideo;
     private long nativeVideoListener;
-    
+    private final LinkedList<VideoRenderer> renderers =
+      new LinkedList<VideoRenderer>();
+	  
     public static interface VideoListener {
         public void onOpenVideo(int result, int nodeId, String deviceId);
         public void onCloseVideo(int result, int nodeId, String deviceId);
@@ -61,4 +65,21 @@ public class Video{
         return nativeCloseUserVideo(nodeId);
     }
     private native boolean nativeCloseUserVideo(int nodeId);
+    
+	public boolean openVideo(int nodeId, VideoRenderer renderer) {
+		renderers.add(renderer);
+        return nativeOpenUserVideoGL(nodeId, renderer.getNativeVideoRenderer());
+    }
+    private native boolean nativeOpenUserVideoGL(int nodeId, long nativeVideoRenderer);
+	
+	public boolean closeVideo(int nodeId, VideoRenderer renderer) {
+		if (!renderers.remove(renderer)) {
+		return false;
+		}
+		if (!nativeCloseUserVideoGL(nodeId, renderer.getNativeVideoRenderer())){
+			return false;
+		}
+        return true;
+    }
+    private native boolean nativeCloseUserVideoGL(int nodeId, long nativeVideoRenderer);
 }

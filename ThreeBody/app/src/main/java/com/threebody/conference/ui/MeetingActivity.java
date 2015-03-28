@@ -27,6 +27,7 @@ import com.threebody.sdk.common.impl.RoomCommonImpl;
 import com.threebody.sdk.common.impl.VideoCommonImpl;
 import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
+import com.threebody.sdk.util.LoggerUtil;
 
 import org.st.User;
 
@@ -93,7 +94,7 @@ public class MeetingActivity extends BaseActivity {
                 tabs.get(index).setBackgroundResource(R.color.liquid);
                 index = Integer.parseInt((String)v.getTag());
                 if(oldIndex != index){
-                    ToastUtil.showToast(this, "old = "+oldIndex +" new  ="+index);
+//                    ToastUtil.showToast(this, "old = "+oldIndex +" new  ="+index);
                     v.setBackgroundResource(R.drawable.topbg);
                     changeFragment(oldIndex,index);
                 }
@@ -179,6 +180,7 @@ public class MeetingActivity extends BaseActivity {
         chatCommon = new ChatCommonImpl(roomCommon, new ChatCommon.ChatCallback() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
+                LoggerUtil.info(getClass().getName(), " receive public message nodeId = "+nodeId +" message = "+message);
                     mMessage.receivePublicMessage();
             }
 

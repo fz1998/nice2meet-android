@@ -6,6 +6,7 @@ import com.threebody.sdk.util.LoggerUtil;
 
 import org.st.User;
 import org.st.Video;
+import org.webrtc.VideoRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,11 +156,12 @@ public class VideoCommon {
         }
         return false;
     }
-    public boolean openVideo(int nodeId, String deviceId){
-        return video.openVideo(nodeId, deviceId);
+    public boolean openVideo(int nodeId, VideoRenderer renderer){
+        LoggerUtil.info(getClass().getName(), " nodeId = "+nodeId+" renderer = "+renderer.toString());
+        return video.openVideo(nodeId, renderer);
     }
-    public  boolean closeVideo(int nodeId, String deviceId){
-        return video.closeVideo(nodeId, deviceId);
+    public  boolean closeVideo(int nodeId, VideoRenderer renderer){
+        return video.closeVideo(nodeId, renderer);
     }
     protected boolean checkCallback(){
         if(callback == null){

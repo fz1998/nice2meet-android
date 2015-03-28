@@ -198,6 +198,7 @@ public abstract class RoomCommon {
             @Override
             public void onUserJoin(User user) {
                 LoggerUtil.info(tag, "onUserJoin nodeId = "+user.getNodeId()+" name = "+user.getUserName());
+//                user.setAudioOn(true);
                 users.add(user);
                 if(checkCallback()){
                     callback.onUserJoin(user);
@@ -208,11 +209,7 @@ public abstract class RoomCommon {
             public void onUserLeave(User user) {
                 LoggerUtil.info(tag, "onUserLeave nodeId = "+user.getNodeId()+" name = "+user.getUserName());
                 if(users != null && !users.isEmpty()){
-                    for (User u : users){
-                        if(u.getNodeId() == user.getNodeId()){
-                            users.remove(u);
-                        }
-                    }
+                    users.remove(user);
                 }
                 if(checkCallback()){
                     callback.onUserLeave(user);

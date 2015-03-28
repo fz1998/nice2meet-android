@@ -20,7 +20,7 @@ public class User {
     Role	role;
     Status	state;
     boolean isVideoOn;
-    boolean isAudioOn;
+    boolean isAudioOn = false;
 
     public User(String userId, String userName, int nodeId, Role role,Status state) {
         this.userId = userId;
@@ -64,11 +64,11 @@ public class User {
         this.nodeId = nodeId;
     }
 
-    public void setRole(org.st.User.Role role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
-    public void setState(org.st.User.Status state) {
+    public void setState(Status state) {
         this.state = state;
     }
 
@@ -85,11 +85,11 @@ public class User {
         return nodeId;
     }
 
-    public org.st.User.Role getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public org.st.User.Status getState() {
+    public Status getState() {
         return state;
     }
 

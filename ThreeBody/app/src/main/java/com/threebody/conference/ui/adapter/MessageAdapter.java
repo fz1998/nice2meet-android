@@ -40,13 +40,10 @@ public class MessageAdapter extends BaseAdapter {
         return position;
     }
 
-    @Override
-    public int getViewTypeCount() {
-        return 2;
-    }
 
-    @Override
-    public int getItemViewType(int position) {
+
+
+    public int getType(int position) {
         if(messageBeans.get(position).isMe()){
             return 1;
         }
@@ -55,12 +52,12 @@ public class MessageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        int type = getItemViewType(position);
+        int type = getType(position);
         ViewHolder holder = null;
         MessageBean messageBean = messageBeans.get(position);
         if(type == 1){
-            if(convertView == null){
-                convertView = LayoutInflater.from(context).inflate(R.layout.item_message_left, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_message_left, null);
+            if(convertView.getTag() == null){
                 holder = new ViewHolder();
                 holder.tvName = (TextView)convertView.findViewById(R.id.tvUserName);
                 holder.tvMessage = (TextView)convertView.findViewById(R.id.tvMessage);
@@ -71,8 +68,9 @@ public class MessageAdapter extends BaseAdapter {
             }
 
         }else{
-            if(convertView == null){
-                convertView = LayoutInflater.from(context).inflate(R.layout.item_message_right, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_message_right, null);
+            if(convertView.getTag() == null){
+
                 holder = new ViewHolder();
                 holder.tvName = (TextView)convertView.findViewById(R.id.tvUserName);
                 holder.tvMessage = (TextView)convertView.findViewById(R.id.tvMessage);
