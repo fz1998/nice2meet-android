@@ -18,8 +18,8 @@ import java.util.List;
  * Created by xiaxin on 15-1-14.
  */
 public class VideoFragment extends BaseFragment {
-    VideoShowFragmenet videoUp;
-    VideoShowFragmenet videoDown;
+    VideoShowGLFragment videoUp;
+    VideoShowGLFragment videoDown;
     DeviceBean deviceUp, deviceDown;
     DeviceBean device1, device2;
     VideoCommonImpl videoCommon;
@@ -47,17 +47,8 @@ public class VideoFragment extends BaseFragment {
     @Override
     protected void initView(final View view) {
         super.initView(view);
-        videoUp = (VideoShowFragmenet)getChildFragmentManager().findFragmentById(R.id.videoUp);
-        videoDown = (VideoShowFragmenet)getChildFragmentManager().findFragmentById(R.id.videoDown);
-
-//        videoView = new RemoteVideoView(getActivity());
-//        videoView = new LocalVideoView(getActivity());
-//        videoView.resetSize(LocalVideoView.WIDTH, LocalVideoView.HEIGHT);
-//        videoDown.getFlVideo().addView(videoView);
-
-//        localVideo = new LocalVideoView(getActivity());
-//        videoDown.getFlVideo().addView(localVideo);
-//        localVideo.startCamera();
+        videoUp = (VideoShowGLFragment)getChildFragmentManager().findFragmentById(R.id.videoUp);
+        videoDown = (VideoShowGLFragment)getChildFragmentManager().findFragmentById(R.id.videoDown);
         videoDown.getView().setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -119,13 +110,17 @@ public class VideoFragment extends BaseFragment {
         checkDevice(device1, device2);
         if(deviceUp != null){
             videoUp.setDevice(deviceUp);
+            videoCommon.openVideo(deviceUp.getNodeId(), videoUp.getRenderer());
         }
         if(deviceDown != null){
             videoDown.setDevice(deviceDown);
+            videoCommon.openVideo(deviceDown.getNodeId(), videoDown.getRenderer());
         }
     }
     private void checkDevice(DeviceBean device1, DeviceBean device2){
         if(device1 == null){
+            videoUp.closeVideo(videoCommon);
+            videoDown.closeVideo(videoCommon);
             return;
         }else if(device2 == null){
             checkOne();
@@ -135,36 +130,47 @@ public class VideoFragment extends BaseFragment {
     }
     private void checkOne(){
         if(deviceUp != null && deviceUp.getDeviceId().equals(device1.getDeviceId())){
-
+            videoDown.closeVideo(videoCommon);
             return;
         }else if(deviceDown != null && deviceDown.getDeviceId().equals(device1.getDeviceId())){
+            videoUp.closeVideo(videoCommon);
+            videoDown.closeVideo(videoCommon);
             deviceDown = device1;
-            return;
         }else{
+            videoUp.closeVideo(videoCommon);
+            videoDown.closeVideo(videoCommon);
             deviceUp = device1;
         }
     }
     private void checkTwo(){
         if(deviceUp != null && deviceUp.getDeviceId().equals(device1.getDeviceId())){
             if(deviceDown != null && deviceDown.getDeviceId().equals(device2.getDeviceId())){
+
                 return;
             }else {
+                videoDown.closeVideo(videoCommon);
                 deviceDown = device2;
             }
         }else{
+
             if(deviceDown != null && deviceDown.getDeviceId().equals(device1.getDeviceId())){
                 if(deviceUp != null && deviceUp.getDeviceId().equals(device2.getDeviceId())){
                     return;
                 }else {
+                    videoUp.closeVideo(videoCommon);
                     deviceUp = device2;
                 }
             }else if(deviceDown != null && deviceDown.getDeviceId().equals(device2.getDeviceId())){
+                videoUp.closeVideo(videoCommon);
                 deviceUp = device1;
             }else {
                 if(deviceUp != null && deviceUp.getDeviceId().equals(device2.getDeviceId())){
+                    videoDown.closeVideo(videoCommon);
                     deviceDown = device1;
                     return;
                 }
+                videoDown.closeVideo(videoCommon);
+                videoUp.closeVideo(videoCommon);
                 deviceUp = device1;
                 deviceDown = device2;
             }

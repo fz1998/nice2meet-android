@@ -198,7 +198,7 @@ public abstract class RoomCommon {
             @Override
             public void onUserJoin(User user) {
                 LoggerUtil.info(tag, "onUserJoin nodeId = "+user.getNodeId()+" name = "+user.getUserName());
-                user.setAudioOn(true);
+//                user.setAudioOn(true);
                 users.add(user);
                 if(checkCallback()){
                     callback.onUserJoin(user);

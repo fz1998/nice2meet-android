@@ -1,5 +1,6 @@
 package com.threebody.conference.ui.fragment;
 
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,9 +14,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.threebody.conference.R;
-import com.threebody.conference.ui.view.video.RemoteVideoView;
+
 import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
+
+import org.st.VideoRendererView;
+import org.webrtc.VideoRenderer;
 
 import butterknife.InjectView;
 
@@ -26,11 +30,14 @@ public class VideoShowFragmenet extends BaseFragment {
     @InjectView(R.id.tvUserName)TextView tvUserName;
     @InjectView(R.id.flVideoFragment)LinearLayout llFlFragment;
     @InjectView(R.id.ivVideoStatus)ImageView ivVideoStatus;
+    @InjectView(R.id.videoView)GLSurfaceView glView;
     @InjectView(R.id.ivAudioStatus)ImageView ivAudioStatus;
     @InjectView(R.id.flVideoView)FrameLayout flVideo;
-    @InjectView(R.id.videoView)RemoteVideoView videoView;
+//    @InjectView(R.id.videoView)RemoteVideoView videoView;
     @InjectView(R.id.progressBar)ProgressBar progressBar;
     DeviceBean deviceBean;
+    VideoRendererView mRendererView;
+    VideoRenderer mRenderer;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_video_view, null);
@@ -52,18 +59,9 @@ public class VideoShowFragmenet extends BaseFragment {
         initVideo();
     }
     private  void initVideo(){
-        ViewTreeObserver vto = videoView.getViewTreeObserver();
-        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                if(videoView.getWidth() != 0){
-                    videoView.setLayoutParam(videoView.getWidth(), videoView.getHeight());
-                    videoView.getViewTreeObserver().removeOnPreDrawListener(this);
-                    return true;
-                }
-                return false;
-            }
-        });
+        mRendererView = new VideoRendererView(glView, true);
+       mRenderer = new VideoRenderer(mRendererView.getRendererCallback());
+
     }
 
     private void initUser(){
@@ -77,7 +75,7 @@ public class VideoShowFragmenet extends BaseFragment {
         progressBar.setVisibility(View.VISIBLE);
     }
     public void setVideoBean(VideoBean videoBean){
-        videoView.setVideoBean(videoBean);
+//        videoView.setVideoBean(videoBean);
     }
     public void setDevice(DeviceBean device){
 //        Message msg = new Message();

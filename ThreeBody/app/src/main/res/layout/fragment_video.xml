@@ -6,14 +6,14 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_36_80"
-        android:name="com.threebody.conference.ui.fragment.VideoShowFragmenet"
+        android:name="com.threebody.conference.ui.fragment.VideoShowGLFragment"
         android:id="@+id/videoUp"
 
         android:layout_weight="1"/>
     <fragment
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_36_80"
-        android:name="com.threebody.conference.ui.fragment.VideoShowFragmenet"
+        android:name="com.threebody.conference.ui.fragment.VideoShowGLFragment"
         android:id="@+id/videoDown"
         android:layout_weight="1"/>
 </LinearLayout>

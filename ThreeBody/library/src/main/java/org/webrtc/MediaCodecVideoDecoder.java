@@ -96,9 +96,9 @@ class MediaCodecVideoDecoder {
   private EGLContext eglContext = EGL14.EGL_NO_CONTEXT;
   private EGLSurface eglSurface = EGL14.EGL_NO_SURFACE;
   private static final int EGL14_SDK_VERSION =
-      android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
+      Build.VERSION_CODES.JELLY_BEAN_MR1;
   private static final int CURRENT_SDK_VERSION =
-      android.os.Build.VERSION.SDK_INT;
+      Build.VERSION.SDK_INT;
 
 
   private MediaCodecVideoDecoder() { }
