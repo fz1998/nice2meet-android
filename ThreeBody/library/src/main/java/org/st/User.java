@@ -20,7 +20,7 @@ public class User {
     Role	role;
     Status	state;
     boolean isVideoOn;
-    boolean isAudioOn;
+    boolean isAudioOn = false;
 
     public User(String userId, String userName, int nodeId, Role role,Status state) {
         this.userId = userId;
