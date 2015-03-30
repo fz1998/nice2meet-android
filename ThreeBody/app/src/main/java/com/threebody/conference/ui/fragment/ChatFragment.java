@@ -21,6 +21,7 @@ import com.threebody.sdk.common.impl.ChatCommonImpl;
 import com.threebody.sdk.common.impl.RoomCommonImpl;
 import com.threebody.sdk.domain.MessageBean;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import butterknife.InjectView;
@@ -71,9 +72,14 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 //        messageBean.setPublic(true);
 //        messageBean.setName(roomCommon.getMe().getUserName());
 //        messageBean.setNodeId(ChatCommon.PUBLIC);
-
+        String message = "";
+        try {
+             message = new String(etSend.getText().toString().getBytes(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         chatCommon
-                .sendPublicMessage(etSend.getText().toString());
+                .sendPublicMessage(message);
         adapter.refresh(chatCommon.getMessageList(ChatCommon.PUBLIC));
         etSend.setText("");
         lvChat.smoothScrollToPosition(adapter.getCount() - 1);

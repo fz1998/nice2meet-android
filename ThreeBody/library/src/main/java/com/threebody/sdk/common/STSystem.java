@@ -13,6 +13,7 @@ public class STSystem {
     private static STSystem instance ;
     protected RoomSystem roomSystem;
     static List<RoomCommon> roomCommons;
+    private RoomCommon roomCommon;
     private RoomSystem.RoomSystemListener listener;
     ConferenceSystemCallback callback;
     public static boolean isInit = false;
@@ -40,9 +41,10 @@ public class STSystem {
 //        roomSystem.
     }
     public void createRoom(RoomCommon roomCommon){
+        this.roomCommon = roomCommon;
+        roomCommons.add(roomCommon);
         Room room = roomSystem.createRoom(roomCommon.getListener(), roomCommon.getRoomId());
         roomCommon.setRoom(room);
-        roomCommons.add(roomCommon);
     }
     public void initializeAndroidGlobals(Object activity){
         RoomSystem.initializeAndroidGlobals(activity, true, true);
@@ -79,4 +81,7 @@ public class STSystem {
         };
     }
 
+    public RoomCommon getRoomCommon() {
+        return roomCommon;
+    }
 }

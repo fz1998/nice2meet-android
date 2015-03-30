@@ -19,7 +19,7 @@ public class VideoCommon {
     public static final int CAMERA_OFF = 0;
     public static final int CAMERA_ON = 1;
     public static final int CAMERA_HOLD = 2;
-    public static  int IS_CAMERA_OPEN ;
+    public static  int IS_CAMERA_OPEN = CAMERA_OFF;
     public static final int VIDEO_OPEN= 40001;
     public static final int VIDEO_CLOSE= 40002;
     public static final int VIDEO_STATUS = 40003;

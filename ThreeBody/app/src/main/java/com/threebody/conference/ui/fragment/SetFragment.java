@@ -39,12 +39,12 @@ public class SetFragment extends BaseFragment {
         ivVideo.setOnClickListener(this);
         ivAudio.setOnClickListener(this);
         llHelp.setOnClickListener(this);
-        if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_OFF){
+        if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_ON){
             ivAudio.setText(R.string.closeAudio);
         }else if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_HANDS_UP){
             ivAudio.setText(R.string.handsup);
         }
-        if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_OFF){
+        if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_ON){
             ivVideo.setText(R.string.closeVideo);
         }else if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_HOLD){
             ivAudio.setText(R.string.handsup);

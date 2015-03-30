@@ -60,7 +60,7 @@ public abstract class RoomCommon {
     }
     public void setCallback(RoomCallback callback) {
         this.callback = callback;
-        joinListener = null;
+//        joinListener = null;
     }
 
     public ChatCommon getChatCommon() {
