@@ -81,15 +81,15 @@ public class SetFragment extends BaseFragment {
                 ivVideo.setEnabled(false);
                 if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_OFF){
                     if(openVideo()){
-                        ivAudio.setText(R.string.closeAudio);
+                        ivVideo.setText(R.string.closeVideo);
                     }else{
                         VideoCommon.IS_CAMERA_OPEN = VideoCommon.CAMERA_HOLD;
-                        ivAudio.setText(R.string.handsup);
+                        ivVideo.setText(R.string.handsup);
 
                     }
                 }else if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_ON){
                     if(closeVideo()){
-                        ivAudio.setText(R.string.openAudio);
+                        ivVideo.setText(R.string.openVideo);
                     }else{
                         ToastUtil.showToast(getActivity(), R.string.closefailed);
                     }

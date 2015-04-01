@@ -41,6 +41,20 @@ public class VideoFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+//        videoUp.onResume();
+//        videoDown.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+//        videoUp.onStop();
+//        videoDown.onStop();
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if(deviceUp != null){

@@ -68,6 +68,7 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
   private boolean local;
   private int videoWidth = 0;
   private int videoHeight = 0;
+  boolean isCanShow;
 
   private final String VERTEX_SHADER_STRING =
       "varying vec2 interp_tc;\n" +
@@ -204,7 +205,15 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
     checkNoGLES2Error();
   }
 
-  /**
+    public void onStop() {
+        isCanShow = false;
+    }
+
+    public void onRsume() {
+        isCanShow = true;
+    }
+
+    /**
    * Class used to display stream of YUV420 frames at particular location
    * on a screen. New video frames are sent to display using renderFrame()
    * call.
@@ -459,7 +468,7 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
 
   @Override
   public void onDrawFrame(GL10 unused) {
-
+    if(!isCanShow) return;
     GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
     synchronized (yuvImageRenderer) {
     	yuvImageRenderer.draw();

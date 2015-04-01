@@ -166,4 +166,10 @@ public class VideoShowGLFragment extends FrameLayout{
     public VideoRendererView getmRendererView() {
         return mRendererView;
     }
+    public void onStop(){
+        mRendererView.onStop();
+    }
+    public void onResume(){
+        mRendererView.onRsume();
+    }
 }

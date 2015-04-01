@@ -215,7 +215,7 @@ public class MeetingActivity extends BaseActivity {
                 if(result == 0){
                     Message msg = new Message();
                     msg.what = VideoCommon.VIDEO_STATUS;
-                    msg.obj = false;
+                    msg.obj = true;
                     msg.arg1 = nodeId;
                     handler.sendMessage(msg);
                 }
