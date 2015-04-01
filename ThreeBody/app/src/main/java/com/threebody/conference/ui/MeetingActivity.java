@@ -131,6 +131,7 @@ public class MeetingActivity extends BaseActivity {
         }).create().show();
     }
     private void leaveConference(){
+        mVideo.closeAll();
         roomCommon.leave();
         finish();
     }

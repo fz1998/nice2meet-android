@@ -3,17 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <fragment
+    <com.threebody.conference.ui.fragment.VideoShowGLFragment
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_36_80"
-        android:name="com.threebody.conference.ui.fragment.VideoShowGLFragment"
         android:id="@+id/videoUp"
 
         android:layout_weight="1"/>
-    <fragment
+    <com.threebody.conference.ui.fragment.VideoShowGLFragment
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_36_80"
-        android:name="com.threebody.conference.ui.fragment.VideoShowGLFragment"
         android:id="@+id/videoDown"
         android:layout_weight="1"/>
 </LinearLayout>

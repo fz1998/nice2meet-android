@@ -1,9 +1,11 @@
 package com.threebody.conference.ui.fragment;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,40 +28,81 @@ import butterknife.InjectView;
 /**
  * Created by xiaxin on 2015/3/28.
  */
-public class VideoShowGLFragment extends BaseFragment{
-    @InjectView(R.id.tvUserName)TextView tvUserName;
-    @InjectView(R.id.flVideoFragment)LinearLayout llFlFragment;
-    @InjectView(R.id.ivVideoStatus)ImageView ivVideoStatus;
-    @InjectView(R.id.ivAudioStatus)ImageView ivAudioStatus;
-    @InjectView(R.id.flVideoView)FrameLayout flVideo;
-    @InjectView(R.id.progressBar)ProgressBar progressBar;
-    @InjectView(R.id.videoView)GLSurfaceView glView;
+public class VideoShowGLFragment extends FrameLayout{
+    TextView tvUserName;
+    LinearLayout llFlFragment;
+    ImageView ivVideoStatus;
+    ImageView ivAudioStatus;
+    FrameLayout flVideo;
+    ProgressBar progressBar;
+    GLSurfaceView glView;
     DeviceBean deviceBean;
     VideoRendererView mRendererView;
     VideoRenderer mRenderer;
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_video_view, null);
-        initView(view);
-        return view;
+    View view;
+
+    public VideoShowGLFragment(Context context) {
+        super(context);
+        init();
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public VideoShowGLFragment(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public VideoShowGLFragment(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+    private void init(){
+        view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_video_view, null);
+        tvUserName = (TextView)view.findViewById(R.id.tvUserName);
+        llFlFragment = (LinearLayout)view.findViewById(R.id.flVideoFragment);
+        ivAudioStatus = (ImageView)view.findViewById(R.id.ivAudioStatus);
+        flVideo = (FrameLayout)view.findViewById(R.id.flVideo);
+        progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
+        glView = (GLSurfaceView)view.findViewById(R.id.videoView);
+        addView(view);
         if(deviceBean != null){
             showVideoLayout();
         }
+         initVideo();
     }
-
-    @Override
-    protected void initView(View view) {
-        super.initView(view);
-        initVideo();
-    }
+    //    @Override
+//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//        if(view == null){
+//            view = inflater.inflate(R.layout.fragment_video_view, container, false);
+//            initView(view);
+//            initVideo();
+//        }else{
+//            ViewGroup vg = (ViewGroup)view.getParent();
+//            if(vg != null){
+//                vg.removeAllViewsInLayout();
+//            }
+//        }
+//
+//
+//        return view;
+//    }
+//
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        if(deviceBean != null){
+//            showVideoLayout();
+//        }
+//    }
+//
+//    @Override
+//    protected void initView(View view) {
+//        super.initView(view);
+//    }
     private  void initVideo(){
-        mRendererView= new VideoRendererView(glView, true);
-        mRenderer = new VideoRenderer(mRendererView.getRendererCallback());
+       if(mRendererView == null){
+           mRendererView = new VideoRendererView(glView, true);
+           mRenderer = new VideoRenderer(mRendererView.getRendererCallback());
+       }
     }
 
     private void initUser(){
@@ -88,6 +131,9 @@ public class VideoShowGLFragment extends BaseFragment{
     public void openVideo(DeviceBean device){
 
     }
+    public void openVideo(VideoCommon videoCommon){
+        videoCommon.openVideo(deviceBean.getNodeId(), getRenderer());
+    }
     private void showVideoLayout(){
         llFlFragment.setVisibility(View.VISIBLE);
         tvUserName.setText(deviceBean.getUser().getUserName());
@@ -115,5 +161,9 @@ public class VideoShowGLFragment extends BaseFragment{
         if(deviceBean != null){
             videoCommon.closeVideo(deviceBean.getNodeId(), mRenderer);
         }
+    }
+
+    public VideoRendererView getmRendererView() {
+        return mRendererView;
     }
 }

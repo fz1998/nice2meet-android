@@ -24,11 +24,19 @@ public class VideoFragment extends BaseFragment {
     DeviceBean device1, device2;
     VideoCommonImpl videoCommon;
     boolean isCanShow = true;
+    View view ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_video, null);
-        initView(view);
+        if(view == null){
+             view = inflater.inflate(R.layout.fragment_video, null);
+            initView(view);
+        }else{
+            ViewGroup vg = (ViewGroup)view.getParent();
+            if(vg != null){
+                vg.removeAllViewsInLayout();
+            }
+        }
         return view;
     }
 
@@ -47,9 +55,9 @@ public class VideoFragment extends BaseFragment {
     @Override
     protected void initView(final View view) {
         super.initView(view);
-        videoUp = (VideoShowGLFragment)getChildFragmentManager().findFragmentById(R.id.videoUp);
-        videoDown = (VideoShowGLFragment)getChildFragmentManager().findFragmentById(R.id.videoDown);
-        videoDown.getView().setOnLongClickListener(new View.OnLongClickListener() {
+        videoUp = (VideoShowGLFragment)view.findViewById(R.id.videoUp);
+        videoDown = (VideoShowGLFragment)view.findViewById(R.id.videoDown);
+        videoDown.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 ((MeetingActivity)getActivity()).changeToVideoSet();
@@ -110,11 +118,11 @@ public class VideoFragment extends BaseFragment {
         checkDevice(device1, device2);
         if(deviceUp != null){
             videoUp.setDevice(deviceUp);
-            videoCommon.openVideo(deviceUp.getNodeId(), videoUp.getRenderer());
+            videoUp.openVideo(videoCommon);
         }
         if(deviceDown != null){
             videoDown.setDevice(deviceDown);
-            videoCommon.openVideo(deviceDown.getNodeId(), videoDown.getRenderer());
+            videoDown.openVideo(videoCommon);
         }
     }
     private void checkDevice(DeviceBean device1, DeviceBean device2){
@@ -210,4 +218,8 @@ public class VideoFragment extends BaseFragment {
 
     }
 
+    public void closeAll() {
+        videoUp.closeVideo(videoCommon);
+        videoDown.closeVideo(videoCommon);
+    }
 }

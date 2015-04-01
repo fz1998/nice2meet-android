@@ -32,6 +32,8 @@ import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.util.Log;
 
+import com.threebody.sdk.util.LoggerUtil;
+
 import org.webrtc.VideoRenderer;
 import org.webrtc.VideoRenderer.I420Frame;
 
@@ -135,6 +137,7 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
   }
   
   public VideoRenderer.Callbacks getRendererCallback() {
+      LoggerUtil.info(getClass().getName(), " id = "+yuvImageRenderer.toString());
 	  return yuvImageRenderer;
   }
   
@@ -220,7 +223,7 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
     // Local copy of incoming video frame.
     private I420Frame frameToRender;
     // Flag if renderFrame() was ever called
-    boolean seenFrame;
+    boolean seenFrame ;
     // Total number of video frames received in renderFrame() call.
     private int framesReceived;
     // Number of video frames dropped by renderFrame() because previous
@@ -288,6 +291,7 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
     }
 
     private void draw() {
+        LoggerUtil.info(getClass().getName(), " draw = "+VideoRendererView.this.toString()+" seenFrame = "+seenFrame);
       long now = System.nanoTime();
       if (!seenFrame) {
         // No frame received yet - nothing to render.
@@ -376,6 +380,7 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
 
     @Override
     public synchronized void renderFrame(I420Frame frame) {
+        LoggerUtil.info(getClass().getName(), " renderFrame = "+VideoRendererView.this.toString());
       long now = System.nanoTime();
       framesReceived++;
       // Check input frame parameters.
@@ -454,6 +459,7 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
 
   @Override
   public void onDrawFrame(GL10 unused) {
+
     GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
     synchronized (yuvImageRenderer) {
     	yuvImageRenderer.draw();

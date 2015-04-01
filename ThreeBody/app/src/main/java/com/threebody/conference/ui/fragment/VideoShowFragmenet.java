@@ -30,7 +30,6 @@ public class VideoShowFragmenet extends BaseFragment {
     @InjectView(R.id.tvUserName)TextView tvUserName;
     @InjectView(R.id.flVideoFragment)LinearLayout llFlFragment;
     @InjectView(R.id.ivVideoStatus)ImageView ivVideoStatus;
-    @InjectView(R.id.videoView)GLSurfaceView glView;
     @InjectView(R.id.ivAudioStatus)ImageView ivAudioStatus;
     @InjectView(R.id.flVideoView)FrameLayout flVideo;
 //    @InjectView(R.id.videoView)RemoteVideoView videoView;
@@ -59,7 +58,7 @@ public class VideoShowFragmenet extends BaseFragment {
         initVideo();
     }
     private  void initVideo(){
-        mRendererView = new VideoRendererView(glView, true);
+//        mRendererView = new VideoRendererView(glView, true);
        mRenderer = new VideoRenderer(mRendererView.getRendererCallback());
 
     }
