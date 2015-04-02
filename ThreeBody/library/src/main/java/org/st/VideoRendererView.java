@@ -68,7 +68,7 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
   private boolean local;
   private int videoWidth = 0;
   private int videoHeight = 0;
-  boolean isCanShow;
+  boolean isCanShow = true;
 
   private final String VERTEX_SHADER_STRING =
       "varying vec2 interp_tc;\n" +
