@@ -323,12 +323,6 @@ public class MeetingActivity extends BaseActivity {
                 case VideoCommon.VIDEO_STATUS:
                     boolean isOpen = (Boolean)msg.obj;
                     mVideo.setAudioStatus(isOpen, msg.arg1);
-                    if(isOpen && msg.arg1 == roomCommon.getMe().getNodeId()){
-                        mSet.openLocalAudio();
-                    }
-                    else if (!isOpen && msg.arg1 == roomCommon.getMe().getNodeId()){
-                        mSet.closeLocalAudio();
-                    }
                     break;
             }
         }

@@ -131,8 +131,8 @@ public class VideoShowGLFragment extends FrameLayout{
     public void openVideo(DeviceBean device){
 
     }
-    public void openVideo(VideoCommon videoCommon){
-        videoCommon.openVideo(deviceBean.getNodeId(), getRenderer());
+    public void setVideoRender(VideoCommon videoCommon){
+        videoCommon.setVideoRender(deviceBean.getNodeId(), getRenderer());
     }
     private void showVideoLayout(){
         llFlFragment.setVisibility(View.VISIBLE);
@@ -157,9 +157,9 @@ public class VideoShowGLFragment extends FrameLayout{
     public VideoRenderer getRenderer() {
         return mRenderer;
     }
-    public void closeVideo(VideoCommon videoCommon){
+    public void removeVideoRender(VideoCommon videoCommon){
         if(deviceBean != null){
-            videoCommon.closeVideo(deviceBean.getNodeId(), mRenderer);
+            videoCommon.removeVideoRender(deviceBean.getNodeId(), mRenderer);
         }
     }
 

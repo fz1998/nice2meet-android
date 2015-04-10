@@ -132,17 +132,17 @@ public class VideoFragment extends BaseFragment {
         checkDevice(device1, device2);
         if(deviceUp != null){
             videoUp.setDevice(deviceUp);
-            videoUp.openVideo(videoCommon);
+            videoUp.setVideoRender(videoCommon);
         }
         if(deviceDown != null){
             videoDown.setDevice(deviceDown);
-            videoDown.openVideo(videoCommon);
+            videoDown.setVideoRender(videoCommon);
         }
     }
     private void checkDevice(DeviceBean device1, DeviceBean device2){
         if(device1 == null){
-            videoUp.closeVideo(videoCommon);
-            videoDown.closeVideo(videoCommon);
+            videoUp.removeVideoRender(videoCommon);
+            videoDown.removeVideoRender(videoCommon);
             return;
         }else if(device2 == null){
             checkOne();
@@ -152,15 +152,15 @@ public class VideoFragment extends BaseFragment {
     }
     private void checkOne(){
         if(deviceUp != null && deviceUp.getDeviceId().equals(device1.getDeviceId())){
-            videoDown.closeVideo(videoCommon);
+            videoDown.removeVideoRender(videoCommon);
             return;
         }else if(deviceDown != null && deviceDown.getDeviceId().equals(device1.getDeviceId())){
-            videoUp.closeVideo(videoCommon);
-            videoDown.closeVideo(videoCommon);
+            videoUp.removeVideoRender(videoCommon);
+            videoDown.removeVideoRender(videoCommon);
             deviceDown = device1;
         }else{
-            videoUp.closeVideo(videoCommon);
-            videoDown.closeVideo(videoCommon);
+            videoUp.removeVideoRender(videoCommon);
+            videoDown.removeVideoRender(videoCommon);
             deviceUp = device1;
         }
     }
@@ -170,7 +170,7 @@ public class VideoFragment extends BaseFragment {
 
                 return;
             }else {
-                videoDown.closeVideo(videoCommon);
+                videoDown.removeVideoRender(videoCommon);
                 deviceDown = device2;
             }
         }else{
@@ -179,20 +179,20 @@ public class VideoFragment extends BaseFragment {
                 if(deviceUp != null && deviceUp.getDeviceId().equals(device2.getDeviceId())){
                     return;
                 }else {
-                    videoUp.closeVideo(videoCommon);
+                    videoUp.removeVideoRender(videoCommon);
                     deviceUp = device2;
                 }
             }else if(deviceDown != null && deviceDown.getDeviceId().equals(device2.getDeviceId())){
-                videoUp.closeVideo(videoCommon);
+                videoUp.removeVideoRender(videoCommon);
                 deviceUp = device1;
             }else {
                 if(deviceUp != null && deviceUp.getDeviceId().equals(device2.getDeviceId())){
-                    videoDown.closeVideo(videoCommon);
+                    videoDown.removeVideoRender(videoCommon);
                     deviceDown = device1;
                     return;
                 }
-                videoDown.closeVideo(videoCommon);
-                videoUp.closeVideo(videoCommon);
+                videoDown.removeVideoRender(videoCommon);
+                videoUp.removeVideoRender(videoCommon);
                 deviceUp = device1;
                 deviceDown = device2;
             }
@@ -233,7 +233,7 @@ public class VideoFragment extends BaseFragment {
     }
 
     public void closeAll() {
-        videoUp.closeVideo(videoCommon);
-        videoDown.closeVideo(videoCommon);
+        videoUp.removeVideoRender(videoCommon);
+        videoDown.removeVideoRender(videoCommon);
     }
 }

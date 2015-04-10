@@ -4,7 +4,7 @@ public class Room  {
    // public enum RoomState { INIT, OPEN, LOCKED,CLOSED };
     /** Java version of RoomListener. */
     public static interface RoomListener {
-        public void onJoin(int result);
+        public void onJoin (int result);
         public void onLeave(int result);
         public void onConnectionChange(int state);
 		//user notify

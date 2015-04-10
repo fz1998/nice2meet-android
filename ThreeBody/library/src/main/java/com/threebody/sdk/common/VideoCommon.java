@@ -156,12 +156,12 @@ public class VideoCommon {
         }
         return false;
     }
-    public boolean openVideo(int nodeId, VideoRenderer renderer){
+    public boolean setVideoRender(int nodeId, VideoRenderer renderer){
         LoggerUtil.info(getClass().getName(), " nodeId = "+nodeId+" renderer = "+renderer.toString());
-        return video.openVideo(nodeId, renderer);
+        return video.setVideoRender(nodeId, renderer);
     }
-    public  boolean closeVideo(int nodeId, VideoRenderer renderer){
-        return video.closeVideo(nodeId, renderer);
+    public  boolean removeVideoRender(int nodeId, VideoRenderer renderer){
+        return video.removeVideoRender(nodeId, renderer);
     }
     protected boolean checkCallback(){
         if(callback == null){

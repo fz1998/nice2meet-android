@@ -66,20 +66,19 @@ public class Video{
     }
     private native boolean nativeCloseUserVideo(int nodeId);
     
-	public boolean openVideo(int nodeId, VideoRenderer renderer) {
+	public boolean setVideoRender(int nodeId, VideoRenderer renderer) {
 		renderers.add(renderer);
-        return nativeOpenUserVideoGL(nodeId, renderer.getNativeVideoRenderer());
+        return nativeRegistVideoRender(nodeId, renderer.getNativeVideoRenderer());
     }
-    private native boolean nativeOpenUserVideoGL(int nodeId, long nativeVideoRenderer);
+    private native boolean nativeRegistVideoRender(int nodeId, long nativeVideoRenderer);
 	
-	public boolean closeVideo(int nodeId, VideoRenderer renderer) {
+	public boolean removeVideoRender(int nodeId, VideoRenderer renderer) {
 		if (!renderers.remove(renderer)) {
 		return false;
 		}
-		if (!nativeCloseUserVideoGL(nodeId, renderer.getNativeVideoRenderer())){
+		if (!nativeRegistVideoRender(nodeId, 0)){
 			return false;
 		}
         return true;
     }
-    private native boolean nativeCloseUserVideoGL(int nodeId, long nativeVideoRenderer);
 }

@@ -232,7 +232,7 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
     // Local copy of incoming video frame.
     private I420Frame frameToRender;
     // Flag if renderFrame() was ever called
-    boolean seenFrame ;
+    boolean seenFrame;
     // Total number of video frames received in renderFrame() call.
     private int framesReceived;
     // Number of video frames dropped by renderFrame() because previous
@@ -300,7 +300,6 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
     }
 
     private void draw() {
-        LoggerUtil.info(getClass().getName(), " draw = "+VideoRendererView.this.toString()+" seenFrame = "+seenFrame);
       long now = System.nanoTime();
       if (!seenFrame) {
         // No frame received yet - nothing to render.
@@ -389,7 +388,6 @@ public class VideoRendererView implements GLSurfaceView.Renderer {
 
     @Override
     public synchronized void renderFrame(I420Frame frame) {
-        LoggerUtil.info(getClass().getName(), " renderFrame = "+VideoRendererView.this.toString());
       long now = System.nanoTime();
       framesReceived++;
       // Check input frame parameters.

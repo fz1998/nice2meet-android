@@ -10,6 +10,8 @@
     <string name="openVideo">打开视频</string>
     <string name="openAudio">打开音频</string>
     <string name="handsup">举手中...</string>
+    <string name="openSpeaker">打开免提</string>
+    <string name="closeSpeaker">取消免提</string>
     <string name="closeAudio">关闭音频</string>
     <string name="closeVideo">关闭视频</string>
     <string name="closefailed">关闭失败</string>

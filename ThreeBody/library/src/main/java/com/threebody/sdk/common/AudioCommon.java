@@ -11,7 +11,10 @@ public abstract class AudioCommon {
     public static final int MIC_OFF = 0;
     public static final int MIC_ON = 1;
     public static final int MIC_HANDS_UP = 2;
+    public static final int SPEAKER_OFF = 0;
+    public static final int SPEAKER_ON = 1;
     public static int IS_MIC_ON = MIC_OFF;
+    public static int IS_SPEAKER_ON = MIC_OFF;
     public static int OPEN_AUDIO_MSG = 50001;
     private Audio audio;
     Audio.AudioListener listener;

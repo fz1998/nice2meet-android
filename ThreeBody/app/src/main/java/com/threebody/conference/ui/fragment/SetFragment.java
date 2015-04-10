@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.media.AudioManager;
 
 import com.threebody.conference.R;
 import com.threebody.conference.ui.util.ToastUtil;
@@ -23,6 +24,7 @@ import butterknife.InjectView;
 public class SetFragment extends BaseFragment {
     @InjectView(R.id.ivVideo)Button ivVideo;
     @InjectView(R.id.ivAudio)Button ivAudio;
+    @InjectView(R.id.ivSpeaker)Button ivSpeaker;
     @InjectView(R.id.llHelp)LinearLayout llHelp;
     RoomCommon roomCommon;
     @Override
@@ -39,6 +41,7 @@ public class SetFragment extends BaseFragment {
         ivVideo.setOnClickListener(this);
         ivAudio.setOnClickListener(this);
         llHelp.setOnClickListener(this);
+        ivSpeaker.setOnClickListener(this);
         if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_ON){
             ivAudio.setText(R.string.closeAudio);
         }else if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_HANDS_UP){
@@ -66,7 +69,7 @@ public class SetFragment extends BaseFragment {
                         ivAudio.setText(R.string.handsup);
 
                     }
-                }else if(AudioCommon.IS_MIC_ON == 1){
+                }else if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_ON){
                     if(closeAudio()){
                         ivAudio.setText(R.string.openAudio);
                     }else{
@@ -98,11 +101,50 @@ public class SetFragment extends BaseFragment {
                 }
                 ivVideo.setEnabled(true);
                 break;
+            case R.id.ivSpeaker:
+                ivSpeaker.setEnabled(false);
+                if(AudioCommon.IS_SPEAKER_ON== AudioCommon.SPEAKER_OFF){
+                    if(openSpeaker()){
+                        ivSpeaker.setText(R.string.closeSpeaker);
+                        AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_ON;
+                    }
+                }else if(AudioCommon.IS_SPEAKER_ON == AudioCommon.SPEAKER_ON){
+                    if(closeSpeaker()){
+                        AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_OFF;
+                        ivSpeaker.setText(R.string.openSpeaker);
+                    }
+                }else{
+                    ToastUtil.showToast(getActivity(), R.string.handsTip);
+                }
+                ivSpeaker.setEnabled(true);
+                break;
+
         }
     }
     private boolean openAudio(){
         return roomCommon.getAudioCommon().openMic(roomCommon.getMe().getNodeId());
     }
+    private boolean openSpeaker(){
+        AudioManager audioManager =
+                ((AudioManager) getActivity().getSystemService(getActivity().AUDIO_SERVICE));
+        // TODO(fischman): figure out how to do this Right(tm) and remove the
+        // suppression.
+        audioManager.setMode( AudioManager.MODE_IN_COMMUNICATION);
+        audioManager.setSpeakerphoneOn(true);
+        return  true;
+    }
+    private boolean closeSpeaker(){
+        AudioManager audioManager =
+                ((AudioManager) getActivity().getSystemService(getActivity().AUDIO_SERVICE));
+        // TODO(fischman): figure out how to do this Right(tm) and remove the
+        // suppression.
+
+       // boolean isWiredHeadsetOn = audioManager.isWiredHeadsetOn();
+        audioManager.setMode(AudioManager.MODE_IN_CALL );
+        audioManager.setSpeakerphoneOn(false);
+        return  true;
+    }
+
     private boolean closeAudio(){
         return roomCommon.getAudioCommon().closeMic(roomCommon.getMe().getNodeId());
     }
@@ -110,7 +152,6 @@ public class SetFragment extends BaseFragment {
         if(ivAudio != null){
             ivAudio.setText(R.string.closeAudio);
         }
-
     }
     public void closeLocalAudio(){
         if(ivAudio != null ){
