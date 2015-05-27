@@ -66,6 +66,8 @@ public abstract class ChatCommon {
         return false;
     }
     private void initListener(){
+        if (chat == null)
+            return;
         listener = new Chat.ChatListener() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {

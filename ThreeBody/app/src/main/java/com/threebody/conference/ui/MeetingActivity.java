@@ -147,6 +147,7 @@ public class MeetingActivity extends BaseActivity {
             @Override
             public void onLeave(int reason) {
                 ToastUtil.showToast(MeetingActivity.this, "退出会议");
+
             }
 
             @Override

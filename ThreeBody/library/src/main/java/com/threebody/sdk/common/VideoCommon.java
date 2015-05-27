@@ -28,6 +28,7 @@ public class VideoCommon {
     Video.VideoListener listener;
     Video video;
     List<DeviceBean> devices;
+ 
     protected VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
         this.roomCommon = roomCommon;
         this.callback = callback;
@@ -63,6 +64,8 @@ public class VideoCommon {
     }
 
     protected void initListener(){
+        if (video == null)
+            return;
         listener = new Video.VideoListener() {
             @Override
             public void onOpenVideo(int result, int nodeId, String deviceId) {

@@ -15,11 +15,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ivVideoStatus"
+        android:visibility="gone"
         android:src="@drawable/status_video"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ivAudioStatus"
+        android:visibility="gone"
         android:src="@drawable/status_sound"
         android:layout_marginLeft="@dimen/TextSize10"/>
 </LinearLayout>

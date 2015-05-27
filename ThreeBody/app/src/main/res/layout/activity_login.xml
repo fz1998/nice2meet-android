@@ -58,6 +58,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="@dimen/TextSize10"
         android:background="@drawable/login_inputbox"
+        android:visibility="gone"
         android:paddingLeft="@dimen/TextSize10">
         <ImageView
             android:layout_width="wrap_content"

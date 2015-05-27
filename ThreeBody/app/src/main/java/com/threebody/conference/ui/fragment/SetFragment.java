@@ -104,18 +104,35 @@ public class SetFragment extends BaseFragment {
             case R.id.ivSpeaker:
                 ivSpeaker.setEnabled(false);
                 if(AudioCommon.IS_SPEAKER_ON== AudioCommon.SPEAKER_OFF){
-                    if(openSpeaker()){
+                    if(setPlayoutSpeaker(true)){
                         ivSpeaker.setText(R.string.closeSpeaker);
                         AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_ON;
                     }
                 }else if(AudioCommon.IS_SPEAKER_ON == AudioCommon.SPEAKER_ON){
-                    if(closeSpeaker()){
+                    if(setPlayoutSpeaker(false)){
                         AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_OFF;
                         ivSpeaker.setText(R.string.openSpeaker);
                     }
                 }else{
                     ToastUtil.showToast(getActivity(), R.string.handsTip);
                 }
+                ivSpeaker.setEnabled(true);
+
+
+                /*// test for muteMicrophone
+                if(AudioCommon.IS_SPEAKER_ON== AudioCommon.SPEAKER_OFF){
+                    if(muteAudio(true)){
+                        ivSpeaker.setText(R.string.closeSpeaker);
+                        AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_ON;
+                    }
+                }else if(AudioCommon.IS_SPEAKER_ON == AudioCommon.SPEAKER_ON){
+                    if(muteAudio(false)){
+                        AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_OFF;
+                        ivSpeaker.setText(R.string.openSpeaker);
+                    }
+                }else{
+                    ToastUtil.showToast(getActivity(), R.string.handsTip);
+                }*/
                 ivSpeaker.setEnabled(true);
                 break;
 
@@ -129,9 +146,45 @@ public class SetFragment extends BaseFragment {
                 ((AudioManager) getActivity().getSystemService(getActivity().AUDIO_SERVICE));
         // TODO(fischman): figure out how to do this Right(tm) and remove the
         // suppression.
-        audioManager.setMode( AudioManager.MODE_IN_COMMUNICATION);
+        //audioManager.setMode( AudioManager.MODE_IN_COMMUNICATION);
         audioManager.setSpeakerphoneOn(true);
         return  true;
+    }
+    private boolean setPlayoutSpeaker(boolean loudspeakerOn){
+        int apiLevel = android.os.Build.VERSION.SDK_INT;
+        AudioManager audioManager =
+                ((AudioManager) getActivity().getSystemService(getActivity().AUDIO_SERVICE));
+        if ((3 == apiLevel) || (4 == apiLevel)) {
+            // 1.5 and 1.6 devices
+            if (loudspeakerOn) {
+                // route audio to back speaker
+                audioManager.setMode(AudioManager.MODE_NORMAL);
+            } else {
+                // route audio to earpiece
+                audioManager.setMode(AudioManager.MODE_IN_CALL);
+            }
+        } else {
+            // 2.x devices
+            if ((android.os.Build.BRAND.equals("Samsung") ||
+                    android.os.Build.BRAND.equals("samsung")) &&
+                    ((5 == apiLevel) || (6 == apiLevel) ||
+                            (7 == apiLevel))) {
+                // Samsung 2.0, 2.0.1 and 2.1 devices
+                if (loudspeakerOn) {
+                    // route audio to back speaker
+                    audioManager.setMode(AudioManager.MODE_IN_CALL);
+                    audioManager.setSpeakerphoneOn(loudspeakerOn);
+                } else {
+                    // route audio to earpiece
+                    audioManager.setSpeakerphoneOn(loudspeakerOn);
+                    audioManager.setMode(AudioManager.MODE_NORMAL);
+                }
+            } else {
+                // Non-Samsung and Samsung 2.2 and up devices
+                audioManager.setSpeakerphoneOn(loudspeakerOn);
+            }
+        }
+        return true;
     }
     private boolean closeSpeaker(){
         AudioManager audioManager =
@@ -140,9 +193,13 @@ public class SetFragment extends BaseFragment {
         // suppression.
 
        // boolean isWiredHeadsetOn = audioManager.isWiredHeadsetOn();
-        audioManager.setMode(AudioManager.MODE_IN_CALL );
+        //audioManager.setMode(AudioManager.MODE_IN_CALL );
         audioManager.setSpeakerphoneOn(false);
         return  true;
+    }
+
+    private boolean muteAudio(boolean mute){
+        return roomCommon.getAudioCommon().muteMic(roomCommon.getMe().getNodeId(), mute);
     }
 
     private boolean closeAudio(){

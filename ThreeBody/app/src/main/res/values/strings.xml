@@ -22,7 +22,7 @@
     <string name="send">发送</string>
 
     <!-- hint -->
-    <string name="inMeetignNum">会议号，如123456</string>
+    <string name="inMeetignNum">会议号，如r1</string>
     <string name="inUsername">请输入用户名</string>
     <string name="inPswd">请输入密码</string>
     <string name="inMessge">填写消息</string>

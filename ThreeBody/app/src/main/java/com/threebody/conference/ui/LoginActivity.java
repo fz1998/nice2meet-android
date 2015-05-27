@@ -18,7 +18,10 @@ import com.threebody.sdk.http.entity.LoginResponse;
 import com.threebody.sdk.listener.LoginListener;
 import com.threebody.sdk.util.LoggerUtil;
 
+import org.st.RoomInfo;
 import org.st.RoomSystem;
+
+import java.util.UUID;
 
 import butterknife.InjectView;
 
@@ -30,6 +33,7 @@ public class LoginActivity extends BaseActivity {
     @InjectView(R.id.etPassword)EditText etPassword;
     @InjectView(R.id.btnAddIn)Button btnAddIn;
     RoomCommonImpl roomCommon ;
+    RoomCommonImpl roomCommon2 ;
     HttpProgressDialog dialog;
     @Override
     protected void initUI() {
@@ -37,8 +41,11 @@ public class LoginActivity extends BaseActivity {
         super.initUI();
         getSupportActionBar().hide();
         btnAddIn.setOnClickListener(this);
-        etNum.setText("r62");
-        etName.setText("admin");
+        String defaultName = android.os.Build.MODEL + ":"
+                + android.os.Build.VERSION.SDK + "_"
+                + android.os.Build.VERSION.RELEASE;
+        etNum.setText("");
+        etName.setText(defaultName);
         etPassword.setText("admin");
     }
 
@@ -80,6 +87,8 @@ public class LoginActivity extends BaseActivity {
         final String name = etName.getText().toString();
         final String password = etPassword.getText().toString();
         RoomSystem.initializeAndroidGlobals(this, true, true);
+        RoomSystem.setVideoOptions(480,640,10);
+        RoomSystem.logEnable(true);
 //        STSystem.getInstance().initializeAndroidGlobals(this);
         final LoginRequest request = new LoginRequest(name, password);
         new LoginHandle(new LoginListener() {
@@ -99,22 +108,47 @@ public class LoginActivity extends BaseActivity {
                         STSystem.getInstance().init(new STSystem.ConferenceSystemCallback() {
                             @Override
                             public void onInitResult(int result) {
-                                LoggerUtil.info(getClass().getName(), "result = "+result);
+                                org.st.RoomInfo info = new RoomInfo();
+                                //free 1, host 2, p2pfree3,
+                                info.setRoomMode(1);
+                                //info.setHostID("oxx");
+                                info.setOwnerID("1002");
+                                info.setExtendID("3213r5255");
+                                info.setRoomName("woxx");
+                                info.setMaxAttendee(1000);
+                                info.setMaxAudio(5);
+                                info.setMaxVideo(5);
+
+                                //STSystem.getInstance().getRoomSystem().ArrangeRoom(info);
+                                // STSystem.getInstance().getRoomSystem().QueryRoomByExtendId("3213r5255");
+                                // STSystem.getInstance().getRoomSystem().CancelRoom("r593");
+                                // STSystem.getInstance().getRoomSystem().QueryRoom("r595");
+                                LoggerUtil.info(getClass().getName(), "result = " + result);
                                 IS_SYSTEM_INIT = true;
                                 roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
                                     @Override
                                     public void onJoinResult(int result) {
-                                        LoggerUtil.info(getClass().getName(), "join result = "+result);
+                                        LoggerUtil.info(getClass().getName(), "join result = " + result);
                                         Intent intent = new Intent();
                                         intent.setClass(LoginActivity.this, MeetingActivity.class);
                                         startActivity(intent);
                                         finish();
+                                        org.st.User user =  roomCommon.getRoom().getUser("12221");
+                                        roomCommon.getRoom().getRoomID();
+                                        roomCommon.getRoom().getRoomName();
                                     }
                                 }, num);
+
                                 STSystem.getInstance().createRoom(roomCommon);
-                                roomCommon.join("12221",name, password);
+                                UUID id = UUID.randomUUID();
+                                roomCommon.join("12221", name, password);
+                                //roomCommon.join(id.toString(), name, password);
                             }
-                        }, url, token);
+                       //}, "192.168.2.2:8080", "demo_access","demo_secret");
+                            //},"60.191.94.115:8090" , "demo_access","demo_secret");
+
+                         },url, "demo_access","demo_secret");
+
                     }
 //                    else{
 //                        roomCommon = (RoomCommonImpl)STSystem.getInstance().findCommonById(num);
@@ -128,7 +162,8 @@ public class LoginActivity extends BaseActivity {
 //                                    startActivity(intent);
 //                                    finish();
 //                                }
-//                            }, num);
+//
+//                 }, num);
 //                        }
 //                        STSystem.getInstance().createRoom(roomCommon);
 //                        roomCommon.join("11221", name, password);

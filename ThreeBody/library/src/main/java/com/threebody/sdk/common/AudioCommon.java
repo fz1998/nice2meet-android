@@ -64,6 +64,17 @@ public abstract class AudioCommon {
         }
         return false;
     }
+    public boolean muteMic(int id, boolean mute){
+        if(audio != null){
+            boolean isSucceed = audio.muteMicrophone(id, mute);
+            if(isSucceed){
+               // IS_MIC_ON = MIC_OFF;
+            }
+            return isSucceed;
+        }
+        return false;
+    }
+
     public int getMaxAudio(){
         if(audio != null){
             return audio.getMaxAudio();
@@ -82,6 +93,8 @@ public abstract class AudioCommon {
         return -1;
     }
     private void initListener(){
+        if (audio == null)
+            return;
         listener = new Audio.AudioListener() {
             @Override
             public void onOpenMicrophone(int result, int nodeId) {

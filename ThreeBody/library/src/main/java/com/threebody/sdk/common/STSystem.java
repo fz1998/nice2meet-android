@@ -1,5 +1,7 @@
 package com.threebody.sdk.common;
 
+import com.threebody.sdk.util.LoggerUtil;
+
 import org.st.Room;
 import org.st.RoomSystem;
 
@@ -17,6 +19,7 @@ public class STSystem {
     private RoomSystem.RoomSystemListener listener;
     ConferenceSystemCallback callback;
     public static boolean isInit = false;
+    private final String tag = "System";
     public static STSystem getInstance(){
        if(instance == null){
            instance = new STSystem();
@@ -34,6 +37,10 @@ public class STSystem {
         this.callback = callback;
         roomSystem.init(listener, url, token);
     }
+    public void init(ConferenceSystemCallback callback, String url, String accessKey, String secretKey){
+        this.callback = callback;
+        roomSystem.init(listener, url, accessKey, secretKey);
+    }
     public void unInit(){
         roomSystem.unInit();
     }
@@ -49,7 +56,9 @@ public class STSystem {
     public void initializeAndroidGlobals(Object activity){
         RoomSystem.initializeAndroidGlobals(activity, true, true);
     }
-
+    public void desroyRoom(){
+       this.roomCommon.getRoom().dispose();
+    }
     public  List<RoomCommon> getRoomCommons() {
         return roomCommons;
     }
@@ -77,6 +86,18 @@ public class STSystem {
                 if(callback != null){
                     callback.onInitResult(i);
                 }
+            }
+            @Override
+            public void onArrangeRoom(int i, java.lang.String s) {
+                LoggerUtil.info(tag, i+s);
+            }
+            @Override
+            public void onCancelRoom(int i, java.lang.String s) {
+                LoggerUtil.info(tag, i+s);
+            }
+            @Override
+            public void onQueryRoom(int i, org.st.RoomInfo roomInfo) {
+                LoggerUtil.info(tag, roomInfo.getRoomID());
             }
         };
     }

@@ -1,5 +1,7 @@
 package com.threebody.sdk.common;
 
+import android.util.Log;
+
 import com.threebody.sdk.util.LoggerUtil;
 
 import org.st.Audio;
@@ -9,6 +11,7 @@ import org.st.RoomInfo;
 import org.st.User;
 import org.st.Video;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +57,9 @@ public abstract class RoomCommon {
         this.me = me;
         users.add(me);
     }
-
+    public Room getRoom(){
+        return this.room;
+    }
     public void setRoom(Room room) {
         this.room = room;
     }
@@ -115,6 +120,7 @@ public abstract class RoomCommon {
             dispose();
             STSystem.getInstance().getRoomCommons().remove(this);
         }
+
         return false;
     }
 
@@ -122,7 +128,14 @@ public abstract class RoomCommon {
      * 销毁房间 最后一个调用函数
      */
     public void dispose(){
+        long begin= System.currentTimeMillis();
+        Log.d("dispose begin time", "ms = " +begin);
         room.dispose();
+        long end = System.currentTimeMillis();
+        Log.d("dispose end time", "ms = " +end);
+        Log.d("dispose end time", "ms = " +(end-begin));
+
+
     }
 
     /**
