@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.media.AudioManager;
 
 import com.threebody.conference.R;
+import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.sdk.common.AudioCommon;
 import com.threebody.sdk.common.RoomCommon;
@@ -23,6 +24,7 @@ import butterknife.InjectView;
  */
 public class SetFragment extends BaseFragment {
     @InjectView(R.id.ivVideo)Button ivVideo;
+    @InjectView(R.id.ivVideoShow)Button ivVideoShow;
     @InjectView(R.id.ivAudio)Button ivAudio;
     @InjectView(R.id.ivSpeaker)Button ivSpeaker;
     @InjectView(R.id.llHelp)LinearLayout llHelp;
@@ -42,6 +44,7 @@ public class SetFragment extends BaseFragment {
         ivAudio.setOnClickListener(this);
         llHelp.setOnClickListener(this);
         ivSpeaker.setOnClickListener(this);
+        ivVideoShow.setOnClickListener(this);
         if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_ON){
             ivAudio.setText(R.string.closeAudio);
         }else if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_HANDS_UP){
@@ -51,6 +54,15 @@ public class SetFragment extends BaseFragment {
             ivVideo.setText(R.string.closeVideo);
         }else if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_HOLD){
             ivAudio.setText(R.string.handsup);
+        }
+        AudioManager audioManager =
+                ((AudioManager) getActivity().getSystemService(getActivity().AUDIO_SERVICE));
+        if (audioManager.isSpeakerphoneOn()){
+            ivSpeaker.setText(R.string.closeSpeaker);
+            AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_ON;
+        }else {
+            ivSpeaker.setText(R.string.openSpeaker);
+            AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_OFF;
         }
     }
 
@@ -135,7 +147,8 @@ public class SetFragment extends BaseFragment {
                 }*/
                 ivSpeaker.setEnabled(true);
                 break;
-
+            case R.id.ivVideoShow:
+                ((MeetingActivity)getActivity()).changeToVideoSet();
         }
     }
     private boolean openAudio(){
