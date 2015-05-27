@@ -309,7 +309,8 @@ public class MeetingActivity extends BaseActivity {
             switch (msg.what){
                 case VideoCommon.VIDEO_OPEN:
                     DeviceBean deviceBean = (DeviceBean)msg.obj;
-                    mVideo.addDevice(deviceBean);
+                    mVideo.refresh(videoCommon.getDevices());;
+                    //mVideo.addDevice(deviceBean);
                     if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
                         mSet.openLocalVideo();
                     }
@@ -317,6 +318,7 @@ public class MeetingActivity extends BaseActivity {
                     break;
                 case VideoCommon.VIDEO_CLOSE:
                     deviceBean = (DeviceBean)msg.obj;
+                    mVideo.refresh(videoCommon.getDevices());;
                     if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
                         mSet.closeLoacalVideo();
                     }

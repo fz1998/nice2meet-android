@@ -12,6 +12,8 @@ import com.threebody.sdk.common.impl.VideoCommonImpl;
 import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
 
+import org.apache.http.auth.NTUserPrincipal;
+
 import java.util.List;
 
 /**
@@ -113,33 +115,126 @@ public class VideoFragment extends BaseFragment {
         }
 
     }
-
-    public void refresh(List<DeviceBean> devices) {
-         int i = 0;
-
-        if(devices != null && !devices.isEmpty()){
-            for (DeviceBean deviceBean : devices){
-               if(deviceBean.isVideoChecked()){
-                 if(i == 0){
-                     device1 = deviceBean;
-                     i++;
-                 }else if(i == 1){
-                     device2 = deviceBean;
-                 }
-               }
-            }
+    private boolean Eq(DeviceBean device1, DeviceBean device2){
+        if (device1 == null && device2 != null){
+            return false;
+        }else if ((device1 != null && device2 == null)){
+            return  false;
+        } else if (device2 != null
+                && null != device1
+                && device1.getDeviceId() == device2.getDeviceId()
+                && device1.getNodeId() == device2.getNodeId()){
+            return true;
         }
-        checkDevice(device1, device2);
-        if(deviceUp != null){
-            videoUp.setDevice(deviceUp);
-            videoUp.setVideoRender(videoCommon);
-        }
-        if(deviceDown != null){
-            videoDown.setDevice(deviceDown);
-            videoDown.setVideoRender(videoCommon);
+        else {
+            return false;
         }
     }
-    private void checkDevice(DeviceBean device1, DeviceBean device2){
+
+    void closeShowDown(){
+        if (videoDown == null)
+            return;
+        videoDown.removeVideoRender(videoCommon);
+        videoDown.setDevice(null);
+        deviceDown = null;
+    }
+    void closeShowUp(){
+        if (videoUp == null)
+            return;
+        videoUp.removeVideoRender(videoCommon);
+        videoUp.setDevice(null);
+        deviceUp = null;
+    }
+
+    void changeShowUp(DeviceBean device){
+        if (Eq(deviceUp, device))
+            return;
+        closeShowUp();
+        videoUp.setDevice(device);
+        videoUp.setVideoRender(videoCommon);
+        deviceUp = device;
+    }
+
+    void changeShowDown(DeviceBean device){
+        if (Eq(deviceUp, device))
+            return;
+        closeShowDown();
+        videoDown.setDevice(device);
+        videoDown.setVideoRender(videoCommon);
+        deviceDown = device;
+    }
+    public void refresh(List<DeviceBean> devices) {
+        int i = 0;
+        DeviceBean nextShowDevice1 = null, nextShowDevice2 = null;
+        if(devices != null && !devices.isEmpty()){
+            for (DeviceBean deviceBean : devices){
+                if(deviceBean.isVideoChecked() ){
+                    if(i == 0){
+                        device1 = deviceBean;
+                        i+=1;
+                    }else if(i == 1){
+                        i+=1;
+                        device2 = deviceBean;
+                    }
+                }
+            }
+        }
+        if (i == 0){
+            closeShowUp();
+            closeShowDown();
+        }else if (i == 1){
+            closeShowDown();
+            changeShowUp(device1);
+        }else if (i  == 2){
+            changeShowUp(device1);
+            changeShowDown(device2);
+        }
+    }
+//    public void refresh(List<DeviceBean> devices) {
+//         int i = 0;
+//        DeviceBean nextShowDevice1 = null, nextShowDevice2 = null;
+//        if(devices != null && !devices.isEmpty()){
+//            for (DeviceBean deviceBean : devices){
+//               if(deviceBean.isVideoChecked() && !Eq(deviceBean, deviceUp) && !Eq(deviceBean, deviceDown)){
+//                 if(i == 0){
+//                     device1 = deviceBean;
+//                     i++;
+//                 }else if(i == 1){
+//                     device2 = deviceBean;
+//                 }
+//               }
+//            }
+//        }
+//        checkDevice(device1,nextShowDevice1 , device2, nextShowDevice2 );
+//
+//        if(deviceUp != null){
+//            videoUp.setDevice(deviceUp);
+//            videoUp.setVideoRender(videoCommon);
+//        }
+//        if(deviceDown != null){
+//            videoDown.setDevice(deviceDown);
+//            videoDown.setVideoRender(videoCommon);
+//        }
+//    }
+    private void checkDevice(DeviceBean device1, DeviceBean nextShowDevice1, DeviceBean device2, DeviceBean nextShowDevice2){
+
+        if (device1 != null ){
+            if (nextShowDevice1 == null){
+                //取消device1的显示
+
+            }else {
+                //更新device1显示
+            }
+        }else {
+            if (nextShowDevice1 == null){
+                //device1没有显示
+
+            }else {
+                //更新device1显示
+            }
+        }
+
+
         if(device1 == null){
             videoUp.removeVideoRender(videoCommon);
             videoDown.removeVideoRender(videoCommon);

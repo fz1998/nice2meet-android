@@ -124,7 +124,7 @@ public class VideoShowGLFragment extends FrameLayout{
         deviceBean = device;
 //        handler.sendMessage(msg);
 
-        if(llFlFragment != null){
+        if(llFlFragment != null && deviceBean != null){
             showVideoLayout();
         }
     }
@@ -160,7 +160,7 @@ public class VideoShowGLFragment extends FrameLayout{
     public void removeVideoRender(VideoCommon videoCommon){
         if(deviceBean != null){
             videoCommon.removeVideoRender(deviceBean.getNodeId(), mRenderer);
-            mRenderer.dispose();
+            //mRenderer.dispose();
         }
     }
 

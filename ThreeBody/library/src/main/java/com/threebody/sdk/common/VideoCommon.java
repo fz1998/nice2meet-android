@@ -28,7 +28,7 @@ public class VideoCommon {
     Video.VideoListener listener;
     Video video;
     List<DeviceBean> devices;
- 
+
     protected VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
         this.roomCommon = roomCommon;
         this.callback = callback;
@@ -58,6 +58,15 @@ public class VideoCommon {
         }
         return null;
     }
+    private int checkDeviceShowCount()
+    {
+        int count = 0;
+        for (DeviceBean deviceBean: devices){
+            if (deviceBean.isVideoChecked())
+                count++;
+        }
+        return count;
+    }
 
     public List<DeviceBean> getDevices() {
         return devices;
@@ -78,7 +87,12 @@ public class VideoCommon {
                             IS_CAMERA_OPEN = CAMERA_ON;
                         }
                         user.setVideoOn(true);
+
                         DeviceBean deviceBean = new DeviceBean(nodeId, deviceId);
+                        if (checkDeviceShowCount()<2){
+                            deviceBean.setVideoChecked(true);
+                        }
+
                         deviceBean.setUser(user);
                         devices.add(deviceBean);
                         if(checkCallback()){
@@ -95,6 +109,8 @@ public class VideoCommon {
             @Override
             public void onCloseVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onCloseVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
+                DeviceBean deviceBean = findDeviceById(deviceId);
+                deviceBean.setVideoChecked(false);
                 if(checkCallback()){
                     callback.onCloseVideo(result, nodeId, deviceId);
                 }
@@ -106,7 +122,6 @@ public class VideoCommon {
                         }
                         user.setVideoOn(false);
                     }
-                    DeviceBean deviceBean = findDeviceById(deviceId);
                     if(deviceBean != null){
                         devices.remove(deviceBean);
                     }

@@ -86,9 +86,9 @@ public class VideoSetAdapter extends BaseAdapter {
                         secondCheck = position;
                     }
                 }else{
+                    checkCount--;
                     if(position == firstCheck){
                         firstCheck = secondCheck;
-                        checkCount--;
                     }
 
                 }
