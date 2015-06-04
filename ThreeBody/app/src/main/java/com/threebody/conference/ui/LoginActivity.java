@@ -87,7 +87,7 @@ public class LoginActivity extends BaseActivity {
         final String name = etName.getText().toString();
         final String password = etPassword.getText().toString();
         RoomSystem.initializeAndroidGlobals(this, true, true);
-        RoomSystem.setVideoOptions(480,640,10);
+        RoomSystem.setVideoOptions(640,480,20);
         RoomSystem.logEnable(true);
 //        STSystem.getInstance().initializeAndroidGlobals(this);
         final LoginRequest request = new LoginRequest(name, password);
@@ -141,8 +141,8 @@ public class LoginActivity extends BaseActivity {
 
                                 STSystem.getInstance().createRoom(roomCommon);
                                 UUID id = UUID.randomUUID();
-                                roomCommon.join("12221", name, password);
-                                //roomCommon.join(id.toString(), name, password);
+                                //roomCommon.join("12221", name, password);
+                                roomCommon.join(id.toString(), name, password);
                             }
                        //}, "192.168.2.2:8080", "demo_access","demo_secret");
                             //},"60.191.94.115:8090" , "demo_access","demo_secret");
