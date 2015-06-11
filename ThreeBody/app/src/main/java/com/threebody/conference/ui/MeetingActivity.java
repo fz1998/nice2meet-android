@@ -29,6 +29,7 @@ import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
 import com.threebody.sdk.util.LoggerUtil;
 
+import org.st.Room;
 import org.st.User;
 
 import java.util.ArrayList;
@@ -151,7 +152,7 @@ public class MeetingActivity extends BaseActivity {
             }
 
             @Override
-            public void onConnectionChange(int state) {
+            public void onConnectionChange(Room.ConnectionStatus state) {
 
             }
 

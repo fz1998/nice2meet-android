@@ -201,7 +201,7 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onConnectionChange(int state) {
+            public void onConnectionChange(Room.ConnectionStatus state) {
                 LoggerUtil.info(tag, "onConnectionChange state = "+state);
                 if(checkCallback()){
                     callback.onConnectionChange(state);
@@ -303,7 +303,7 @@ public abstract class RoomCommon {
          * 连接状态改变
          * @param state
          */
-        void onConnectionChange(int state);
+        void onConnectionChange(Room.ConnectionStatus state);
         /**
          * 新用户加入
          * @param user

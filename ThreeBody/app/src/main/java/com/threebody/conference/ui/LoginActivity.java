@@ -87,7 +87,7 @@ public class LoginActivity extends BaseActivity {
         final String name = etName.getText().toString();
         final String password = etPassword.getText().toString();
         RoomSystem.initializeAndroidGlobals(this, true, true);
-        RoomSystem.setVideoOptions(640,480,20);
+        RoomSystem.setVideoOptions(640,480,10);
         RoomSystem.logEnable(true);
 //        STSystem.getInstance().initializeAndroidGlobals(this);
         final LoginRequest request = new LoginRequest(name, password);
