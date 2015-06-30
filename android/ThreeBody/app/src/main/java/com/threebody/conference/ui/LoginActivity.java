@@ -89,6 +89,33 @@ public class LoginActivity extends BaseActivity {
         RoomSystem.initializeAndroidGlobals(this, true, true);
         RoomSystem.setVideoOptions(640,480,10);
         RoomSystem.logEnable(true);
+
+       // LoggerUtil.info(getClass().getName(), "url = "+url);
+//                    String url = "192.168.1.108:20009";
+//                    String token = result.getAccess_tocken();
+//                    String url = result.getRoom_uri();
+       // String token = result.getAccess_tocken();
+
+        //join with out http
+
+//                    else{
+//                        roomCommon = (RoomCommonImpl)STSystem.getInstance().findCommonById(num);
+//                        if(roomCommon == null){
+//                            roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
+//                                @Override
+//                                public void onJoinResult(int result) {
+//                                    LoggerUtil.info(getClass().getName(), "join result = "+result);
+//                                    Intent intent = new Intent();
+//                                    intent.setClass(LoginActivity.this, MeetingActivity.class);
+//                                    startActivity(intent);
+//                                    finish();
+//                                }
+//
+//                 }, num);
+//                        }
+//                        STSystem.getInstance().createRoom(roomCommon);
+//                        roomCommon.join("11221", name, password);
+//                    }
 //        STSystem.getInstance().initializeAndroidGlobals(this);
         final LoginRequest request = new LoginRequest(name, password);
         new LoginHandle(new LoginListener() {
@@ -96,14 +123,7 @@ public class LoginActivity extends BaseActivity {
             public void onLoginResult(LoginResponse result) {
                 if(result.getRet() == 0){
 
-//                }
                     String url = result.getRoom_uri().substring(0, result.getRoom_uri().indexOf("/"));
-
-                    LoggerUtil.info(getClass().getName(), "url = "+url);
-//                    String url = "192.168.1.108:20009";
-//                    String token = result.getAccess_tocken();
-//                    String url = result.getRoom_uri();
-                    String token = result.getAccess_tocken();
                     if(!IS_SYSTEM_INIT){
                         STSystem.getInstance().init(new STSystem.ConferenceSystemCallback() {
                             @Override
@@ -128,14 +148,16 @@ public class LoginActivity extends BaseActivity {
                                 roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
                                     @Override
                                     public void onJoinResult(int result) {
-                                        LoggerUtil.info(getClass().getName(), "join result = " + result);
-                                        Intent intent = new Intent();
-                                        intent.setClass(LoginActivity.this, MeetingActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                        org.st.User user =  roomCommon.getRoom().getUser("12221");
-                                        roomCommon.getRoom().getRoomID();
-                                        roomCommon.getRoom().getRoomName();
+                                        if (0  == result){
+                                            LoggerUtil.info(getClass().getName(), "join result = " + result);
+                                            Intent intent = new Intent();
+                                            intent.setClass(LoginActivity.this, MeetingActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                            org.st.User user =  roomCommon.getRoom().getUser("12221");
+                                            roomCommon.getRoom().getRoomID();
+                                            roomCommon.getRoom().getRoomName();
+                                        }
                                     }
                                 }, num);
 
@@ -144,30 +166,12 @@ public class LoginActivity extends BaseActivity {
                                 //roomCommon.join("12221", name, password);
                                 roomCommon.join(id.toString(), name, password);
                             }
-                       //}, "192.168.2.2:8080", "demo_access","demo_secret");
+                            //}, "192.168.2.2:8080", "demo_access","demo_secret");
                             //},"60.191.94.115:8090" , "demo_access","demo_secret");
 
-                         },url, "demo_access","demo_secret");
+                        },url, "demo_access","demo_secret");
 
                     }
-//                    else{
-//                        roomCommon = (RoomCommonImpl)STSystem.getInstance().findCommonById(num);
-//                        if(roomCommon == null){
-//                            roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
-//                                @Override
-//                                public void onJoinResult(int result) {
-//                                    LoggerUtil.info(getClass().getName(), "join result = "+result);
-//                                    Intent intent = new Intent();
-//                                    intent.setClass(LoginActivity.this, MeetingActivity.class);
-//                                    startActivity(intent);
-//                                    finish();
-//                                }
-//
-//                 }, num);
-//                        }
-//                        STSystem.getInstance().createRoom(roomCommon);
-//                        roomCommon.join("11221", name, password);
-//                    }
 
                 }
             }

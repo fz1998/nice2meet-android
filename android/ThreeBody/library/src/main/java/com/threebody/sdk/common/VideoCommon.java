@@ -45,6 +45,7 @@ public class VideoCommon {
             devices = new ArrayList<>();
         }
         video = roomCommon.getVideo();
+        video.setAutoRotation(true);
         roomCommon.setVideoCommon(this);
         initListener();
     }
@@ -161,7 +162,11 @@ public class VideoCommon {
         return video.getSurplusVideo();
     }
     public boolean openVideo(int nodeId){
-        if(video.openVideo(nodeId)){
+//        if(video.openVideo(nodeId)){
+//            IS_CAMERA_OPEN = CAMERA_ON;
+//            return true;
+//        }
+        if(video.openLocalVideo(Video.CameraType.Front)){
             IS_CAMERA_OPEN = CAMERA_ON;
             return true;
         }

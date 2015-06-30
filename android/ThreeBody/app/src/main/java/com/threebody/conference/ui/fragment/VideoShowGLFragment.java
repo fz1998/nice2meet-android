@@ -23,6 +23,8 @@ import com.threebody.sdk.domain.VideoBean;
 import org.st.VideoRendererView;
 import org.webrtc.VideoRenderer;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import butterknife.InjectView;
 
 /**
@@ -160,6 +162,8 @@ public class VideoShowGLFragment extends FrameLayout{
     public void removeVideoRender(VideoCommon videoCommon){
         if(deviceBean != null){
             videoCommon.removeVideoRender(deviceBean.getNodeId(), mRenderer);
+            mRendererView.refresh();
+            //mRendererView.onDrawFrame();
             //mRenderer.dispose();
         }
     }
