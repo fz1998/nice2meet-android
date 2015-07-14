@@ -70,7 +70,7 @@ public abstract class ChatCommon {
             return;
         listener = new Chat.ChatListener() {
             @Override
-            public void onReceivePublicMessage(int nodeId, String message) {
+            synchronized public void onReceivePublicMessage(int nodeId, String message) {
                 User user = roomCommon.findUserById(nodeId);
                 String name = "";
                 if(user != null){
@@ -84,7 +84,7 @@ public abstract class ChatCommon {
             }
 
             @Override
-            public void onReceivePrivateMessage(int nodeId, String message) {
+            synchronized public void onReceivePrivateMessage(int nodeId, String message) {
                 MessageBean msg = new MessageBean(message,"",nodeId, false, false);
                 addPrivateMessage(msg);
                 if(checkCallback()){
@@ -93,7 +93,7 @@ public abstract class ChatCommon {
             }
 
             @Override
-            public void onReceiveData(int nodeId, String data) {
+            synchronized public void onReceiveData(int nodeId, String data) {
                 if(checkCallback()){
                     callback.onReceiveData(nodeId, data);
                 }

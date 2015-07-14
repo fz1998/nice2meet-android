@@ -4,6 +4,7 @@ import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
 import com.threebody.sdk.util.LoggerUtil;
 
+import org.st.Screen;
 import org.st.User;
 import org.st.Video;
 import org.webrtc.VideoRenderer;
@@ -23,16 +24,21 @@ public class VideoCommon {
     public static final int VIDEO_OPEN= 40001;
     public static final int VIDEO_CLOSE= 40002;
     public static final int VIDEO_STATUS = 40003;
+    public static final int SCREEN_OPEN= 40004;
+    public static final int SCREEN_CLOSE= 40005;
     RoomCommon roomCommon;
     protected VideoCallback callback;
     Video.VideoListener listener;
     Video video;
+    Screen.ScreenListener screenListener;
+    Screen screen;
     List<DeviceBean> devices;
 
     protected VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
         this.roomCommon = roomCommon;
         this.callback = callback;
         video = roomCommon.getVideo();
+        screen = roomCommon.getScreen();
         init();
     }
 
@@ -45,7 +51,7 @@ public class VideoCommon {
             devices = new ArrayList<>();
         }
         video = roomCommon.getVideo();
-        video.setAutoRotation(true);
+        video.setAutoRotation(false);
         roomCommon.setVideoCommon(this);
         initListener();
     }
@@ -76,9 +82,10 @@ public class VideoCommon {
     protected void initListener(){
         if (video == null)
             return;
+
         listener = new Video.VideoListener() {
             @Override
-            public void onOpenVideo(int result, int nodeId, String deviceId) {
+            synchronized public void onOpenVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onOpenVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
 
                 if(result == 0){
@@ -108,7 +115,7 @@ public class VideoCommon {
             }
 
             @Override
-            public void onCloseVideo(int result, int nodeId, String deviceId) {
+            synchronized public void onCloseVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onCloseVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
                 DeviceBean deviceBean = findDeviceById(deviceId);
                 deviceBean.setVideoChecked(false);
@@ -131,7 +138,7 @@ public class VideoCommon {
             }
 
             @Override
-            public void onRequestOpenVideo(int nodeId, String deviceId) {
+            synchronized public void onRequestOpenVideo(int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onRequestOpenVideo nodeId = "+nodeId+" deviceId = "+deviceId);
                 if(checkCallback()){
                     callback.onRequestOpenVideo(nodeId, deviceId);
@@ -139,7 +146,7 @@ public class VideoCommon {
             }
 
             @Override
-            public void onVideoData(int nodeId, String deviceId, byte[] data, int len, int width, int height) {
+            synchronized public void onVideoData(int nodeId, String deviceId, byte[] data, int len, int width, int height) {
                 VideoBean videoBean = new VideoBean();
                 videoBean.setNodeId(nodeId);
                 videoBean.setDeviceId(deviceId);
@@ -151,8 +158,64 @@ public class VideoCommon {
                     callback.onVideoData(videoBean);
                 }
             }
+
         };
         video.setListener(listener);
+
+        screenListener = new Screen.ScreenListener(){
+            @Override
+            public void onShareScreen(int result, int nodeId, String screenId){
+                LoggerUtil.info(tag, "onShareScreen result = "+result+" nodeId = "+nodeId+" deviceId = "+screenId);
+
+                if(result == 0){
+                    User user = roomCommon.findUserById(nodeId);
+                    if(user != null){
+                        if(user.getNodeId() == roomCommon.getMe().getNodeId()){
+                            IS_CAMERA_OPEN = CAMERA_ON;
+                        }
+                        user.setVideoOn(true);
+
+                        DeviceBean deviceBean = new DeviceBean(nodeId, screenId, true);
+                        if (checkDeviceShowCount()<2){
+                            deviceBean.setVideoChecked(true);
+                        }
+
+                        deviceBean.setUser(user);
+                        devices.add(deviceBean);
+                        if(checkCallback()){
+                            callback.onShareScreen(deviceBean);
+                        }
+                    }
+
+
+                }
+            }
+            @Override
+            public void onCloseScreen(int result, int nodeId, String screenId){
+                LoggerUtil.info(tag, "onCloseScreen result = "+result+" nodeId = "+nodeId+" deviceId = "+screenId);
+                DeviceBean deviceBean = findDeviceById(screenId);
+                deviceBean.setVideoChecked(false);
+                if(checkCallback()){
+                    callback.onCloseScreen(result, nodeId, screenId);
+                }
+                if(result == 0){
+                    User user = roomCommon.findUserById(nodeId);
+                    if(user != null){
+                        if(user.getNodeId() == getRoomCommon().getMe().getNodeId()){
+                            IS_CAMERA_OPEN = CAMERA_OFF;
+                        }
+                        user.setVideoOn(false);
+                    }
+                    if(deviceBean != null){
+                        devices.remove(deviceBean);
+                    }
+                }
+            }
+        };
+        if (screen == null)
+            return;
+        screen.setListener(screenListener);
+
     }
     //
     public int getMaxVideo(){
@@ -179,10 +242,21 @@ public class VideoCommon {
         }
         return false;
     }
+
+    public boolean setScreenRender(int nodeId, String screenId, VideoRenderer renderer){
+        LoggerUtil.info(getClass().getName(), " nodeId = "+nodeId+" renderer = "+renderer.toString());
+        return screen.setScreenRender(nodeId, screenId, renderer);
+    }
+
     public boolean setVideoRender(int nodeId, VideoRenderer renderer){
         LoggerUtil.info(getClass().getName(), " nodeId = "+nodeId+" renderer = "+renderer.toString());
         return video.setVideoRender(nodeId, renderer);
     }
+
+    public  boolean removeSreenRender(int nodeId, String screenId, VideoRenderer renderer){
+        return screen.removeScreenRender(nodeId, screenId,renderer);
+    }
+
     public  boolean removeVideoRender(int nodeId, VideoRenderer renderer){
         return video.removeVideoRender(nodeId, renderer);
     }
@@ -193,6 +267,8 @@ public class VideoCommon {
         return true;
     }
     public interface VideoCallback{
+         void onShareScreen(DeviceBean deviceBean);
+         void onCloseScreen(int result, int nodeId, String deviceId);
          void onOpenVideo(DeviceBean deviceBean);
          void onCloseVideo(int result, int nodeId, String deviceId);
          void onRequestOpenVideo(int nodeId, String deviceId);

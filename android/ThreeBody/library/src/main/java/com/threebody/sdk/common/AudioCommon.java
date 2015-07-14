@@ -97,7 +97,7 @@ public abstract class AudioCommon {
             return;
         listener = new Audio.AudioListener() {
             @Override
-            public void onOpenMicrophone(int result, int nodeId) {
+            synchronized public void onOpenMicrophone(int result, int nodeId) {
                 LoggerUtil.info(tag, "onOpenMic result = "+result+" nodeId = "+nodeId);
                 User user = roomCommon.findUserById(nodeId);
                 if(user != null){
@@ -114,7 +114,7 @@ public abstract class AudioCommon {
             }
 
             @Override
-            public void onCloseMicrophone(int result, int nodeId) {
+            synchronized public void onCloseMicrophone(int result, int nodeId) {
                 LoggerUtil.info(tag, "onCloseMic result = "+result+" nodeId = "+nodeId);
                 User user = roomCommon.findUserById(nodeId);
                 if(user != null){
@@ -131,7 +131,7 @@ public abstract class AudioCommon {
             }
 
             @Override
-            public void onRequestOpenMicrophone(int nodeId) {
+            synchronized public void onRequestOpenMicrophone(int nodeId) {
                 if(checkCallback()){
                     callback.onRequestOpenMicrophone(nodeId);
                 }

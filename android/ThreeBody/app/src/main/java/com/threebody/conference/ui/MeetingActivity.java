@@ -247,7 +247,23 @@ public class MeetingActivity extends BaseActivity {
                 handler.sendMessage(msg);
 
             }
-
+            @Override
+            public void onShareScreen(DeviceBean deviceBean)
+            {
+                Message msg = new Message();
+                msg.what = VideoCommon.SCREEN_OPEN;
+                msg.obj = deviceBean;
+                handler.sendMessage(msg);
+            }
+            @Override
+            public void onCloseScreen(int result, int nodeId, String deviceId)
+            {
+                DeviceBean deviceBean = new DeviceBean(nodeId,deviceId, true);
+                Message msg = new Message();
+                msg.what = VideoCommon.SCREEN_CLOSE;
+                msg.obj = deviceBean;
+                handler.sendMessage(msg);
+            }
             @Override
             public void onRequestOpenVideo(int nodeId, String deviceId) {
 
@@ -318,6 +334,22 @@ public class MeetingActivity extends BaseActivity {
 
                     break;
                 case VideoCommon.VIDEO_CLOSE:
+                    deviceBean = (DeviceBean)msg.obj;
+                    mVideo.refresh(videoCommon.getDevices());;
+                    if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
+                        mSet.closeLoacalVideo();
+                    }
+                    break;
+                case VideoCommon.SCREEN_OPEN:
+                    deviceBean = (DeviceBean)msg.obj;
+                    mVideo.refresh(videoCommon.getDevices());;
+                    //mVideo.addDevice(deviceBean);
+                    if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
+                        mSet.openLocalVideo();
+                    }
+
+                    break;
+                case VideoCommon.SCREEN_CLOSE:
                     deviceBean = (DeviceBean)msg.obj;
                     mVideo.refresh(videoCommon.getDevices());;
                     if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){

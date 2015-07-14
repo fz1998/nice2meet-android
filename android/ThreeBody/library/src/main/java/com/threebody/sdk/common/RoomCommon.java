@@ -8,6 +8,7 @@ import org.st.Audio;
 import org.st.Chat;
 import org.st.Room;
 import org.st.RoomInfo;
+import org.st.Screen;
 import org.st.User;
 import org.st.Video;
 
@@ -156,6 +157,11 @@ public abstract class RoomCommon {
     Video getVideo(){
         return room.getVideo();
     }
+    Screen getScreen(){
+        return room.getScreen();
+    }
+
+
     /**
      * 获取音频模块
      * @return
@@ -193,7 +199,7 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onLeave(int reason) {
+            synchronized public void onLeave(int reason) {
 //                LoggerUtil.info(tag, "onLeave result = "+ reason);
                 if(checkCallback()){
                     callback.onLeave(reason);
@@ -201,7 +207,7 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onConnectionChange(Room.ConnectionStatus state) {
+            synchronized public void onConnectionChange(Room.ConnectionStatus state) {
                 LoggerUtil.info(tag, "onConnectionChange state = "+state);
                 if(checkCallback()){
                     callback.onConnectionChange(state);
@@ -209,8 +215,10 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onUserJoin(User user) {
-                LoggerUtil.info(tag, "onUserJoin nodeId = "+user.getNodeId()+" name = "+user.getUserName());
+            synchronized public void onUserJoin(User user) {
+                //LoggerUtil.info(tag, "onUserJoin nodeId = "+user.getNodeId()+" name = "+user.getUserName());
+                Log.e(tag, "onUserJoin nodeId = "+user.getNodeId()+" name = "+user.getUserName() + " role = "+user.getRole() + " usrID = "+user.getUserId());
+
 //                user.setAudioOn(true);
                 users.add(user);
                 if(checkCallback()){
@@ -219,10 +227,17 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onUserLeave(User user) {
-                LoggerUtil.info(tag, "onUserLeave nodeId = "+user.getNodeId()+" name = "+user.getUserName());
+            synchronized public void onUserLeave(User user) {
+//                LoggerUtil.info(tag, "onUserLeave nodeId = "+user.getNodeId()+" name = "+user.getUserName());
+                Log.i(tag, "onUserLeave nodeId = "+user.getNodeId()+" name = "+user.getUserName());
                 if(users != null && !users.isEmpty()){
-                    users.remove(user);
+                    for(User u : users){
+                        if(u.getNodeId() == user.getNodeId()){
+                            users.remove(u);
+                            break;
+                        }
+                    }
+//                    users.remove(user);
                 }
                 if(checkCallback()){
                     callback.onUserLeave(user);
@@ -230,7 +245,7 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onUserUpdate(User user) {
+            synchronized public void onUserUpdate(User user) {
                 LoggerUtil.info(tag, "onUserUpdate nodeId = "+user.getNodeId()+" name = "+user.getUserName());
                 if(users != null && !users.isEmpty()){
                     for(User u : users){
@@ -246,7 +261,7 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onUpdateRole(int nodeId, User.Role newRole) {
+            synchronized public void onUpdateRole(int nodeId, User.Role newRole) {
                 LoggerUtil.info(tag, "onUpdateRole nodeId = "+nodeId+" newRole = "+newRole.toString());
                 if(users != null && !users.isEmpty()){
                     for(User user : users){
@@ -261,7 +276,7 @@ public abstract class RoomCommon {
             }
 
             @Override
-            public void onUpdateStatus(int nodeId, User.Status status) {
+            synchronized public void onUpdateStatus(int nodeId, User.Status status) {
                 LoggerUtil.info(tag, "onUpdatestatus nodeId = "+nodeId+" status = "+status.toString());
                 if(users != null && !users.isEmpty()){
                     for(User user : users){

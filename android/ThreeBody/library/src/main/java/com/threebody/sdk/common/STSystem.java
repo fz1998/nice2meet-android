@@ -1,5 +1,7 @@
 package com.threebody.sdk.common;
 
+import android.content.Context;
+
 import com.threebody.sdk.util.LoggerUtil;
 
 import org.st.Room;
@@ -53,8 +55,8 @@ public class STSystem {
         Room room = roomSystem.createRoom(roomCommon.getListener(), roomCommon.getRoomId());
         roomCommon.setRoom(room);
     }
-    public void initializeAndroidGlobals(Object activity){
-        RoomSystem.initializeAndroidGlobals(activity, true, true);
+    public void initializeAndroidGlobals(Context context){
+        RoomSystem.initializeAndroidGlobals(context, true, true);
     }
     public void desroyRoom(){
        this.roomCommon.getRoom().dispose();
@@ -82,21 +84,21 @@ public class STSystem {
     private void initListener(){
         listener = new RoomSystem.RoomSystemListener() {
             @Override
-            public void onInit(int i) {
+            synchronized public void onInit(int i) {
                 if(callback != null){
                     callback.onInitResult(i);
                 }
             }
             @Override
-            public void onArrangeRoom(int i, java.lang.String s) {
+            synchronized public void onArrangeRoom(int i, java.lang.String s) {
                 LoggerUtil.info(tag, i+s);
             }
             @Override
-            public void onCancelRoom(int i, java.lang.String s) {
+            synchronized public void onCancelRoom(int i, java.lang.String s) {
                 LoggerUtil.info(tag, i+s);
             }
             @Override
-            public void onQueryRoom(int i, org.st.RoomInfo roomInfo) {
+            synchronized public void onQueryRoom(int i, org.st.RoomInfo roomInfo) {
                 LoggerUtil.info(tag, roomInfo.getRoomID());
             }
         };

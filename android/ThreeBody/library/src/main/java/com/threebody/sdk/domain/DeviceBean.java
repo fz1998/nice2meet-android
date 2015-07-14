@@ -8,6 +8,7 @@ import org.st.User;
 public class DeviceBean {
     int nodeId;
     String deviceId;
+    boolean isScreen = false;
     User user;
     boolean isVideoChecked;
     public DeviceBean(int nodeId, String deviceId) {
@@ -15,6 +16,11 @@ public class DeviceBean {
         this.deviceId = deviceId;
     }
 
+    public DeviceBean(int nodeId, String deviceId, boolean isScreen) {
+        this.isScreen = isScreen;
+        this.nodeId = nodeId;
+        this.deviceId = deviceId;
+    }
     public int getNodeId() {
         return nodeId;
     }
@@ -46,4 +52,9 @@ public class DeviceBean {
     public void setVideoChecked(boolean isVideoChecked) {
         this.isVideoChecked = isVideoChecked;
     }
+
+    public boolean isScreen() {
+        return isScreen;
+    }
+
 }

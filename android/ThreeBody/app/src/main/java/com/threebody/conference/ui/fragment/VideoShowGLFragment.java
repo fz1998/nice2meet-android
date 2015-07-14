@@ -103,6 +103,7 @@ public class VideoShowGLFragment extends FrameLayout{
     private  void initVideo(){
        if(mRendererView == null){
            mRendererView = new VideoRendererView(glView, true);
+           mRendererView.setScalingType(VideoRendererView.ScalingType.Scale_Aspect_Full);
            mRenderer = new VideoRenderer(mRendererView.getRendererCallback());
        }
     }
@@ -134,7 +135,12 @@ public class VideoShowGLFragment extends FrameLayout{
 
     }
     public void setVideoRender(VideoCommon videoCommon){
-        videoCommon.setVideoRender(deviceBean.getNodeId(), getRenderer());
+        if (deviceBean.isScreen()){
+            videoCommon.setScreenRender(deviceBean.getNodeId(),deviceBean.getDeviceId(), mRenderer);
+        }
+        else {
+            videoCommon.setVideoRender(deviceBean.getNodeId(), getRenderer());
+        }
     }
     private void showVideoLayout(){
         llFlFragment.setVisibility(View.VISIBLE);
@@ -159,9 +165,15 @@ public class VideoShowGLFragment extends FrameLayout{
     public VideoRenderer getRenderer() {
         return mRenderer;
     }
+
     public void removeVideoRender(VideoCommon videoCommon){
         if(deviceBean != null){
-            videoCommon.removeVideoRender(deviceBean.getNodeId(), mRenderer);
+            if (deviceBean.isScreen()){
+                videoCommon.removeSreenRender(deviceBean.getNodeId(),deviceBean.getDeviceId(), mRenderer);
+            }
+            else {
+                videoCommon.removeVideoRender(deviceBean.getNodeId(), mRenderer);
+            }
             mRendererView.refresh();
             //mRendererView.onDrawFrame();
             //mRenderer.dispose();
