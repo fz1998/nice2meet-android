@@ -289,6 +289,10 @@ public abstract class RoomCommon {
                     callback.onUpdateStatus(nodeId, status);
                 }
             }
+            @Override
+            synchronized public void onUpdateUserData(int nodeId, String data) {
+                LoggerUtil.info(tag, "onUpdateUserData nodeId = " + nodeId + " data = " + data);
+            }
         };
     }
     Room.RoomListener getListener(){

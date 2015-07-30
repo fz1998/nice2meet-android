@@ -27,6 +27,7 @@ public class SetFragment extends BaseFragment {
     @InjectView(R.id.ivVideoShow)Button ivVideoShow;
     @InjectView(R.id.ivAudio)Button ivAudio;
     @InjectView(R.id.ivSpeaker)Button ivSpeaker;
+    @InjectView(R.id.ivSwitchCamera)Button ivSwitchCamera;
     @InjectView(R.id.llHelp)LinearLayout llHelp;
     RoomCommon roomCommon;
     @Override
@@ -45,6 +46,7 @@ public class SetFragment extends BaseFragment {
         llHelp.setOnClickListener(this);
         ivSpeaker.setOnClickListener(this);
         ivVideoShow.setOnClickListener(this);
+        ivSwitchCamera.setOnClickListener(this);
         if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_ON){
             ivAudio.setText(R.string.closeAudio);
         }else if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_HANDS_UP){
@@ -149,6 +151,10 @@ public class SetFragment extends BaseFragment {
                 break;
             case R.id.ivVideoShow:
                 ((MeetingActivity)getActivity()).changeToVideoSet();
+                break;
+            case R.id.ivSwitchCamera:
+                roomCommon.getVideoCommon().switchVideo();
+                break;
         }
     }
     private boolean openAudio(){

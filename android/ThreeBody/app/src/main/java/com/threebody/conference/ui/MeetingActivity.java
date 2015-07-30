@@ -367,4 +367,5 @@ public class MeetingActivity extends BaseActivity {
     public void changeToVideoSet() {
         FragmentUtil.moveToRightFragment(this, R.id.llContainer, mVideoSet);
     }
+
 }

@@ -139,7 +139,7 @@ public class VideoShowGLFragment extends FrameLayout{
             videoCommon.setScreenRender(deviceBean.getNodeId(),deviceBean.getDeviceId(), mRenderer);
         }
         else {
-            videoCommon.setVideoRender(deviceBean.getNodeId(), getRenderer());
+            videoCommon.setVideoRender(deviceBean.getNodeId(), deviceBean.getDeviceId(), getRenderer());
         }
     }
     private void showVideoLayout(){
@@ -172,7 +172,7 @@ public class VideoShowGLFragment extends FrameLayout{
                 videoCommon.removeSreenRender(deviceBean.getNodeId(),deviceBean.getDeviceId(), mRenderer);
             }
             else {
-                videoCommon.removeVideoRender(deviceBean.getNodeId(), mRenderer);
+                videoCommon.removeVideoRender(deviceBean.getNodeId(), deviceBean.getDeviceId(),mRenderer);
             }
             mRendererView.refresh();
             //mRendererView.onDrawFrame();

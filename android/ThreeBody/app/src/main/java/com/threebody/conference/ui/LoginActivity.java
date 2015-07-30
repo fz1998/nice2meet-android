@@ -82,8 +82,8 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void joinConference(){
-        if(dialog == null){
+    private void joinConference() {
+        if (dialog == null) {
             dialog = new HttpProgressDialog("");
         }
         getSupportFragmentManager().beginTransaction().add(dialog, "").commit();
@@ -97,6 +97,7 @@ public class LoginActivity extends BaseActivity {
         RoomSystem.initializeAndroidGlobals(this, true, true);
         RoomSystem.setVideoOptions(640, 480, 10);
         RoomSystem.logEnable(true);
+
 
         if (true) {
             STSystem.getInstance().init(new STSystem.ConferenceSystemCallback() {
@@ -158,22 +159,22 @@ public class LoginActivity extends BaseActivity {
                     // },"60.191.94.115:9080" , "demo_access","demo_secret");
                     //}, " 121.201.103.241:8080", "YzJlMzIyYWViNTEwYTlkOTY1Y2FkMmVlYzM0YmQyNWVkZTIzNDgzOA==");
                 }
-            }, "121.41.119.216:8080", "demo_access", "demo_secret");
-            //},url, "demo_access","demo_secret");
+                // }, "121.41.119.216:8080", "demo_access", "demo_secret");
+            },"60.191.94.115:8090"  , "demo_access", "demo_secret");
         }
-    }
 
 
 //        final LoginRequest request = new LoginRequest(name, password);
 //        new LoginHandle(new LoginListener() {
 //            @Override
 //            public void onLoginResult(LoginResponse result) {
-//                if(result.getRet() == 0){
+//                if (result.getRet() == 0) {
 //                    String url = result.getRoom_uri().substring(0, result.getRoom_uri().indexOf("/"));
+//
 //
 //                }
 //            }
 //        }).login(request);
 
-
+    }
 }

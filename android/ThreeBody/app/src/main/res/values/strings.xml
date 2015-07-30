@@ -8,6 +8,7 @@
     <string name="addMeeging">加入会议室</string>
 
     <string name="openVideo">打开视频</string>
+    <string name="switchCamera">切换摄像头</string>
     <string name="videoShow">播放视频</string>
     <string name="openAudio">打开音频</string>
     <string name="handsup">举手中...</string>

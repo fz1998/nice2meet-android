@@ -26,6 +26,7 @@ public class VideoCommon {
     public static final int VIDEO_STATUS = 40003;
     public static final int SCREEN_OPEN= 40004;
     public static final int SCREEN_CLOSE= 40005;
+    Video.CameraType currentCameraType;
     RoomCommon roomCommon;
     protected VideoCallback callback;
     Video.VideoListener listener;
@@ -55,10 +56,10 @@ public class VideoCommon {
         roomCommon.setVideoCommon(this);
         initListener();
     }
-    private DeviceBean findDeviceById(String deviceId){
+    private synchronized DeviceBean findDeviceById(int nodeid ,String deviceId){
         if(devices != null && !devices.isEmpty()){
             for (DeviceBean deviceBean : devices){
-                if(deviceId.equals(deviceBean.getDeviceId())){
+                if(deviceId.equals(deviceBean.getDeviceId()) && deviceBean.getNodeId() == nodeid){
                     return deviceBean;
                 }
             }
@@ -117,11 +118,12 @@ public class VideoCommon {
             @Override
             synchronized public void onCloseVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onCloseVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
-                DeviceBean deviceBean = findDeviceById(deviceId);
-                deviceBean.setVideoChecked(false);
-                if(checkCallback()){
-                    callback.onCloseVideo(result, nodeId, deviceId);
+                DeviceBean deviceBean = findDeviceById(nodeId,deviceId);
+                if(deviceBean != null) {
+                    deviceBean.setVideoChecked(false);
                 }
+
+
                 if(result == 0){
                     User user = roomCommon.findUserById(nodeId);
                     if(user != null){
@@ -135,6 +137,9 @@ public class VideoCommon {
                     }
                 }
 
+                if(checkCallback()){
+                    callback.onCloseVideo(result, nodeId, deviceId);
+                }
             }
 
             @Override
@@ -193,7 +198,7 @@ public class VideoCommon {
             @Override
             public void onCloseScreen(int result, int nodeId, String screenId){
                 LoggerUtil.info(tag, "onCloseScreen result = "+result+" nodeId = "+nodeId+" deviceId = "+screenId);
-                DeviceBean deviceBean = findDeviceById(screenId);
+                DeviceBean deviceBean = findDeviceById(nodeId,screenId);
                 deviceBean.setVideoChecked(false);
                 if(checkCallback()){
                     callback.onCloseScreen(result, nodeId, screenId);
@@ -230,6 +235,11 @@ public class VideoCommon {
 //            return true;
 //        }
         if(video.openLocalVideo(Video.CameraType.Front)){
+            currentCameraType  = Video.CameraType.Front;
+            IS_CAMERA_OPEN = CAMERA_ON;
+            return true;
+        }else if(video.openLocalVideo(Video.CameraType.Back)){
+            currentCameraType  = Video.CameraType.Back;
             IS_CAMERA_OPEN = CAMERA_ON;
             return true;
         }
@@ -248,17 +258,32 @@ public class VideoCommon {
         return screen.setScreenRender(nodeId, screenId, renderer);
     }
 
-    public boolean setVideoRender(int nodeId, VideoRenderer renderer){
+    public boolean setVideoRender(int nodeId,  String deviceId, VideoRenderer renderer){
         LoggerUtil.info(getClass().getName(), " nodeId = "+nodeId+" renderer = "+renderer.toString());
-        return video.setVideoRender(nodeId, renderer);
+        return video.setVideoRender(nodeId,deviceId, renderer);
     }
 
     public  boolean removeSreenRender(int nodeId, String screenId, VideoRenderer renderer){
         return screen.removeScreenRender(nodeId, screenId,renderer);
     }
 
-    public  boolean removeVideoRender(int nodeId, VideoRenderer renderer){
-        return video.removeVideoRender(nodeId, renderer);
+    public  boolean removeVideoRender(int nodeId,String deviceId, VideoRenderer renderer){
+//        return video.removeVideoRender(nodeId, deviceId, renderer);
+          return video.removeVideoRender(nodeId,renderer);
+    }
+
+    public  boolean switchVideoRender( VideoRenderer renderer1, VideoRenderer renderer2){
+//        return video.removeVideoRender(nodeId, deviceId, renderer);
+        return video.switchRender(renderer1, renderer2);
+    }
+    public  boolean switchVideo( ){
+        Video.CameraType now = (currentCameraType== Video.CameraType.Back ? Video.CameraType.Front: Video.CameraType.Back);
+//        return video.removeVideoRender(nodeId, deviceId, renderer);
+        if (video.switchLocalVideo(now)){
+            currentCameraType = now;
+            return true;
+        }
+        return false;
     }
     protected boolean checkCallback(){
         if(callback == null){

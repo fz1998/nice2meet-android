@@ -13,6 +13,7 @@ import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
 
 import org.apache.http.auth.NTUserPrincipal;
+import org.webrtc.VideoRenderer;
 
 import java.util.List;
 
@@ -77,6 +78,13 @@ public class VideoFragment extends BaseFragment {
             @Override
             public boolean onLongClick(View v) {
                 ((MeetingActivity)getActivity()).changeToVideoSet();
+                return true;
+            }
+        });
+        videoUp.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                switchVideo();
                 return true;
             }
         });
@@ -163,7 +171,25 @@ public class VideoFragment extends BaseFragment {
         videoDown.setVideoRender(videoCommon);
         deviceDown = device;
     }
-    public void refresh(List<DeviceBean> devices) {
+    boolean switchVideo(){
+
+        if  (videoCommon.switchVideoRender(videoUp.mRenderer, videoDown.mRenderer))
+        {
+            DeviceBean temp = deviceUp;
+            deviceUp = deviceDown;
+            deviceDown = temp;
+
+            VideoRenderer mRenderer  = videoUp.mRenderer;
+
+            videoUp.mRenderer = videoDown.mRenderer;
+            videoDown.mRenderer = mRenderer;
+            videoUp.setDevice(deviceUp);
+            videoDown.setDevice(deviceDown);
+            return true;
+        }
+        return false;
+    }
+    public synchronized void  refresh(List<DeviceBean> devices) {
         int i = 0;
         DeviceBean nextShowDevice1 = null, nextShowDevice2 = null;
         if(devices != null && !devices.isEmpty()){
