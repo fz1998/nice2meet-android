@@ -4,12 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ThreeBody.iml" filepath="$PROJECT_DIR$/ThreeBody.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cameratest/cameratest.iml" filepath="$PROJECT_DIR$/cameratest/cameratest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eclipse/eclipse.iml" filepath="$PROJECT_DIR$/eclipse/eclipse.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/swipeRefreshLayoutDemomaster/swipeRefreshLayoutDemomaster.iml" filepath="$PROJECT_DIR$/swipeRefreshLayoutDemomaster/swipeRefreshLayoutDemomaster.iml" />
-      <module fileurl="file://$PROJECT_DIR$/swipelayout/swipelayout.iml" filepath="$PROJECT_DIR$/swipelayout/swipelayout.iml" />
     </modules>
   </component>
 </project>
-

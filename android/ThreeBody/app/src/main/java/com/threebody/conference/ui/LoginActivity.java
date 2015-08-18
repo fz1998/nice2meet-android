@@ -1,7 +1,6 @@
 package com.threebody.conference.ui;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,23 +12,12 @@ import com.threebody.conference.ui.view.HttpProgressDialog;
 import com.threebody.sdk.common.RoomCommon;
 import com.threebody.sdk.common.STSystem;
 import com.threebody.sdk.common.impl.RoomCommonImpl;
-import com.threebody.sdk.http.LoginHandle;
-import com.threebody.sdk.http.entity.LoginRequest;
-import com.threebody.sdk.http.entity.LoginResponse;
-import com.threebody.sdk.listener.LoginListener;
 import com.threebody.sdk.util.LoggerUtil;
-import java.net.NetworkInterface;
-import java.net.InetAddress;
-import java.util.Enumeration;
 
 import org.st.RoomInfo;
 import org.st.RoomSystem;
-import org.st.User;
 
-import java.net.SocketException;
-import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
 
 import butterknife.InjectView;
 
@@ -71,10 +59,7 @@ public class LoginActivity extends BaseActivity {
                     ToastUtil.showToast(this, R.string.noUser);
                     return;
                 }
-//                if(!TextViewUtil.isNullOrEmpty(etPassword)){
-//                    ToastUtil.showToast(this, R.string.noPswd);
-//                    return;
-//                }
+
                 joinConference();
                 break;
             default:
@@ -134,16 +119,7 @@ public class LoginActivity extends BaseActivity {
                                 intent.setClass(LoginActivity.this, MeetingActivity.class);
                                 startActivity(intent);
                                 finish();
-//                                            int num = 1000;
-//                                            List<User> users =  new ArrayList<>();
-//                                            for(int u = 0; u < num; u++){
-//                                                org.st.User user = roomCommon.getRoom().getUser(userId);
-//                                                users.add(user);
-//                                            }
-//                                            for(int u = 0; u < num; u++){
-//                                                org.st.User user = roomCommon.getRoom().getUser(userId);
-//                                                users.add(user);
-//                                            }
+
                                 roomCommon.getRoom().getRoomID();
                                 roomCommon.getRoom().getRoomName();
                             }
@@ -159,22 +135,9 @@ public class LoginActivity extends BaseActivity {
                     // },"60.191.94.115:9080" , "demo_access","demo_secret");
                     //}, " 121.201.103.241:8080", "YzJlMzIyYWViNTEwYTlkOTY1Y2FkMmVlYzM0YmQyNWVkZTIzNDgzOA==");
                 }
-                // }, "121.41.119.216:8080", "demo_access", "demo_secret");
-            },"60.191.94.115:8090"  , "demo_access", "demo_secret");
+                }, "121.41.119.216:8080", "demo_access", "demo_secret");
+//            },"60.191.94.115:8090"  , "demo_access", "demo_secret");
         }
-
-
-//        final LoginRequest request = new LoginRequest(name, password);
-//        new LoginHandle(new LoginListener() {
-//            @Override
-//            public void onLoginResult(LoginResponse result) {
-//                if (result.getRet() == 0) {
-//                    String url = result.getRoom_uri().substring(0, result.getRoom_uri().indexOf("/"));
-//
-//
-//                }
-//            }
-//        }).login(request);
 
     }
 }

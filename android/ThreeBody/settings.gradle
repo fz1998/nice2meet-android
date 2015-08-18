@@ -1,3 +1,2 @@
-include ':app', ':library', ':cameratest', ':swipelayout'
-include ':swipeRefreshLayoutDemomaster'
-include ':eclipse'
+include ':app', ':library'
+

@@ -3,22 +3,17 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="distributionType" value="LOCAL" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="D:\Program Files\Android\Android Studio\gradle\gradle-2.2.1" />
+        <option name="gradleJvm" value="1.7" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/cameratest" />
-            <option value="$PROJECT_DIR$/eclipse" />
             <option value="$PROJECT_DIR$/library" />
-            <option value="$PROJECT_DIR$/swipeRefreshLayoutDemomaster" />
-            <option value="$PROJECT_DIR$/swipelayout" />
           </set>
         </option>
       </GradleProjectSettings>
     </option>
   </component>
 </project>
-
