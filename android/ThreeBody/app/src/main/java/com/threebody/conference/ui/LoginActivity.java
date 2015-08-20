@@ -24,13 +24,17 @@ import butterknife.InjectView;
 
 public class LoginActivity extends BaseActivity {
     public static boolean IS_SYSTEM_INIT = false;
-    @InjectView(R.id.etNum)EditText etNum;
-    @InjectView(R.id.etName)EditText etName;
-    @InjectView(R.id.etPassword)EditText etPassword;
-    @InjectView(R.id.btnAddIn)Button btnAddIn;
-    RoomCommonImpl roomCommon ;
-    RoomCommonImpl roomCommon2 ;
+    @InjectView(R.id.etNum)
+    EditText etNum;
+    @InjectView(R.id.etName)
+    EditText etName;
+    @InjectView(R.id.etPassword)
+    EditText etPassword;
+    @InjectView(R.id.btnAddIn)
+    Button btnAddIn;
+    RoomCommonImpl roomCommon;
     HttpProgressDialog dialog;
+
     @Override
     protected void initUI() {
         setContentView(R.layout.activity_login);
@@ -48,14 +52,14 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnAddIn:
 
-                if(!TextViewUtil.isNullOrEmpty(etNum)){
+                if (!TextViewUtil.isNullOrEmpty(etNum)) {
                     ToastUtil.showToast(this, R.string.noMeetNum);
                     return;
                 }
-                if(!TextViewUtil.isNullOrEmpty(etName)){
+                if (!TextViewUtil.isNullOrEmpty(etName)) {
                     ToastUtil.showToast(this, R.string.noUser);
                     return;
                 }
@@ -72,72 +76,80 @@ public class LoginActivity extends BaseActivity {
             dialog = new HttpProgressDialog("");
         }
         getSupportFragmentManager().beginTransaction().add(dialog, "").commit();
-//        final String num = etNum.getText().toString().trim();
-//        String name = etName.getText().toString().trim();
-//        String password = etPassword.getText().toString().trim();
+
         final String num = etNum.getText().toString();
         final String userId = UUID.randomUUID().toString();
         final String name = etName.getText().toString();
         final String password = etPassword.getText().toString();
+
+
+        joinConferenceRoomViaSdk(num, userId, name, password);
+
+
+
+    }
+
+    private void joinConferenceRoomViaSdk(final String num, final String userId, final String name, final String password) {
         RoomSystem.initializeAndroidGlobals(this, true, true);
         RoomSystem.setVideoOptions(640, 480, 10);
         RoomSystem.logEnable(true);
 
 
-        if (true) {
-            STSystem.getInstance().init(new STSystem.ConferenceSystemCallback() {
-                @Override
-                public void onInitResult(int result) {
-                    if (result != 0) {
-                        return;
-                    }
+        STSystem.getInstance().init(new MyConferenceSystemCallback(num, userId, name, password), "121.41.119.216:8080", "demo_access", "demo_secret");
 
-                    org.st.RoomInfo info = new RoomInfo();
-                    //free 1, host 2, p2pfree3,
-                    info.setRoomMode(1);
-                    //info.setHostID("oxx");
-                    info.setOwnerID("1002");
-                    info.setExtendID("3213r5255");
-                    info.setRoomName("woxx");
-                    info.setMaxAttendee(1000);
-                    info.setMaxAudio(5);
-                    info.setMaxVideo(5);
 
-                    STSystem.getInstance().getRoomSystem().ArrangeRoom(info);
-
-                    STSystem.getInstance().getRoomSystem().QueryRoomByExtendId("3213r5255");
-                    // STSystem.getInstance().getRoomSystem().CancelRoom("r593");
-                    // STSystem.getInstance().getRoomSystem().QueryRoom("r595");
-                    LoggerUtil.info(getClass().getName(), "result = " + result);
-                    IS_SYSTEM_INIT = true;
-                    roomCommon = new RoomCommonImpl(new RoomCommon.JoinResultListener() {
-                        @Override
-                        public void onJoinResult(int result) {
-                            if (0 == result) {
-                                LoggerUtil.info(getClass().getName(), "join result = " + result);
-                                Intent intent = new Intent();
-                                intent.setClass(LoginActivity.this, MeetingActivity.class);
-                                startActivity(intent);
-                                finish();
-
-                                roomCommon.getRoom().getRoomID();
-                                roomCommon.getRoom().getRoomName();
-                            }
-                        }
-                    }, num);
-
-                    STSystem.getInstance().createRoom(roomCommon);
-                    //STSystem.getInstance().unInit();
-                    //roomCommon.join("12221", name, password);
-                    roomCommon.join(userId, name, password);
-
-                    //}, "192.168.2.2:8080", "demo_access","demo_secret");
-                    // },"60.191.94.115:9080" , "demo_access","demo_secret");
-                    //}, " 121.201.103.241:8080", "YzJlMzIyYWViNTEwYTlkOTY1Y2FkMmVlYzM0YmQyNWVkZTIzNDgzOA==");
-                }
-                }, "121.41.119.216:8080", "demo_access", "demo_secret");
 //            },"60.191.94.115:8090"  , "demo_access", "demo_secret");
+
+    }
+
+    private class MyConferenceSystemCallback implements STSystem.ConferenceSystemCallback {
+        private final String num;
+        private final String userId;
+        private final String name;
+        private final String password;
+
+        public MyConferenceSystemCallback(String num, String userId, String name, String password) {
+            this.num = num;
+            this.userId = userId;
+            this.name = name;
+            this.password = password;
         }
 
+        @Override
+        public void onInitResult(int result) {
+            if (result != 0) {
+                return;
+            }
+
+            RoomInfo info = new RoomInfo();
+
+            LoggerUtil.info(getClass().getName(), "result = " + result);
+            IS_SYSTEM_INIT = true;
+            roomCommon = new RoomCommonImpl(new MyJoinResultListener(), num);
+
+            STSystem.getInstance().createRoom(roomCommon);
+
+            roomCommon.join(userId, name, password);
+
+            //}, "192.168.2.2:8080", "demo_access","demo_secret");
+            // },"60.191.94.115:9080" , "demo_access","demo_secret");
+            //}, " 121.201.103.241:8080", "YzJlMzIyYWViNTEwYTlkOTY1Y2FkMmVlYzM0YmQyNWVkZTIzNDgzOA==");
+        }
+
+        private class MyJoinResultListener implements RoomCommon.JoinResultListener {
+            @Override
+            public void onJoinResult(int result) {
+                if (0 == result) {
+                    LoggerUtil.info(getClass().getName(), "join result = " + result);
+                    Intent intent = new Intent();
+                    intent.setClass(LoginActivity.this, MeetingActivity.class);
+                    startActivity(intent);
+                    finish();
+
+//                    roomCommon.getRoom().getRoomID();
+//                    roomCommon.getRoom().getRoomName();
+                }
+            }
+        }
     }
 }
