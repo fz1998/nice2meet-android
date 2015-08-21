@@ -10,13 +10,11 @@ import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.conference.ui.view.HttpProgressDialog;
 import com.threebody.sdk.common.RoomCommon;
-import com.threebody.sdk.common.STSystem;
-import com.threebody.sdk.common.impl.RoomCommonImpl;
 import com.threebody.sdk.util.LoggerUtil;
-
 import java.util.UUID;
-
 import butterknife.InjectView;
+
+import cn.tee3.n2m.RoomService;
 
 
 public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinResultListener {
@@ -28,8 +26,10 @@ public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinRes
     EditText etPassword;
     @InjectView(R.id.btnAddIn)
     Button btnAddIn;
-    RoomCommonImpl roomCommon;
+
     HttpProgressDialog dialog;
+
+    RoomService roomService;
 
     @Override
     protected void initUI() {
@@ -78,9 +78,8 @@ public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinRes
         final String name = etName.getText().toString();
         final String password = etPassword.getText().toString();
 
-        roomCommon = new RoomCommonImpl(this, num);
-        STSystem.getInstance().createRoom(roomCommon);
-        roomCommon.join(userId, name, password);
+        roomService = new RoomService(this);
+        roomService.joinRoom(num, userId, name, password);
     }
 
     public void onJoinResult(int result) {
