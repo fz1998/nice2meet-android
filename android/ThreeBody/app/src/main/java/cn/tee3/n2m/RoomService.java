@@ -15,6 +15,7 @@ public class RoomService {
 
     public void joinRoom(String num, String userId, String name, String password) {
 
+        //// TODO: 2015/8/22 Should save room instance for other activities like MeetingActivity to use.
         Room room = SingletonRoomSystem.getInstance().createRoom(this.roomListener, num);
         room.join(userId, name, password);
 
