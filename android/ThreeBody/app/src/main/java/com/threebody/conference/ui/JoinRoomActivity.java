@@ -9,16 +9,58 @@ import com.threebody.conference.R;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.conference.ui.view.HttpProgressDialog;
-import com.threebody.sdk.common.RoomCommon;
 import com.threebody.sdk.util.LoggerUtil;
-import java.util.UUID;
-import butterknife.InjectView;
 
+import org.st.Room;
+import org.st.User;
+
+import java.util.UUID;
+
+import butterknife.InjectView;
 import cn.tee3.n2m.RoomService;
 
 
-public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinResultListener {
-//    public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinResultListener {
+public class JoinRoomActivity extends BaseActivity implements Room.RoomListener {
+    @Override
+    public void onLeave(int i) {
+
+    }
+
+    @Override
+    public void onConnectionChange(Room.ConnectionStatus connectionStatus) {
+
+    }
+
+    @Override
+    public void onUserJoin(User user) {
+
+    }
+
+    @Override
+    public void onUserLeave(User user) {
+
+    }
+
+    @Override
+    public void onUserUpdate(User user) {
+
+    }
+
+    @Override
+    public void onUpdateRole(int i, User.Role role) {
+
+    }
+
+    @Override
+    public void onUpdateStatus(int i, User.Status status) {
+
+    }
+
+    @Override
+    public void onUpdateUserData(int i, String s) {
+
+    }
+
     @InjectView(R.id.etNum)
     EditText etNum;
     @InjectView(R.id.etName)
@@ -83,7 +125,9 @@ public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinRes
         roomService.joinRoom(num, userId, name, password);
     }
 
-    public void onJoinResult(int result) {
+
+    @Override
+    public void onJoin(int result) {
         if (0 == result) {
             LoggerUtil.info(getClass().getName(), "join result = " + result);
             Intent intent = new Intent();

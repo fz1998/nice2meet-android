@@ -12,7 +12,6 @@ import org.st.Screen;
 import org.st.User;
 import org.st.Video;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,20 +23,23 @@ public abstract class RoomCommon {
     protected Room room;
     User me;
     List<User> users;
+
     RoomCallback callback;
+
     JoinResultListener joinListener;
     private Room.RoomListener listener;
+
     protected ChatCommon chatCommon;
     protected AudioCommon audioCommon;
     protected VideoCommon videoCommon;
     protected String roomId;
 
 
-    protected RoomCommon (RoomCallback callback, String roomId){
-        this.callback = callback;
-        this.roomId = roomId;
-        init();
-    }
+//    protected RoomCommon (RoomCallback callback, String roomId){
+//        this.callback = callback;
+//        this.roomId = roomId;
+//        init();
+//    }
     protected RoomCommon(JoinResultListener joinListener, String roomId){
         this.joinListener = joinListener;
         this.roomId = roomId;

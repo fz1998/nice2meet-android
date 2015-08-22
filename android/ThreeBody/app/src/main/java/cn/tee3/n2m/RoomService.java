@@ -1,23 +1,22 @@
 package cn.tee3.n2m;
 
-import com.threebody.sdk.common.RoomCommon;
-import com.threebody.sdk.common.STSystem;
-import com.threebody.sdk.common.impl.RoomCommonImpl;
+import org.st.Room;
 
 /**
  * Created by uyu on 2015/8/21.
  */
 public class RoomService {
 
-    private RoomCommon.JoinResultListener joinResultListener;
+    private Room.RoomListener roomListener;
 
-    public RoomService(RoomCommon.JoinResultListener joinResultListener) {
-        this.joinResultListener = joinResultListener;
+    public RoomService(Room.RoomListener roomListener) {
+        this.roomListener = roomListener;
     }
 
     public void joinRoom(String num, String userId, String name, String password) {
-        RoomCommonImpl roomCommon = new RoomCommonImpl(joinResultListener, num);
-        STSystem.getInstance().createRoom(roomCommon);
-        roomCommon.join(userId, name, password);
+
+        Room room = SingletonRoomSystem.getInstance().createRoom(this.roomListener, num);
+        room.join(userId, name, password);
+
     }
 }
