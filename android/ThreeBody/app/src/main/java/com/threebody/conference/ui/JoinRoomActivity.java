@@ -18,6 +18,7 @@ import cn.tee3.n2m.RoomService;
 
 
 public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinResultListener {
+//    public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinResultListener {
     @InjectView(R.id.etNum)
     EditText etNum;
     @InjectView(R.id.etName)

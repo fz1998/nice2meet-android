@@ -9,7 +9,6 @@ import com.threebody.sdk.common.impl.RoomCommonImpl;
  */
 public class RoomService {
 
-    private RoomCommonImpl roomCommon;
     private RoomCommon.JoinResultListener joinResultListener;
 
     public RoomService(RoomCommon.JoinResultListener joinResultListener) {
@@ -17,7 +16,7 @@ public class RoomService {
     }
 
     public void joinRoom(String num, String userId, String name, String password) {
-        roomCommon = new RoomCommonImpl(joinResultListener, num);
+        RoomCommonImpl roomCommon = new RoomCommonImpl(joinResultListener, num);
         STSystem.getInstance().createRoom(roomCommon);
         roomCommon.join(userId, name, password);
     }

@@ -137,7 +137,6 @@ public class MeetingActivity extends BaseActivity {
         finish();
     }
     private void initData(){
-//       roomCommon = (RoomCommonImpl)STSystem.getInstance().getRoomCommons().get(0);
         roomCommon = (RoomCommonImpl)STSystem.getInstance().getRoomCommon();
         roomCommon.setCallback(new RoomCommon.RoomCallback() {
             @Override
