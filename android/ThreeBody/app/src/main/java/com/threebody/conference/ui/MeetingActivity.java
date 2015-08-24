@@ -41,8 +41,8 @@ import butterknife.InjectView;
  * Created by xiaxin on 15-1-14.
  */
 public class MeetingActivity extends BaseActivity {
-    @InjectView(R.id.llContainer)LinearLayout llContainer;
-    @InjectView(R.id.flMessage)FrameLayout flMessage;
+    @InjectView(R.id.mainScreenLinearLayout)LinearLayout llContainer;
+    @InjectView(R.id.flChat)FrameLayout flChat;
     @InjectView(R.id.flVideo)FrameLayout flVideo;
     @InjectView(R.id.flSet)FrameLayout flSet;
     @InjectView(R.id.flExit)FrameLayout flExit;
@@ -52,35 +52,37 @@ public class MeetingActivity extends BaseActivity {
     AudioCommonImpl audioCommon;
     VideoCommonImpl videoCommon;
 //    @InjectView(R.id.localVideo)LocalVideoView localVideoView;
-    ChatFragment mMessage;
-    VideoFragment mVideo;
-    SetFragment mSet;
-    VideoSetFragment mVideoSet;
-    List<FrameLayout> tabs;
-    List<Fragment> mFragments;
+
+    ChatFragment chatFragment;
+    VideoFragment videoFragment;
+    SetFragment setFragment;
+    VideoSetFragment videoSetFragment;
+    List<FrameLayout> frameLayoutList;
+    List<Fragment> fragmentList;
     int index = 1;
+
     @Override
     protected void initUI() {
         setContentView(R.layout.activity_meeting);
         super.initUI();
         getSupportActionBar().hide();
-        flMessage.setOnClickListener(this);
+        flChat.setOnClickListener(this);
         flVideo.setOnClickListener(this);
         flSet.setOnClickListener(this);
         flExit.setOnClickListener(this);
-        tabs = new ArrayList<FrameLayout>();
-        tabs.add(flMessage);
-        tabs.add(flVideo);
-        tabs.add(flSet);
-        mMessage = new ChatFragment();
-        mVideo = new VideoFragment();
-        mSet = new SetFragment();
-        mVideoSet = new VideoSetFragment();
-        mFragments = new ArrayList<Fragment>();
-        mFragments.add(mMessage);
-        mFragments.add(mVideo);
-        mFragments.add(mSet);
-        getSupportFragmentManager().beginTransaction().add(R.id.llContainer, mVideo).commit();
+        frameLayoutList = new ArrayList<FrameLayout>();
+        frameLayoutList.add(flChat);
+        frameLayoutList.add(flVideo);
+        frameLayoutList.add(flSet);
+        chatFragment = new ChatFragment();
+        videoFragment = new VideoFragment();
+        setFragment = new SetFragment();
+        videoSetFragment = new VideoSetFragment();
+        fragmentList = new ArrayList<Fragment>();
+        fragmentList.add(chatFragment);
+        fragmentList.add(videoFragment);
+        fragmentList.add(setFragment);
+        getSupportFragmentManager().beginTransaction().add(R.id.mainScreenLinearLayout, videoFragment).commit();
         initData();
     }
 
@@ -88,11 +90,11 @@ public class MeetingActivity extends BaseActivity {
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
-            case R.id.flMessage:
+            case R.id.flChat:
             case R.id.flVideo:
             case R.id.flSet:
                 int oldIndex = index;
-                tabs.get(index).setBackgroundResource(R.color.liquid);
+                frameLayoutList.get(index).setBackgroundResource(R.color.liquid);
                 index = Integer.parseInt((String)v.getTag());
                 if(oldIndex != index){
 //                    ToastUtil.showToast(this, "old = "+oldIndex +" new  ="+index);
@@ -109,9 +111,9 @@ public class MeetingActivity extends BaseActivity {
     }
     private void changeFragment(int old, int index){
         if(old > index){
-            FragmentUtil.moveToLeftFragment(this, R.id.llContainer, mFragments.get(index));
+            FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, fragmentList.get(index));
         }else{
-            FragmentUtil.moveToRightFragment(this, R.id.llContainer, mFragments.get(index));
+            FragmentUtil.moveToRightFragment(this, R.id.mainScreenLinearLayout, fragmentList.get(index));
         }
     }
     private void showDialog(){
@@ -132,7 +134,7 @@ public class MeetingActivity extends BaseActivity {
         }).create().show();
     }
     private void leaveConference(){
-        mVideo.closeAll();
+        videoFragment.closeAll();
         roomCommon.leave();
         finish();
     }
@@ -184,7 +186,7 @@ public class MeetingActivity extends BaseActivity {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
                 LoggerUtil.info(getClass().getName(), " receive public message nodeId = "+nodeId +" message = "+message);
-                    mMessage.receivePublicMessage();
+                    chatFragment.receivePublicMessage();
             }
 
             @Override
@@ -270,7 +272,7 @@ public class MeetingActivity extends BaseActivity {
 
             @Override
             public void onVideoData(VideoBean videoBean) {
-                mVideo.receiVideoBean(videoBean);
+                videoFragment.receiVideoBean(videoBean);
             }
         });
 //        initDevice();
@@ -303,8 +305,8 @@ public class MeetingActivity extends BaseActivity {
 
     public void refreshVideo(){
 
-        FragmentUtil.moveToLeftFragment(this, R.id.llContainer, mVideo);
-        mVideo.refresh(videoCommon.getDevices());
+        FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, videoFragment);
+        videoFragment.refresh(videoCommon.getDevices());
     }
 
 
@@ -325,46 +327,46 @@ public class MeetingActivity extends BaseActivity {
             switch (msg.what){
                 case VideoCommon.VIDEO_OPEN:
                     DeviceBean deviceBean = (DeviceBean)msg.obj;
-                    mVideo.refresh(videoCommon.getDevices());;
-                    //mVideo.addDevice(deviceBean);
+                    videoFragment.refresh(videoCommon.getDevices());;
+                    //videoFragment.addDevice(deviceBean);
                     if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
-                        mSet.openLocalVideo();
+                        setFragment.openLocalVideo();
                     }
 
                     break;
                 case VideoCommon.VIDEO_CLOSE:
                     deviceBean = (DeviceBean)msg.obj;
-                    mVideo.refresh(videoCommon.getDevices());;
+                    videoFragment.refresh(videoCommon.getDevices());;
                     if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
-                        mSet.closeLoacalVideo();
+                        setFragment.closeLoacalVideo();
                     }
                     break;
                 case VideoCommon.SCREEN_OPEN:
                     deviceBean = (DeviceBean)msg.obj;
-                    mVideo.refresh(videoCommon.getDevices());;
-                    //mVideo.addDevice(deviceBean);
+                    videoFragment.refresh(videoCommon.getDevices());;
+                    //videoFragment.addDevice(deviceBean);
                     if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
-                        mSet.openLocalVideo();
+                        setFragment.openLocalVideo();
                     }
 
                     break;
                 case VideoCommon.SCREEN_CLOSE:
                     deviceBean = (DeviceBean)msg.obj;
-                    mVideo.refresh(videoCommon.getDevices());;
+                    videoFragment.refresh(videoCommon.getDevices());;
                     if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
-                        mSet.closeLoacalVideo();
+                        setFragment.closeLoacalVideo();
                     }
                     break;
                 case VideoCommon.VIDEO_STATUS:
                     boolean isOpen = (Boolean)msg.obj;
-                    mVideo.setAudioStatus(isOpen, msg.arg1);
+                    videoFragment.setAudioStatus(isOpen, msg.arg1);
                     break;
             }
         }
     };
 
     public void changeToVideoSet() {
-        FragmentUtil.moveToRightFragment(this, R.id.llContainer, mVideoSet);
+        FragmentUtil.moveToRightFragment(this, R.id.mainScreenLinearLayout, videoSetFragment);
     }
 
 }

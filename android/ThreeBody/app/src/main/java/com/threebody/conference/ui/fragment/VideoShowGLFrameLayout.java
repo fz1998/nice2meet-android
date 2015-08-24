@@ -1,14 +1,10 @@
 package com.threebody.conference.ui.fragment;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.opengl.GLSurfaceView;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,14 +19,10 @@ import com.threebody.sdk.domain.VideoBean;
 import org.st.VideoRendererView;
 import org.webrtc.VideoRenderer;
 
-import javax.microedition.khronos.opengles.GL10;
-
-import butterknife.InjectView;
-
 /**
  * Created by xiaxin on 2015/3/28.
  */
-public class VideoShowGLFragment extends FrameLayout{
+public class VideoShowGLFrameLayout extends FrameLayout{
     TextView tvUserName;
     LinearLayout llFlFragment;
     ImageView ivVideoStatus;
@@ -43,17 +35,17 @@ public class VideoShowGLFragment extends FrameLayout{
     VideoRenderer mRenderer;
     View view;
 
-    public VideoShowGLFragment(Context context) {
+    public VideoShowGLFrameLayout(Context context) {
         super(context);
         init();
     }
 
-    public VideoShowGLFragment(Context context, AttributeSet attrs) {
+    public VideoShowGLFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public VideoShowGLFragment(Context context, AttributeSet attrs, int defStyleAttr) {
+    public VideoShowGLFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

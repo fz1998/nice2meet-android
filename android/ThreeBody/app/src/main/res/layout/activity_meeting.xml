@@ -10,7 +10,7 @@
         android:layout_height="1px"
         android:id="@+id/localVideo"/>-->
     <LinearLayout
-        android:id="@+id/llContainer"
+        android:id="@+id/mainScreenLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
