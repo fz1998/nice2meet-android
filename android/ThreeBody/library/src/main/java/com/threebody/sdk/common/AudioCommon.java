@@ -6,7 +6,7 @@ import com.threebody.sdk.util.LoggerUtil;
 import org.st.Audio;
 import org.st.User;
 
-public abstract class AudioCommon {
+public class AudioCommon {
     String tag = getClass().getName();
     public static final int MIC_OFF = 0;
     public static final int MIC_ON = 1;

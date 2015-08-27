@@ -15,27 +15,24 @@ import com.threebody.conference.ui.fragment.SetFragment;
 import com.threebody.conference.ui.fragment.VideoFragment;
 import com.threebody.conference.ui.fragment.VideoSetFragment;
 import com.threebody.conference.ui.util.FragmentUtil;
-import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.sdk.common.AudioCommon;
 import com.threebody.sdk.common.ChatCommon;
 import com.threebody.sdk.common.RoomCommon;
-import com.threebody.sdk.common.STSystem;
 import com.threebody.sdk.common.VideoCommon;
-import com.threebody.sdk.common.impl.AudioCommonImpl;
-import com.threebody.sdk.common.impl.ChatCommonImpl;
-import com.threebody.sdk.common.impl.RoomCommonImpl;
-import com.threebody.sdk.common.impl.VideoCommonImpl;
 import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
 import com.threebody.sdk.util.LoggerUtil;
-
-import org.st.Room;
-import org.st.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.InjectView;
+
+//import com.threebody.sdk.common.impl.ChatCommonImpl;
+
+//import com.threebody.sdk.common.impl.ChatCommonImpl;
+
+//import com.threebody.sdk.common.impl.ChatCommonImpl;
 
 /**
  * Created by xiaxin on 15-1-14.
@@ -47,10 +44,10 @@ public class MeetingActivity extends BaseActivity {
     @InjectView(R.id.flSet)FrameLayout flSet;
     @InjectView(R.id.flExit)FrameLayout flExit;
 
-    RoomCommonImpl roomCommon;
-    ChatCommonImpl chatCommon;
-    AudioCommonImpl audioCommon;
-    VideoCommonImpl videoCommon;
+    RoomCommon roomCommon;
+    ChatCommon chatCommon;
+    AudioCommon audioCommon;
+    VideoCommon videoCommon;
 //    @InjectView(R.id.localVideo)LocalVideoView localVideoView;
 
     ChatFragment chatFragment;
@@ -83,7 +80,7 @@ public class MeetingActivity extends BaseActivity {
         fragmentList.add(videoFragment);
         fragmentList.add(setFragment);
         getSupportFragmentManager().beginTransaction().add(R.id.mainScreenLinearLayout, videoFragment).commit();
-        initData();
+//        initData();
     }
 
     @Override
@@ -138,51 +135,12 @@ public class MeetingActivity extends BaseActivity {
         roomCommon.leave();
         finish();
     }
+
     private void initData(){
-        roomCommon = (RoomCommonImpl)STSystem.getInstance().getRoomCommon();
-        roomCommon.setCallback(new RoomCommon.RoomCallback() {
-            @Override
-            public void onJoin(int result) {
-
-            }
-
-            @Override
-            public void onLeave(int reason) {
-                ToastUtil.showToast(MeetingActivity.this, "退出会议");
-
-            }
-
-            @Override
-            public void onConnectionChange(Room.ConnectionStatus state) {
-
-            }
-
-            @Override
-            public void onUserJoin(User user) {
-
-            }
-
-            @Override
-            public void onUserLeave(User user) {
-
-            }
-
-            @Override
-            public void onUserUpdate(User user) {
-
-            }
-
-            @Override
-            public void onUpdateRole(int nodeId, User.Role newRole) {
-
-            }
-
-            @Override
-            public void onUpdateStatus(int nodeId, User.Status status) {
-
-            }
-        });
-        chatCommon = new ChatCommonImpl(roomCommon, new ChatCommon.ChatCallback() {
+        // roomCommon
+        // chat common
+        // audio common
+        chatCommon = new ChatCommon(roomCommon, new ChatCommon.ChatCallback() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
                 LoggerUtil.info(getClass().getName(), " receive public message nodeId = "+nodeId +" message = "+message);
@@ -199,7 +157,7 @@ public class MeetingActivity extends BaseActivity {
 
             }
         });
-        audioCommon = new AudioCommonImpl(roomCommon, new AudioCommon.AudioCallback() {
+        audioCommon = new AudioCommon(roomCommon, new AudioCommon.AudioCallback() {
             @Override
             public void onOpenMicrophone(int result, int nodeId) {
 
@@ -229,7 +187,7 @@ public class MeetingActivity extends BaseActivity {
 
             }
         });
-        videoCommon = new VideoCommonImpl(roomCommon, new VideoCommon.VideoCallback() {
+        videoCommon = new VideoCommon(roomCommon, new VideoCommon.VideoCallback() {
             @Override
             public void onOpenVideo(DeviceBean deviceBean) {
                 Message msg = new Message();
@@ -272,7 +230,7 @@ public class MeetingActivity extends BaseActivity {
 
             @Override
             public void onVideoData(VideoBean videoBean) {
-                videoFragment.receiVideoBean(videoBean);
+//                videoFragment.receiVideoBean(videoBean);
             }
         });
 //        initDevice();
@@ -289,15 +247,15 @@ public class MeetingActivity extends BaseActivity {
 //        }
     }
 
-    public VideoCommonImpl getVideoCommon() {
+    public VideoCommon getVideoCommon() {
         return videoCommon;
     }
 
-    public ChatCommonImpl getChatCommon() {
+    public ChatCommon getChatCommon() {
         return chatCommon;
     }
 
-    public RoomCommonImpl getRoomCommon() {
+    public RoomCommon getRoomCommon() {
         return roomCommon;
     }
 
@@ -368,5 +326,148 @@ public class MeetingActivity extends BaseActivity {
     public void changeToVideoSet() {
         FragmentUtil.moveToRightFragment(this, R.id.mainScreenLinearLayout, videoSetFragment);
     }
+
+
+//    private void initData(){
+//        roomCommon = (RoomCommon)STSystem.getInstance().getRoomCommon();
+//        roomCommon.setCallback(new RoomCommon.RoomCallback() {
+//            @Override
+//            public void onJoin(int result) {
+//
+//            }
+//
+//            @Override
+//            public void onLeave(int reason) {
+//                ToastUtil.showToast(MeetingActivity.this, "退出会议");
+//
+//            }
+//
+//            @Override
+//            public void onConnectionChange(Room.ConnectionStatus state) {
+//
+//            }
+//
+//            @Override
+//            public void onUserJoin(User user) {
+//
+//            }
+//
+//            @Override
+//            public void onUserLeave(User user) {
+//
+//            }
+//
+//            @Override
+//            public void onUserUpdate(User user) {
+//
+//            }
+//
+//            @Override
+//            public void onUpdateRole(int nodeId, User.Role newRole) {
+//
+//            }
+//
+//            @Override
+//            public void onUpdateStatus(int nodeId, User.Status status) {
+//
+//            }
+//        });
+//        chatCommon = new ChatCommonImpl(roomCommon, new ChatCommon.ChatCallback() {
+//            @Override
+//            public void onReceivePublicMessage(int nodeId, String message) {
+//                LoggerUtil.info(getClass().getName(), " receive public message nodeId = "+nodeId +" message = "+message);
+//                chatFragment.receivePublicMessage();
+//            }
+//
+//            @Override
+//            public void onReceivePrivateMessage(int nodeId, String message) {
+//
+//            }
+//
+//            @Override
+//            public void onReceiveData(int nodeId, String data) {
+//
+//            }
+//        });
+//        audioCommon = new AudioCommonImpl(roomCommon, new AudioCommon.AudioCallback() {
+//            @Override
+//            public void onOpenMicrophone(int result, int nodeId) {
+//
+//                if(result == 0){
+//                    Message msg = new Message();
+//                    msg.what = VideoCommon.VIDEO_STATUS;
+//                    msg.obj = true;
+//                    msg.arg1 = nodeId;
+//                    handler.sendMessage(msg);
+//                }
+//            }
+//
+//            @Override
+//            public void onCloseMicrophone(int result, int nodeId) {
+//
+//                if(result == 0){
+//                    Message msg = new Message();
+//                    msg.what = VideoCommon.VIDEO_STATUS;
+//                    msg.obj = true;
+//                    msg.arg1 = nodeId;
+//                    handler.sendMessage(msg);
+//                }
+//            }
+//
+//            @Override
+//            public void onRequestOpenMicrophone(int nodeId) {
+//
+//            }
+//        });
+//        videoCommon = new VideoCommonImpl(roomCommon, new VideoCommon.VideoCallback() {
+//            @Override
+//            public void onOpenVideo(DeviceBean deviceBean) {
+//                Message msg = new Message();
+//                msg.what = VideoCommon.VIDEO_OPEN;
+//                msg.obj = deviceBean;
+//                handler.sendMessage(msg);
+//            }
+//
+//            @Override
+//            public void onCloseVideo(int result, int nodeId, String deviceId) {
+//
+//                DeviceBean deviceBean = new DeviceBean(nodeId,deviceId);
+//                Message msg = new Message();
+//                msg.what = VideoCommon.VIDEO_CLOSE;
+//                msg.obj = deviceBean;
+//                handler.sendMessage(msg);
+//
+//            }
+//            @Override
+//            public void onShareScreen(DeviceBean deviceBean)
+//            {
+//                Message msg = new Message();
+//                msg.what = VideoCommon.SCREEN_OPEN;
+//                msg.obj = deviceBean;
+//                handler.sendMessage(msg);
+//            }
+//            @Override
+//            public void onCloseScreen(int result, int nodeId, String deviceId)
+//            {
+//                DeviceBean deviceBean = new DeviceBean(nodeId,deviceId, true);
+//                Message msg = new Message();
+//                msg.what = VideoCommon.SCREEN_CLOSE;
+//                msg.obj = deviceBean;
+//                handler.sendMessage(msg);
+//            }
+//            @Override
+//            public void onRequestOpenVideo(int nodeId, String deviceId) {
+//
+//            }
+//
+//            @Override
+//            public void onVideoData(VideoBean videoBean) {
+////                videoFragment.receiVideoBean(videoBean);
+//            }
+//        });
+////        initDevice();
+//    }
+
+
 
 }

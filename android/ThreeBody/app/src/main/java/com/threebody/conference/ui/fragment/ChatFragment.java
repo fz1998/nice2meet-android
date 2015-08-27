@@ -17,12 +17,9 @@ import com.threebody.conference.ui.adapter.MessageAdapter;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.sdk.common.ChatCommon;
-import com.threebody.sdk.common.impl.ChatCommonImpl;
-import com.threebody.sdk.common.impl.RoomCommonImpl;
-import com.threebody.sdk.domain.MessageBean;
+import com.threebody.sdk.common.RoomCommon;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import butterknife.InjectView;
 
@@ -35,8 +32,8 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @InjectView(R.id.btnSend)Button btnSend;
     @InjectView(R.id.etSend)EditText etSend;
     MessageAdapter adapter;
-    ChatCommonImpl chatCommon;
-    RoomCommonImpl roomCommon;
+    ChatCommon chatCommon;
+    RoomCommon roomCommon;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, null);

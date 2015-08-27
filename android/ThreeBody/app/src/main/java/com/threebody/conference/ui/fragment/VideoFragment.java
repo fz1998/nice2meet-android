@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.threebody.conference.R;
 import com.threebody.conference.ui.MeetingActivity;
-import com.threebody.sdk.common.impl.VideoCommonImpl;
+import com.threebody.sdk.common.VideoCommon;
 import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
 
@@ -24,7 +24,7 @@ public class VideoFragment extends BaseFragment {
     VideoShowGLFrameLayout lowerVideoFragment;
     DeviceBean deviceUpper, deviceLower;
     DeviceBean device1, device2;
-    VideoCommonImpl videoCommon;
+    VideoCommon videoCommon;
     boolean isCanShow = true;
     View view ;
 
@@ -107,19 +107,19 @@ public class VideoFragment extends BaseFragment {
         isCanShow = true;
     }
     public void receiVideoBean(VideoBean videoBean){
-        if(isCanShow){
-            if(deviceUpper != null){
-                if(deviceUpper.getDeviceId().equals(videoBean.getDeviceId())){
-                    upperVideoFragment.setVideoBean(videoBean);
-                    return;
-                }
-            }
-            if(deviceLower != null){
-                if(deviceLower.getDeviceId().equals(videoBean.getDeviceId())){
-                    lowerVideoFragment.setVideoBean(videoBean);
-                }
-            }
-        }
+//        if(isCanShow){
+//            if(deviceUpper != null){
+//                if(deviceUpper.getDeviceId().equals(videoBean.getDeviceId())){
+//                    upperVideoFragment.setVideoBean(videoBean);
+//                    return;
+//                }
+//            }
+//            if(deviceLower != null){
+//                if(deviceLower.getDeviceId().equals(videoBean.getDeviceId())){
+//                    lowerVideoFragment.setVideoBean(videoBean);
+//                }
+//            }
+//        }
 
     }
     private boolean Eq(DeviceBean device1, DeviceBean device2){

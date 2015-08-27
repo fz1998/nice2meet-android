@@ -35,7 +35,7 @@ public class VideoCommon {
     Screen screen;
     List<DeviceBean> devices;
 
-    protected VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
+    public VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
         this.roomCommon = roomCommon;
         this.callback = callback;
         video = roomCommon.getVideo();
@@ -80,7 +80,7 @@ public class VideoCommon {
         return devices;
     }
 
-    protected void initListener(){
+    private void initListener(){
         if (video == null)
             return;
 

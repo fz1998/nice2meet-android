@@ -1,7 +1,5 @@
 package com.threebody.sdk.common;
 
-import android.os.Message;
-
 import com.threebody.sdk.domain.MessageBean;
 
 import org.st.Chat;
@@ -15,7 +13,7 @@ import java.util.Map;
 /**
  * Created by xiaxin on 15-2-4.
  */
-public abstract class ChatCommon {
+public class ChatCommon {
     public static final int PUBLIC = 0;
     public static final int RECEIVE_PUBLIC_MESSAGE = 10000;
     public static final int RECEIVI_PRIVATE_MESSAG = 10001;
@@ -24,7 +22,7 @@ public abstract class ChatCommon {
     ChatCallback callback;
     Map<Integer, List<MessageBean>> messageMap;
     RoomCommon roomCommon;
-    protected ChatCommon(RoomCommon roomCommon, ChatCallback callback){
+    public ChatCommon(RoomCommon roomCommon, ChatCallback callback){
         this.callback = callback;
         this.roomCommon = roomCommon;
         chat = roomCommon.getChat();

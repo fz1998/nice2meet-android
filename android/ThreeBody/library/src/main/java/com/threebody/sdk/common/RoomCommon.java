@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by xiaxin on 15-2-4.
  */
-public abstract class RoomCommon {
+public class RoomCommon {
     String tag = getClass().getName();
     protected Room room;
     User me;

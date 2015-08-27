@@ -63,35 +63,7 @@ public class VideoShowGLFrameLayout extends FrameLayout{
         }
          initVideo();
     }
-    //    @Override
-//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        if(view == null){
-//            view = inflater.inflate(R.layout.fragment_video_view, container, false);
-//            initView(view);
-//            initVideo();
-//        }else{
-//            ViewGroup vg = (ViewGroup)view.getParent();
-//            if(vg != null){
-//                vg.removeAllViewsInLayout();
-//            }
-//        }
-//
-//
-//        return view;
-//    }
-//
-//    @Override
-//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        if(deviceBean != null){
-//            showVideoLayout();
-//        }
-//    }
-//
-//    @Override
-//    protected void initView(View view) {
-//        super.initView(view);
-//    }
+
     private  void initVideo(){
        if(mRendererView == null){
            mRendererView = new VideoRendererView(glView, true);
@@ -100,16 +72,7 @@ public class VideoShowGLFrameLayout extends FrameLayout{
        }
     }
 
-    private void initUser(){
 
-    }
-    public FrameLayout getFlVideo(){
-        return flVideo;
-    }
-    public void open(){
-//        videoView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-    }
     public void setVideoBean(VideoBean videoBean){
 //        videoView.setVideoBean(videoBean);
     }
@@ -123,9 +86,7 @@ public class VideoShowGLFrameLayout extends FrameLayout{
             showVideoLayout();
         }
     }
-    public void openVideo(DeviceBean device){
 
-    }
     public void setVideoRender(VideoCommon videoCommon){
         if (deviceBean.isScreen()){
             videoCommon.setScreenRender(deviceBean.getNodeId(),deviceBean.getDeviceId(), mRenderer);
