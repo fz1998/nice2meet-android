@@ -16,20 +16,23 @@ import java.util.List;
  * Created by xiaxin on 15-2-4.
  */
 public class VideoCommon {
+
     protected String tag = getClass().getName();
     public static final int CAMERA_OFF = 0;
     public static final int CAMERA_ON = 1;
     public static final int CAMERA_HOLD = 2;
-    public static  int IS_CAMERA_OPEN = CAMERA_OFF;
     public static final int VIDEO_OPEN= 40001;
     public static final int VIDEO_CLOSE= 40002;
     public static final int VIDEO_STATUS = 40003;
     public static final int SCREEN_OPEN= 40004;
     public static final int SCREEN_CLOSE= 40005;
+
+    //fixme
+    public static  int IS_CAMERA_OPEN = CAMERA_OFF;
+
     Video.CameraType currentCameraType;
     RoomCommon roomCommon;
     protected VideoCallback callback;
-
     Video video;
     Screen.ScreenListener screenListener;
     Screen screen;
@@ -56,6 +59,7 @@ public class VideoCommon {
         roomCommon.setVideoCommon(this);
         initListener();
     }
+
     private synchronized DeviceBean findDeviceById(int nodeid ,String deviceId){
         if(devices != null && !devices.isEmpty()){
             for (DeviceBean deviceBean : devices){
@@ -66,6 +70,7 @@ public class VideoCommon {
         }
         return null;
     }
+
     private int checkDeviceShowCount()
     {
         int count = 0;
@@ -108,11 +113,7 @@ public class VideoCommon {
                             callback.onOpenVideo(deviceBean);
                         }
                     }
-
-
                 }
-
-
             }
 
             @Override
@@ -122,7 +123,6 @@ public class VideoCommon {
                 if(deviceBean != null) {
                     deviceBean.setVideoChecked(false);
                 }
-
 
                 if(result == 0){
                     User user = roomCommon.findUserById(nodeId);
@@ -163,7 +163,6 @@ public class VideoCommon {
                     callback.onVideoData(videoBean);
                 }
             }
-
         };
         video.setListener(listener);
 
@@ -191,10 +190,9 @@ public class VideoCommon {
                             callback.onShareScreen(deviceBean);
                         }
                     }
-
-
                 }
             }
+
             @Override
             public void onCloseScreen(int result, int nodeId, String screenId){
                 LoggerUtil.info(tag, "onCloseScreen result = "+result+" nodeId = "+nodeId+" deviceId = "+screenId);
@@ -222,18 +220,8 @@ public class VideoCommon {
         screen.setListener(screenListener);
 
     }
-    //
-    public int getMaxVideo(){
-        return video.getMaxVideo();
-    }
-    public int getSurplusVideo(){
-        return video.getSurplusVideo();
-    }
+
     public boolean openVideo(int nodeId){
-//        if(video.openVideo(nodeId)){
-//            IS_CAMERA_OPEN = CAMERA_ON;
-//            return true;
-//        }
         if(video.openLocalVideo(Video.CameraType.Front)){
             currentCameraType  = Video.CameraType.Front;
             IS_CAMERA_OPEN = CAMERA_ON;
@@ -245,6 +233,7 @@ public class VideoCommon {
         }
         return false;
     }
+
     public boolean closeVideo(int nodeId){
         if(video.closeVideo(nodeId)){
             IS_CAMERA_OPEN = CAMERA_OFF;
@@ -276,6 +265,7 @@ public class VideoCommon {
 //        return video.removeVideoRender(nodeId, deviceId, renderer);
         return video.switchRender(renderer1, renderer2);
     }
+
     public  boolean switchVideo( ){
         Video.CameraType now = (currentCameraType== Video.CameraType.Back ? Video.CameraType.Front: Video.CameraType.Back);
 //        return video.removeVideoRender(nodeId, deviceId, renderer);
@@ -285,12 +275,11 @@ public class VideoCommon {
         }
         return false;
     }
+
     protected boolean checkCallback(){
-        if(callback == null){
-            return false;
-        }
-        return true;
+        return callback != null;
     }
+
     public interface VideoCallback{
          void onShareScreen(DeviceBean deviceBean);
          void onCloseScreen(int result, int nodeId, String deviceId);
@@ -298,14 +287,5 @@ public class VideoCommon {
          void onCloseVideo(int result, int nodeId, String deviceId);
          void onRequestOpenVideo(int nodeId, String deviceId);
          void onVideoData(VideoBean videoBean);
-    }
-    private boolean checkMe(int nodeId){
-        User me = roomCommon.getCurrentUser();
-        if(me != null){
-            if(me.getNodeId() == nodeId){
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -87,9 +87,9 @@ public class ChatCommon {
         return callback != null;
     }
 
-    private void addPublicMessage(MessageBean messsageBean){
+    private void addPublicMessage(MessageBean messageBean){
         List<MessageBean> messageBeans = messageMap.get(PUBLIC_MESSAGE);
-        messageBeans.add(messsageBean);
+        messageBeans.add(messageBean);
     }
 
     private void addPrivateMessage(MessageBean messageBean){

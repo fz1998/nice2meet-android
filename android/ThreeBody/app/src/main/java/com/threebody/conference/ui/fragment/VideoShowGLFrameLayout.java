@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.threebody.conference.R;
 import com.threebody.sdk.common.VideoCommon;
 import com.threebody.sdk.domain.DeviceBean;
-import com.threebody.sdk.domain.VideoBean;
 
 import org.st.VideoRendererView;
 import org.webrtc.VideoRenderer;
@@ -22,10 +21,9 @@ import org.webrtc.VideoRenderer;
 /**
  * Created by xiaxin on 2015/3/28.
  */
-public class VideoShowGLFrameLayout extends FrameLayout{
+public class VideoShowGLFrameLayout extends FrameLayout {
     TextView tvUserName;
     LinearLayout llFlFragment;
-    ImageView ivVideoStatus;
     ImageView ivAudioStatus;
     FrameLayout flVideo;
     ProgressBar progressBar;
@@ -72,16 +70,9 @@ public class VideoShowGLFrameLayout extends FrameLayout{
        }
     }
 
-
-    public void setVideoBean(VideoBean videoBean){
-//        videoView.setVideoBean(videoBean);
-    }
     public void setDevice(DeviceBean device){
-//        Message msg = new Message();
-//        msg.what = VideoCommon.NEW_DEVICE;
-        deviceBean = device;
-//        handler.sendMessage(msg);
 
+        deviceBean = device;
         if(llFlFragment != null && deviceBean != null){
             showVideoLayout();
         }
@@ -128,18 +119,6 @@ public class VideoShowGLFrameLayout extends FrameLayout{
                 videoCommon.removeVideoRender(deviceBean.getNodeId(), deviceBean.getDeviceId(),mRenderer);
             }
             mRendererView.refresh();
-            //mRendererView.onDrawFrame();
-            //mRenderer.dispose();
         }
-    }
-
-    public VideoRendererView getmRendererView() {
-        return mRendererView;
-    }
-    public void onStop(){
-        mRendererView.onStop();
-    }
-    public void onResume(){
-        mRendererView.onRsume();
     }
 }
