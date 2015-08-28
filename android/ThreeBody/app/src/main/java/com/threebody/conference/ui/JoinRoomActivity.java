@@ -16,10 +16,9 @@ import com.threebody.sdk.util.LoggerUtil;
 import java.util.UUID;
 
 import butterknife.InjectView;
-import cn.tee3.n2m.RoomService;
+import cn.tee3.n2m.Constants;
 
-
-public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinResultListener {
+public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinResultCallback {
 
     @InjectView(R.id.etNum)
     EditText etNum;
@@ -31,8 +30,6 @@ public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinRes
     Button btnAddIn;
 
     HttpProgressDialog dialog;
-
-    RoomService roomService;
 
     @Override
     protected void initUI() {
@@ -46,6 +43,9 @@ public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinRes
         etNum.setText("");
         etName.setText(defaultName);
         etPassword.setText("admin");
+
+        //todo for testing, need to delete.
+        joinConference();
     }
 
     @Override
@@ -76,7 +76,11 @@ public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinRes
         }
         getSupportFragmentManager().beginTransaction().add(dialog, "").commit();
 
-        final String num = etNum.getText().toString();
+
+        //todo for testing, need to recover.
+//        final String num = etNum.getText().toString();
+        final String num = Constants.ROOM_NUMBER;
+
         final String userId = UUID.randomUUID().toString();
         final String name = etName.getText().toString();
         final String password = etPassword.getText().toString();
@@ -85,7 +89,7 @@ public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinRes
         RoomCommon roomCommon = STSystem.getInstance().obtainRoom(num);
 
         // set join result listener
-        roomCommon.setJoinResultListener(this);
+        roomCommon.setJoinResultCallback(this);
 
         // join
         roomCommon.join(userId, name, password);

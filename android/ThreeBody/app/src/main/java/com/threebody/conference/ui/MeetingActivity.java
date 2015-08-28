@@ -18,6 +18,7 @@ import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.sdk.common.AudioCommon;
 import com.threebody.sdk.common.ChatCommon;
 import com.threebody.sdk.common.RoomCommon;
+import com.threebody.sdk.common.STSystem;
 import com.threebody.sdk.common.VideoCommon;
 import com.threebody.sdk.domain.DeviceBean;
 import com.threebody.sdk.domain.VideoBean;
@@ -71,8 +72,12 @@ public class MeetingActivity extends BaseActivity {
         fragmentList.add(chatFragment);
         fragmentList.add(videoFragment);
         fragmentList.add(setFragment);
+
+        // display video Fragment
         getSupportFragmentManager().beginTransaction().add(R.id.mainScreenLinearLayout, videoFragment).commit();
-//        initData();
+
+        // init biz objects
+        initBizObjects();
     }
 
     @Override
@@ -128,10 +133,10 @@ public class MeetingActivity extends BaseActivity {
         finish();
     }
 
-    private void initData(){
+    private void initBizObjects(){
         // roomCommon
+        roomCommon = STSystem.getInstance().getRoomCommon();
         // chat common
-        // audio common
         chatCommon = new ChatCommon(roomCommon, new ChatCommon.ChatCallback() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
@@ -149,6 +154,7 @@ public class MeetingActivity extends BaseActivity {
 
             }
         });
+        // audio common
         audioCommon = new AudioCommon(roomCommon, new AudioCommon.AudioCallback() {
             @Override
             public void onOpenMicrophone(int result, int nodeId) {
@@ -195,6 +201,7 @@ public class MeetingActivity extends BaseActivity {
                 Message msg = new Message();
                 msg.what = VideoCommon.VIDEO_CLOSE;
                 msg.obj = deviceBean;
+
                 handler.sendMessage(msg);
 
             }
@@ -225,18 +232,6 @@ public class MeetingActivity extends BaseActivity {
 //                videoFragment.receiVideoBean(videoBean);
             }
         });
-//        initDevice();
-    }
-    private void initDevice(){
-//        for(int i = 0; i < 10; i++){
-//            User user = new User();
-//            user.setUserName("user"+i);
-//            user.setNodeId(1000+i);
-//            roomCommon.li.onUserJoin(user);
-//        }
-//        for(int i = 0; i < 10; i++){
-//            videoCommon.listener.onOpenVideo(0, 1000+i, "device"+i);
-//        }
     }
 
     public VideoCommon getVideoCommon() {
@@ -320,7 +315,7 @@ public class MeetingActivity extends BaseActivity {
     }
 
 
-//    private void initData(){
+//    private void initBizObjects(){
 //        roomCommon = (RoomCommon)STSystem.getInstance().getRoomCommon();
 //        roomCommon.setCallback(new RoomCommon.RoomCallback() {
 //            @Override

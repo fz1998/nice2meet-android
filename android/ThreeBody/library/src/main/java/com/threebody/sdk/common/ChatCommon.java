@@ -14,13 +14,16 @@ import java.util.Map;
  * Created by xiaxin on 15-2-4.
  */
 public class ChatCommon {
-    public static final int PUBLIC = 0;
+
+    public static final int PUBLIC_MESSAGE = 0;
+    Map<Integer, List<MessageBean>> messageMap;
+
     public static final int RECEIVE_PUBLIC_MESSAGE = 10000;
-    public static final int RECEIVI_PRIVATE_MESSAG = 10001;
+
     protected Chat chat;
     private Chat.ChatListener listener;
     ChatCallback callback;
-    Map<Integer, List<MessageBean>> messageMap;
+
     RoomCommon roomCommon;
     public ChatCommon(RoomCommon roomCommon, ChatCallback callback){
         this.callback = callback;
@@ -28,13 +31,8 @@ public class ChatCommon {
         chat = roomCommon.getRoom().getChat();
         roomCommon.setChatCommon(this);
         messageMap = new HashMap<>();
-        messageMap.put(PUBLIC, new ArrayList<MessageBean>());
+        messageMap.put(PUBLIC_MESSAGE, new ArrayList<MessageBean>());
         initListener();
-
-    }
-
-    public Map<Integer, List<MessageBean>> getMessageMap() {
-        return messageMap;
     }
 
     public boolean sendPublicMessage(String message){
@@ -48,21 +46,7 @@ public class ChatCommon {
         }
         return false;
     }
-    public boolean sendPrivateMessage(int nodeId, String message){
-        MessageBean msg = new MessageBean(message, roomCommon.getMe().getUserName(), roomCommon.getMe().getNodeId(), false, true);
-        msg.setToNodeId(nodeId);
-        addPrivateMessage(msg);
-        if(chat != null){
-//            return chat.sendPrivateMessage(id, message);
-        }
-        return false;
-    }
-    public boolean sendData(int id, String message){
-        if(chat != null){
-            return chat.sendData(id, message);
-        }
-        return false;
-    }
+
     private void initListener(){
         if (chat == null)
             return;
@@ -99,16 +83,16 @@ public class ChatCommon {
         };
         chat.setListener(listener);
     }
+
     private boolean checkCallback(){
-        if(callback == null){
-            return false;
-        }
-        return true;
+        return callback != null;
     }
+
     private void addPublicMessage(MessageBean messsageBean){
-        List<MessageBean> messageBeans = messageMap.get(PUBLIC);
+        List<MessageBean> messageBeans = messageMap.get(PUBLIC_MESSAGE);
         messageBeans.add(messsageBean);
     }
+
     private void addPrivateMessage(MessageBean messageBean){
         if(!checkUser(messageBean.getNodeId())){
             messageMap.put(messageBean.getNodeId(), new ArrayList<MessageBean>());
@@ -116,6 +100,7 @@ public class ChatCommon {
         List<MessageBean> messageBeans = messageMap.get(messageBean.getNodeId());
         messageBeans.add(messageBean);
     }
+
     private boolean checkUser(int nodeId){
         for (Integer key : messageMap.keySet()){
             if(nodeId == key){
@@ -125,9 +110,10 @@ public class ChatCommon {
         return false;
     }
 
-    public List<MessageBean> getMessageList(int aPublic) {
-        return messageMap.get(PUBLIC);
+    public List<MessageBean> getPublicMessgeList() {
+        return messageMap.get(PUBLIC_MESSAGE);
     }
+
 
     public interface ChatCallback{
         void onReceivePublicMessage(int nodeId, java.lang.String message);
@@ -136,4 +122,6 @@ public class ChatCommon {
 
         void onReceiveData(int nodeId, java.lang.String data);
     }
+
+
 }

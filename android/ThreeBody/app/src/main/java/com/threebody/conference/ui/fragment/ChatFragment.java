@@ -50,7 +50,7 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         chatCommon = ((MeetingActivity)getActivity()).getChatCommon();
         roomCommon = ((MeetingActivity)getActivity()).getRoomCommon();
         btnSend.setOnClickListener(this);
-        adapter = new MessageAdapter(getActivity(), chatCommon.getMessageList(ChatCommon.PUBLIC));
+        adapter = new MessageAdapter(getActivity(), chatCommon.getPublicMessgeList());
         lvChat.setAdapter(adapter);
     }
 
@@ -68,7 +68,7 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 //        messageBean.setMessage(etSend.getText().toString());
 //        messageBean.setPublic(true);
 //        messageBean.setName(roomCommon.getMe().getUserName());
-//        messageBean.setNodeId(ChatCommon.PUBLIC);
+//        messageBean.setNodeId(ChatCommon.PUBLIC_MESSAGE);
         String message = "";
         try {
              message = new String(etSend.getText().toString().getBytes(), "UTF-8");
@@ -77,7 +77,7 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
         chatCommon
                 .sendPublicMessage(message);
-        adapter.refresh(chatCommon.getMessageList(ChatCommon.PUBLIC));
+        adapter.refresh(chatCommon.getPublicMessgeList());
         etSend.setText("");
         lvChat.smoothScrollToPosition(adapter.getCount() - 1);
     }
@@ -105,8 +105,8 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             switch (msg.what){
                 case ChatCommon.RECEIVE_PUBLIC_MESSAGE:
                     if(chatCommon != null){
-                        if(chatCommon.getMessageList(ChatCommon.PUBLIC) != null){
-                            adapter.refresh(chatCommon.getMessageList(ChatCommon.PUBLIC));
+                        if(chatCommon.getPublicMessgeList() != null){
+                            adapter.refresh(chatCommon.getPublicMessgeList());
                             lvChat.smoothScrollToPosition(adapter.getCount() - 1);
                         }
                     }

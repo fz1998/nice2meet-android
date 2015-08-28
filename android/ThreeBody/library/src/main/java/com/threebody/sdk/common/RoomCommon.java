@@ -17,7 +17,7 @@ public class RoomCommon {
     /**
      * 给JoinActiviry的回调接口
      */
-    public interface JoinResultListener{
+    public interface JoinResultCallback {
         void onJoinResult(int result);
     }
 
@@ -27,11 +27,11 @@ public class RoomCommon {
     User me;
     List<User> users;
 
-    public void setJoinResultListener(JoinResultListener joinResultListener) {
-        this.joinResultListener = joinResultListener;
+    public void setJoinResultCallback(JoinResultCallback joinResultCallback) {
+        this.joinResultCallback = joinResultCallback;
     }
 
-    JoinResultListener joinResultListener;
+    JoinResultCallback joinResultCallback;
     private Room.RoomListener roomListener;
 
     protected ChatCommon chatCommon;
@@ -150,6 +150,7 @@ public class RoomCommon {
     public User findUserById(int nodeId){
         return room.getUser(nodeId);
     }
+
     private void initListener(){
         roomListener = new Room.RoomListener() {
             @Override
@@ -160,8 +161,8 @@ public class RoomCommon {
                     users.add(me);
                 }
 
-                if(joinResultListener != null){
-                    joinResultListener.onJoinResult(result);
+                if(joinResultCallback != null){
+                    joinResultCallback.onJoinResult(result);
                 }
             }
 
