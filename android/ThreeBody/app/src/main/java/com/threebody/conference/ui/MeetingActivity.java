@@ -226,11 +226,6 @@ public class MeetingActivity extends BaseActivity {
             public void onRequestOpenVideo(int nodeId, String deviceId) {
 
             }
-
-            @Override
-            public void onVideoData(VideoBean videoBean) {
-//                videoFragment.receiVideoBean(videoBean);
-            }
         });
     }
 

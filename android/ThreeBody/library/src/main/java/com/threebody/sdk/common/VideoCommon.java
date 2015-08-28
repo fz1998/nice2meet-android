@@ -152,16 +152,7 @@ public class VideoCommon {
 
             @Override
             synchronized public void onVideoData(int nodeId, String deviceId, byte[] data, int len, int width, int height) {
-                VideoBean videoBean = new VideoBean();
-                videoBean.setNodeId(nodeId);
-                videoBean.setDeviceId(deviceId);
-                videoBean.setVideoData(data);
-                videoBean.setLength(len);
-                videoBean.setWidth(width);
-                videoBean.setHeight(height);
-                if(checkCallback()){
-                    callback.onVideoData(videoBean);
-                }
+                //todo implement this if need to take care of raw video data
             }
         };
         video.setListener(listener);
@@ -286,6 +277,5 @@ public class VideoCommon {
          void onOpenVideo(DeviceBean deviceBean);
          void onCloseVideo(int result, int nodeId, String deviceId);
          void onRequestOpenVideo(int nodeId, String deviceId);
-         void onVideoData(VideoBean videoBean);
     }
 }
