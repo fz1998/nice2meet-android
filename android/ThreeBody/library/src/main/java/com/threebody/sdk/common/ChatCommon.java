@@ -25,7 +25,7 @@ public class ChatCommon {
     public ChatCommon(RoomCommon roomCommon, ChatCallback callback){
         this.callback = callback;
         this.roomCommon = roomCommon;
-        chat = roomCommon.getChat();
+        chat = roomCommon.getRoom().getChat();
         roomCommon.setChatCommon(this);
         messageMap = new HashMap<>();
         messageMap.put(PUBLIC, new ArrayList<MessageBean>());

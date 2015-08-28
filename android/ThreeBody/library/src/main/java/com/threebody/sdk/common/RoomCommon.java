@@ -4,13 +4,8 @@ import android.util.Log;
 
 import com.threebody.sdk.util.LoggerUtil;
 
-import org.st.Audio;
-import org.st.Chat;
 import org.st.Room;
-import org.st.RoomInfo;
-import org.st.Screen;
 import org.st.User;
-import org.st.Video;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,29 +14,39 @@ import java.util.List;
  * Created by xiaxin on 15-2-4.
  */
 public class RoomCommon {
+    /**
+     * 给JoinActiviry的回调接口
+     */
+    public interface JoinResultListener{
+        void onJoinResult(int result);
+    }
+
+
     String tag = getClass().getName();
     protected Room room;
     User me;
     List<User> users;
 
-    RoomCallback callback;
+    public void setJoinResultListener(JoinResultListener joinResultListener) {
+        this.joinResultListener = joinResultListener;
+    }
 
-    JoinResultListener joinListener;
-    private Room.RoomListener listener;
+    JoinResultListener joinResultListener;
+    private Room.RoomListener roomListener;
 
     protected ChatCommon chatCommon;
     protected AudioCommon audioCommon;
     protected VideoCommon videoCommon;
     protected String roomId;
 
-
-//    protected RoomCommon (RoomCallback callback, String roomId){
-//        this.callback = callback;
+//
+//    protected RoomCommon(JoinResultListener joinResultListener, String roomId){
+//        this.joinResultListener = joinResultListener;
 //        this.roomId = roomId;
 //        init();
 //    }
-    protected RoomCommon(JoinResultListener joinListener, String roomId){
-        this.joinListener = joinListener;
+
+    protected RoomCommon(String roomId){
         this.roomId = roomId;
         init();
     }
@@ -65,14 +70,6 @@ public class RoomCommon {
     }
     public void setRoom(Room room) {
         this.room = room;
-    }
-    public void setCallback(RoomCallback callback) {
-        this.callback = callback;
-//        joinListener = null;
-    }
-
-    public ChatCommon getChatCommon() {
-        return chatCommon;
     }
 
     public void setChatCommon(ChatCommon chatCommon) {
@@ -141,36 +138,6 @@ public class RoomCommon {
 
     }
 
-    /**
-     * 获取房间信息
-     * @return
-     */
-    public RoomInfo getRoomInfo(){
-        return room.getRoomInfo();
-    }
-
-    /**
-     * 获取聊天模块
-     * @return
-     */
-     Chat getChat(){
-        return room.getChat();
-    }
-    Video getVideo(){
-        return room.getVideo();
-    }
-    Screen getScreen(){
-        return room.getScreen();
-    }
-
-
-    /**
-     * 获取音频模块
-     * @return
-     */
-     Audio getAudio(){
-        return room.getAudio();
-    }
 
     /**
      * 获取自己
@@ -184,7 +151,7 @@ public class RoomCommon {
         return room.getUser(nodeId);
     }
     private void initListener(){
-        listener = new Room.RoomListener() {
+        roomListener = new Room.RoomListener() {
             @Override
             public void onJoin(int result) {
                 LoggerUtil.info(tag, "onJoin result = "+result);
@@ -192,45 +159,29 @@ public class RoomCommon {
                 if(me != null){
                     users.add(me);
                 }
-                if(checkCallback()){
-                    callback.onJoin(result);
-                }
-                if(joinListener != null){
-                    joinListener.onJoinResult(result);
+
+                if(joinResultListener != null){
+                    joinResultListener.onJoinResult(result);
                 }
             }
 
             @Override
             synchronized public void onLeave(int reason) {
-//                LoggerUtil.info(tag, "onLeave result = "+ reason);
-                if(checkCallback()){
-                    callback.onLeave(reason);
-                }
             }
 
             @Override
             synchronized public void onConnectionChange(Room.ConnectionStatus state) {
                 LoggerUtil.info(tag, "onConnectionChange state = "+state);
-                if(checkCallback()){
-                    callback.onConnectionChange(state);
-                }
             }
 
             @Override
             synchronized public void onUserJoin(User user) {
-                //LoggerUtil.info(tag, "onUserJoin nodeId = "+user.getNodeId()+" name = "+user.getUserName());
                 Log.e(tag, "onUserJoin nodeId = "+user.getNodeId()+" name = "+user.getUserName() + " role = "+user.getRole() + " usrID = "+user.getUserId());
-
-//                user.setAudioOn(true);
                 users.add(user);
-                if(checkCallback()){
-                    callback.onUserJoin(user);
-                }
             }
 
             @Override
             synchronized public void onUserLeave(User user) {
-//                LoggerUtil.info(tag, "onUserLeave nodeId = "+user.getNodeId()+" name = "+user.getUserName());
                 Log.i(tag, "onUserLeave nodeId = "+user.getNodeId()+" name = "+user.getUserName());
                 if(users != null && !users.isEmpty()){
                     for(User u : users){
@@ -240,9 +191,6 @@ public class RoomCommon {
                         }
                     }
 //                    users.remove(user);
-                }
-                if(checkCallback()){
-                    callback.onUserLeave(user);
                 }
             }
 
@@ -257,9 +205,6 @@ public class RoomCommon {
                         }
                     }
                 }
-                if(checkCallback()){
-                    callback.onUserUpdate(user);
-                }
             }
 
             @Override
@@ -271,9 +216,6 @@ public class RoomCommon {
                             user.setRole(newRole);
                         }
                     }
-                }
-                if(checkCallback()){
-                    callback.onUpdateRole(nodeId, newRole);
                 }
             }
 
@@ -287,71 +229,17 @@ public class RoomCommon {
                         }
                     }
                 }
-                if(checkCallback()){
-                    callback.onUpdateStatus(nodeId, status);
-                }
             }
+
             @Override
             synchronized public void onUpdateUserData(int nodeId, String data) {
                 LoggerUtil.info(tag, "onUpdateUserData nodeId = " + nodeId + " data = " + data);
             }
         };
     }
-    Room.RoomListener getListener(){
-        return listener;
+    Room.RoomListener getRoomListener(){
+        return roomListener;
     }
-    private boolean checkCallback(){
-        if(callback == null){
-            return false;
-        }
-        return true;
-    }
-    public interface JoinResultListener{
-        void onJoinResult(int result);
-    }
-    public interface RoomCallback{
-        /**
-         * 加入会议结果
-         * @param result
-         */
-        void onJoin(int result);
-        /**
-         * 退出会议结果
-         * @param reason
-         */
-        void onLeave(int reason);
-        /**
-         * 连接状态改变
-         * @param state
-         */
-        void onConnectionChange(Room.ConnectionStatus state);
-        /**
-         * 新用户加入
-         * @param user
-         */
-        void onUserJoin(User user);
-        /**
-         * 用户离开会议
-         * @param user
-         */
-        void onUserLeave(User user);
-        /**
-         * 用户状态改变
-         * @param user
-         */
-        void onUserUpdate(User user);
-        /**
-         * 本地角色改变
-         * @param nodeId       用户id
-         * @param newRole  user角色
-         */
-        void onUpdateRole(int nodeId, User.Role newRole);
-        /**
-         * 用户状态改变
-         * @param nodeId      用户id
-         * @param status  用户状态
-         */
-        void onUpdateStatus(int nodeId, User.Status status);
-    }
+
 
 }

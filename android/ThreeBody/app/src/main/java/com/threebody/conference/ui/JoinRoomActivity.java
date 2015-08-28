@@ -9,10 +9,9 @@ import com.threebody.conference.R;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.conference.ui.view.HttpProgressDialog;
+import com.threebody.sdk.common.RoomCommon;
+import com.threebody.sdk.common.STSystem;
 import com.threebody.sdk.util.LoggerUtil;
-
-import org.st.Room;
-import org.st.User;
 
 import java.util.UUID;
 
@@ -20,46 +19,7 @@ import butterknife.InjectView;
 import cn.tee3.n2m.RoomService;
 
 
-public class JoinRoomActivity extends BaseActivity implements Room.RoomListener {
-    @Override
-    public void onLeave(int i) {
-
-    }
-
-    @Override
-    public void onConnectionChange(Room.ConnectionStatus connectionStatus) {
-
-    }
-
-    @Override
-    public void onUserJoin(User user) {
-
-    }
-
-    @Override
-    public void onUserLeave(User user) {
-
-    }
-
-    @Override
-    public void onUserUpdate(User user) {
-
-    }
-
-    @Override
-    public void onUpdateRole(int i, User.Role role) {
-
-    }
-
-    @Override
-    public void onUpdateStatus(int i, User.Status status) {
-
-    }
-
-    @Override
-    public void onUpdateUserData(int i, String s) {
-
-    }
+public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinResultListener {
 
     @InjectView(R.id.etNum)
     EditText etNum;
@@ -121,13 +81,19 @@ public class JoinRoomActivity extends BaseActivity implements Room.RoomListener 
         final String name = etName.getText().toString();
         final String password = etPassword.getText().toString();
 
-        roomService = new RoomService(this);
-        roomService.joinRoom(num, userId, name, password);
+        // obtain a room
+        RoomCommon roomCommon = STSystem.getInstance().obtainRoom(num);
+
+        // set join result listener
+        roomCommon.setJoinResultListener(this);
+
+        // join
+        roomCommon.join(userId, name, password);
     }
 
 
     @Override
-    public void onJoin(int result) {
+    public void onJoinResult(int result) {
         if (0 == result) {
             LoggerUtil.info(getClass().getName(), "join result = " + result);
             Intent intent = new Intent();

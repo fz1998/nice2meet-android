@@ -28,12 +28,6 @@ import java.util.List;
 
 import butterknife.InjectView;
 
-//import com.threebody.sdk.common.impl.ChatCommonImpl;
-
-//import com.threebody.sdk.common.impl.ChatCommonImpl;
-
-//import com.threebody.sdk.common.impl.ChatCommonImpl;
-
 /**
  * Created by xiaxin on 15-1-14.
  */
@@ -48,8 +42,6 @@ public class MeetingActivity extends BaseActivity {
     ChatCommon chatCommon;
     AudioCommon audioCommon;
     VideoCommon videoCommon;
-//    @InjectView(R.id.localVideo)LocalVideoView localVideoView;
-
     ChatFragment chatFragment;
     VideoFragment videoFragment;
     SetFragment setFragment;

@@ -22,7 +22,7 @@ public class AudioCommon {
     RoomCommon roomCommon;
 
     public AudioCommon(RoomCommon roomCommon, AudioCallback callbak){
-        audio = roomCommon.getAudio();
+        audio = roomCommon.getRoom().getAudio();
         this.callback = callbak;
         roomCommon.setAudioCommon(this);
         this.roomCommon = roomCommon;

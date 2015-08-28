@@ -38,8 +38,8 @@ public class VideoCommon {
     public VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
         this.roomCommon = roomCommon;
         this.callback = callback;
-        video = roomCommon.getVideo();
-        screen = roomCommon.getScreen();
+        video = roomCommon.getRoom().getVideo();
+        screen = roomCommon.getRoom().getScreen();
         init();
     }
 
@@ -51,7 +51,7 @@ public class VideoCommon {
         if(devices == null){
             devices = new ArrayList<>();
         }
-        video = roomCommon.getVideo();
+        video = roomCommon.getRoom().getVideo();
         video.setAutoRotation(false);
         roomCommon.setVideoCommon(this);
         initListener();

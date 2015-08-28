@@ -29,9 +29,18 @@ public class STSystem {
     public void createRoom(RoomCommon roomCommon){
         this.roomCommon = roomCommon;
         roomCommons.add(roomCommon);
-        Room room = roomSystem.createRoom(roomCommon.getListener(), roomCommon.getRoomId());
+        Room room = roomSystem.createRoom(roomCommon.getRoomListener(), roomCommon.getRoomId());
         roomCommon.setRoom(room);
     }
+
+    public RoomCommon obtainRoom(String roomNumber) {
+        this.roomCommon = new RoomCommon(roomNumber);
+        roomCommons.add(roomCommon);
+        Room room = roomSystem.createRoom(roomCommon.getRoomListener(), roomNumber);
+        this.roomCommon.setRoom(room);
+        return roomCommon;
+    }
+
 
 
     public  List<RoomCommon> getRoomCommons() {
