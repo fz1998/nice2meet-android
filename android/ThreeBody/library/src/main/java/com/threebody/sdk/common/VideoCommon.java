@@ -300,7 +300,7 @@ public class VideoCommon {
          void onVideoData(VideoBean videoBean);
     }
     private boolean checkMe(int nodeId){
-        User me = roomCommon.getSelf();
+        User me = roomCommon.getCurrentUser();
         if(me != null){
             if(me.getNodeId() == nodeId){
                 return true;

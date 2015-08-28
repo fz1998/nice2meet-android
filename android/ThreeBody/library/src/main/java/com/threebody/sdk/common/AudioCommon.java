@@ -32,7 +32,7 @@ public class AudioCommon {
     }
 
     private boolean checkMe(int nodeId){
-        User me = roomCommon.getSelf();
+        User me = roomCommon.getCurrentUser();
         if(me != null){
             if(me.getNodeId() == nodeId){
                 return true;

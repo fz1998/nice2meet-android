@@ -14,22 +14,11 @@ import java.util.List;
  * Created by xiaxin on 15-2-4.
  */
 public class RoomCommon {
-    /**
-     * 给JoinActiviry的回调接口
-     */
-    public interface JoinResultCallback {
-        void onJoinResult(int result);
-    }
-
 
     String tag = getClass().getName();
     protected Room room;
     User me;
     List<User> users;
-
-    public void setJoinResultCallback(JoinResultCallback joinResultCallback) {
-        this.joinResultCallback = joinResultCallback;
-    }
 
     JoinResultCallback joinResultCallback;
     private Room.RoomListener roomListener;
@@ -41,9 +30,7 @@ public class RoomCommon {
 
     protected RoomCommon(String roomId){
         this.roomId = roomId;
-        init();
-    }
-    private void init(){
+
         if(users == null){
             users = new ArrayList<>();
         }
@@ -54,10 +41,6 @@ public class RoomCommon {
         return me;
     }
 
-    public void setMe(User me) {
-        this.me = me;
-        users.add(me);
-    }
     public Room getRoom(){
         return this.room;
     }
@@ -136,7 +119,7 @@ public class RoomCommon {
      * 获取自己
      * @return
      */
-    User getSelf(){
+    User getCurrentUser(){
        return room.getSelf();
     }
 
@@ -149,7 +132,7 @@ public class RoomCommon {
             @Override
             public void onJoin(int result) {
                 LoggerUtil.info(tag, "onJoin result = "+result);
-                me = getSelf();
+                me = getCurrentUser();
                 if(me != null){
                     users.add(me);
                 }
@@ -231,7 +214,21 @@ public class RoomCommon {
             }
         };
     }
+
     Room.RoomListener getRoomListener(){
         return roomListener;
     }
+
+    public void setJoinResultCallback(JoinResultCallback joinResultCallback) {
+        this.joinResultCallback = joinResultCallback;
+    }
+
+    /**
+     * 给JoinActiviry的回调接口
+     */
+    public interface JoinResultCallback {
+        void onJoinResult(int result);
+    }
+
+
 }
