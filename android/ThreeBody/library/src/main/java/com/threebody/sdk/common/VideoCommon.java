@@ -29,7 +29,7 @@ public class VideoCommon {
     Video.CameraType currentCameraType;
     RoomCommon roomCommon;
     protected VideoCallback callback;
-    Video.VideoListener listener;
+
     Video video;
     Screen.ScreenListener screenListener;
     Screen screen;
@@ -84,7 +84,7 @@ public class VideoCommon {
         if (video == null)
             return;
 
-        listener = new Video.VideoListener() {
+        Video.VideoListener listener = new Video.VideoListener() {
             @Override
             synchronized public void onOpenVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onOpenVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);

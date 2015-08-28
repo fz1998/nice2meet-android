@@ -26,12 +26,12 @@ public class STSystem {
         roomCommons = new ArrayList<>();
     }
 
-    public void createRoom(RoomCommon roomCommon){
-        this.roomCommon = roomCommon;
-        roomCommons.add(roomCommon);
-        Room room = roomSystem.createRoom(roomCommon.getRoomListener(), roomCommon.getRoomId());
-        roomCommon.setRoom(room);
-    }
+//    public void createRoom(RoomCommon roomCommon){
+//        this.roomCommon = roomCommon;
+//        roomCommons.add(roomCommon);
+//        Room room = roomSystem.createRoom(roomCommon.getRoomListener(), roomCommon.getRoomId());
+//        roomCommon.setRoom(room);
+//    }
 
     public RoomCommon obtainRoom(String roomNumber) {
         this.roomCommon = new RoomCommon(roomNumber);

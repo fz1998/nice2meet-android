@@ -39,13 +39,6 @@ public class RoomCommon {
     protected VideoCommon videoCommon;
     protected String roomId;
 
-//
-//    protected RoomCommon(JoinResultListener joinResultListener, String roomId){
-//        this.joinResultListener = joinResultListener;
-//        this.roomId = roomId;
-//        init();
-//    }
-
     protected RoomCommon(String roomId){
         this.roomId = roomId;
         init();
@@ -241,6 +234,4 @@ public class RoomCommon {
     Room.RoomListener getRoomListener(){
         return roomListener;
     }
-
-
 }

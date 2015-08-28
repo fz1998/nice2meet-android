@@ -21,7 +21,6 @@ public class ChatCommon {
     public static final int RECEIVE_PUBLIC_MESSAGE = 10000;
 
     protected Chat chat;
-    private Chat.ChatListener listener;
     ChatCallback callback;
 
     RoomCommon roomCommon;
@@ -50,7 +49,7 @@ public class ChatCommon {
     private void initListener(){
         if (chat == null)
             return;
-        listener = new Chat.ChatListener() {
+        Chat.ChatListener listener = new Chat.ChatListener() {
             @Override
             synchronized public void onReceivePublicMessage(int nodeId, String message) {
                 User user = roomCommon.findUserById(nodeId);

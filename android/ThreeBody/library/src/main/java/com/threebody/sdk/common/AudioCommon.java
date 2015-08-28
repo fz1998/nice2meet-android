@@ -14,11 +14,12 @@ public class AudioCommon {
     public static final int SPEAKER_OFF = 0;
     public static final int SPEAKER_ON = 1;
 
+    //todo need to change this
     public static int IS_MIC_ON = MIC_OFF;
     public static int IS_SPEAKER_ON = MIC_OFF;
 
     private Audio audio;
-    Audio.AudioListener listener;
+
     AudioCallback callback;
     RoomCommon roomCommon;
 
@@ -30,9 +31,6 @@ public class AudioCommon {
         initListener();
     }
 
-    public RoomCommon getRoomCommon() {
-        return roomCommon;
-    }
     private boolean checkMe(int nodeId){
         User me = roomCommon.getSelf();
         if(me != null){
@@ -94,7 +92,7 @@ public class AudioCommon {
     private void initListener(){
         if (audio == null)
             return;
-        listener = new Audio.AudioListener() {
+        Audio.AudioListener listener = new Audio.AudioListener() {
             @Override
             synchronized public void onOpenMicrophone(int result, int nodeId) {
                 LoggerUtil.info(tag, "onOpenMic result = "+result+" nodeId = "+nodeId);
