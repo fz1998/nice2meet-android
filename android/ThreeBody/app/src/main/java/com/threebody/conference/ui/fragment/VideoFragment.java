@@ -109,7 +109,7 @@ public class VideoFragment extends BaseFragment {
     }
 
     void changeShowUp(DeviceBean device){
-        if (deviceUpper!=null && deviceUpper == device)
+        if (deviceUpper == device)
             return;
         closeShowUp();
         upperVideoLayout.setDevice(device);
@@ -118,7 +118,7 @@ public class VideoFragment extends BaseFragment {
     }
 
     void changeShowDown(DeviceBean device){
-        if (deviceUpper!=null && deviceUpper == device)
+        if (deviceUpper == device)
             return;
         closeShowDown();
         lowerVideoFragment.setDevice(device);
