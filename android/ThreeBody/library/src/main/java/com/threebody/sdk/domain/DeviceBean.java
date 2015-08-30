@@ -2,6 +2,8 @@ package com.threebody.sdk.domain;
 
 import org.st.User;
 
+import java.util.Objects;
+
 /**
  * Created by xiaxin on 15-2-10.
  */
@@ -57,4 +59,12 @@ public class DeviceBean {
         return isScreen;
     }
 
+    public boolean equals(Object device1){
+        DeviceBean device = (DeviceBean) device1;
+        if (device1 == null)
+            return false;
+        return device.getDeviceId() == this.getDeviceId()
+                &&
+                device.getNodeId() == this.getNodeId();
+    }
 }

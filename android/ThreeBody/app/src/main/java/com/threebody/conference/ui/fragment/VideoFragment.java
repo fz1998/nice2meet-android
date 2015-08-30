@@ -93,22 +93,6 @@ public class VideoFragment extends BaseFragment {
         isCanShow = true;
     }
 
-    private boolean Eq(DeviceBean device1, DeviceBean device2){
-        if (device1 == null && device2 != null){
-            return false;
-        }else if ((device1 != null && device2 == null)){
-            return  false;
-        } else if (device2 != null
-                && null != device1
-                && device1.getDeviceId() == device2.getDeviceId()
-                && device1.getNodeId() == device2.getNodeId()){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
     void closeShowDown(){
         if (lowerVideoFragment == null)
             return;
@@ -125,7 +109,7 @@ public class VideoFragment extends BaseFragment {
     }
 
     void changeShowUp(DeviceBean device){
-        if (Eq(deviceUpper, device))
+        if (deviceUpper!=null && deviceUpper == device)
             return;
         closeShowUp();
         upperVideoLayout.setDevice(device);
@@ -134,7 +118,7 @@ public class VideoFragment extends BaseFragment {
     }
 
     void changeShowDown(DeviceBean device){
-        if (Eq(deviceUpper, device))
+        if (deviceUpper!=null && deviceUpper == device)
             return;
         closeShowDown();
         lowerVideoFragment.setDevice(device);
