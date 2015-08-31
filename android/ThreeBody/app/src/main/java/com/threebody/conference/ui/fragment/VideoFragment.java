@@ -133,6 +133,7 @@ public class VideoFragment extends BaseFragment {
         deviceLower = device;
     }
 
+    // TODO: 2015/8/31 To use singleton instance for click handler.
     void switchVideo(){
 
         View v0 = llVideoFragment.getChildAt(0);

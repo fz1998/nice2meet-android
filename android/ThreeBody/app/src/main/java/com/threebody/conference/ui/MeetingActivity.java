@@ -268,7 +268,8 @@ public class MeetingActivity extends BaseActivity {
             switch (msg.what){
                 case VideoCommon.VIDEO_OPEN:
                     N2MVideo n2MVideo = (N2MVideo)msg.obj;
-                    videoFragment.update2VideoWindowsWithDevices();;
+                    videoFragment.update2VideoWindowsWithDevices();
+                    // update Setup Fragment UI
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
                         setupFragment.openLocalVideo();
                     }
