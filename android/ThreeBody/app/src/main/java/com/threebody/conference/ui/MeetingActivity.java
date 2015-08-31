@@ -33,10 +33,10 @@ import butterknife.InjectView;
  */
 public class MeetingActivity extends BaseActivity {
     @InjectView(R.id.mainScreenLinearLayout)LinearLayout llContainer;
-    @InjectView(R.id.flChat)FrameLayout flChat;
-    @InjectView(R.id.flVideo_btn)FrameLayout flVideo;
-    @InjectView(R.id.flSet)FrameLayout flSet;
-    @InjectView(R.id.flExit)FrameLayout flExit;
+    @InjectView(R.id.flChat)FrameLayout flChatBtn;
+    @InjectView(R.id.flVideo_btn)FrameLayout flVideoBtn;
+    @InjectView(R.id.flSet)FrameLayout flSetupBtn;
+    @InjectView(R.id.flExit)FrameLayout flExitBtn;
 
     RoomCommon roomCommon;
     ChatCommon chatCommon;
@@ -46,7 +46,7 @@ public class MeetingActivity extends BaseActivity {
     VideoFragment videoFragment;
     SetupFragment setupFragment;
     VideoSetupFragment videoSetupFragment;
-    List<FrameLayout> frameLayoutList;
+    List<FrameLayout> btnList;
     List<Fragment> fragmentList;
     int index = 1;
 
@@ -54,15 +54,16 @@ public class MeetingActivity extends BaseActivity {
     protected void initUI() {
         setContentView(R.layout.activity_meeting);
         super.initUI();
+
         getSupportActionBar().hide();
-        flChat.setOnClickListener(this);
-        flVideo.setOnClickListener(this);
-        flSet.setOnClickListener(this);
-        flExit.setOnClickListener(this);
-        frameLayoutList = new ArrayList<FrameLayout>();
-        frameLayoutList.add(flChat);
-        frameLayoutList.add(flVideo);
-        frameLayoutList.add(flSet);
+        flChatBtn.setOnClickListener(this);
+        flVideoBtn.setOnClickListener(this);
+        flSetupBtn.setOnClickListener(this);
+        flExitBtn.setOnClickListener(this);
+        btnList = new ArrayList<FrameLayout>();
+        btnList.add(flChatBtn);
+        btnList.add(flVideoBtn);
+        btnList.add(flSetupBtn);
         chatFragment = new ChatFragment();
         videoFragment = new VideoFragment();
         setupFragment = new SetupFragment();
@@ -87,7 +88,7 @@ public class MeetingActivity extends BaseActivity {
             case R.id.flVideo_btn:
             case R.id.flSet:
                 int oldIndex = index;
-                frameLayoutList.get(index).setBackgroundResource(R.color.liquid);
+                btnList.get(index).setBackgroundResource(R.color.liquid);
                 index = Integer.parseInt((String)v.getTag());
                 if(oldIndex != index){
 //                    ToastUtil.showToast(this, "old = "+oldIndex +" new  ="+index);
@@ -242,10 +243,11 @@ public class MeetingActivity extends BaseActivity {
 
 
 
-    public void refreshVideo(){
+    public void refreshVideoFragmentUI(){
 
         FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, videoFragment);
-        videoFragment.refresh(videoCommon.getDevices());
+        videoFragment.update2VideoWindowsWithDevices();
+//        videoFragment.update2VideoWindowsWithDevices(videoCommon.getDevices());
     }
 
 
@@ -266,8 +268,7 @@ public class MeetingActivity extends BaseActivity {
             switch (msg.what){
                 case VideoCommon.VIDEO_OPEN:
                     N2MVideo n2MVideo = (N2MVideo)msg.obj;
-                    videoFragment.refresh(videoCommon.getDevices());;
-                    //videoFragment.addDevice(deviceBean);
+                    videoFragment.update2VideoWindowsWithDevices();;
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
                         setupFragment.openLocalVideo();
                     }
@@ -275,15 +276,14 @@ public class MeetingActivity extends BaseActivity {
                     break;
                 case VideoCommon.VIDEO_CLOSE:
                     n2MVideo = (N2MVideo)msg.obj;
-                    videoFragment.refresh(videoCommon.getDevices());;
+                    videoFragment.update2VideoWindowsWithDevices();;
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
                         setupFragment.closeLoacalVideo();
                     }
                     break;
                 case VideoCommon.SCREEN_OPEN:
                     n2MVideo = (N2MVideo)msg.obj;
-                    videoFragment.refresh(videoCommon.getDevices());;
-                    //videoFragment.addDevice(deviceBean);
+                    videoFragment.update2VideoWindowsWithDevices();;
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
                         setupFragment.openLocalVideo();
                     }
@@ -291,7 +291,7 @@ public class MeetingActivity extends BaseActivity {
                     break;
                 case VideoCommon.SCREEN_CLOSE:
                     n2MVideo = (N2MVideo)msg.obj;
-                    videoFragment.refresh(videoCommon.getDevices());;
+                    videoFragment.update2VideoWindowsWithDevices();;
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
                         setupFragment.closeLoacalVideo();
                     }

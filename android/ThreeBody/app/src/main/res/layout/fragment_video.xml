@@ -2,16 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/ll_video_fragment">
     <com.threebody.conference.ui.fragment.VideoShowGLFrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_36_80"
         android:id="@+id/videoUp"
-
+        android:tag="upperVideo"
         android:layout_weight="1"/>
     <com.threebody.conference.ui.fragment.VideoShowGLFrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_36_80"
         android:id="@+id/videoDown"
+        android:tag="lowerVideo"
         android:layout_weight="1"/>
 </LinearLayout>

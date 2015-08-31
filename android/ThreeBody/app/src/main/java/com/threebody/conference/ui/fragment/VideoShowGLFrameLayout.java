@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,10 +21,10 @@ import org.webrtc.VideoRenderer;
  * Created by xiaxin on 2015/3/28.
  */
 public class VideoShowGLFrameLayout extends FrameLayout {
+    View llVideoWindow;
+
     TextView tvUserName;
-    LinearLayout view_window_ll;
     ImageView ivAudioStatus;
-//    FrameLayout flVideo;
     ProgressBar progressBar;
 
     N2MVideo n2MVideo;
@@ -33,8 +32,6 @@ public class VideoShowGLFrameLayout extends FrameLayout {
     GLSurfaceView glView;
     VideoRendererView mRendererView;
     VideoRenderer mRenderer;
-
-    View view;
 
     public VideoShowGLFrameLayout(Context context) {
         super(context);
@@ -51,17 +48,17 @@ public class VideoShowGLFrameLayout extends FrameLayout {
         init();
     }
     private void init(){
-        view = LayoutInflater.from(getContext()).inflate(R.layout.video_window, null);
-        tvUserName = (TextView)view.findViewById(R.id.tvUserName);
-        view_window_ll = (LinearLayout)view.findViewById(R.id.Video_window_ll);
-        ivAudioStatus = (ImageView)view.findViewById(R.id.ivAudioStatus);
-//        flVideo = (FrameLayout)view.findViewById(R.id.flVideo_btn);
+        // the container for all views inside llVideoFragment window
+        llVideoWindow = LayoutInflater.from(getContext()).inflate(R.layout.video_window, null);
 
-        progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
-        glView = (GLSurfaceView)view.findViewById(R.id.video_window_gl_view);
-        addView(view);
+        tvUserName = (TextView) llVideoWindow.findViewById(R.id.tvUserName);
+        ivAudioStatus = (ImageView) llVideoWindow.findViewById(R.id.ivAudioStatus);
+
+        progressBar = (ProgressBar) llVideoWindow.findViewById(R.id.progressBar);
+        glView = (GLSurfaceView) llVideoWindow.findViewById(R.id.v_gl_video_window);
+        addView(llVideoWindow);
         if(n2MVideo != null){
-            showVideoLayout();
+            showVideoWindow();
         }
          initVideo();
     }
@@ -77,8 +74,8 @@ public class VideoShowGLFrameLayout extends FrameLayout {
     public void setDevice(N2MVideo device){
 
         n2MVideo = device;
-        if(view_window_ll != null && n2MVideo != null){
-            showVideoLayout();
+        if(llVideoWindow != null && n2MVideo != null){
+            showVideoWindow();
         }
     }
 
@@ -90,9 +87,9 @@ public class VideoShowGLFrameLayout extends FrameLayout {
             videoCommon.setVideoRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), getRenderer());
         }
     }
-    private void showVideoLayout(){
+    private void showVideoWindow(){
         // show video
-        view_window_ll.setVisibility(View.VISIBLE);
+        llVideoWindow.setVisibility(View.VISIBLE);
         // show user name
         tvUserName.setText(n2MVideo.getUser().getUserName());
         // show audio icon

@@ -5,13 +5,12 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.threebody.conference.R;
 import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.sdk.common.VideoCommon;
 import com.threebody.sdk.domain.N2MVideo;
-
-import org.webrtc.VideoRenderer;
 
 import java.util.List;
 
@@ -19,26 +18,30 @@ import java.util.List;
  * Created by xiaxin on 15-1-14.
  */
 public class VideoFragment extends BaseFragment {
+    // LinearLayout for the whole VideoFragment
+    LinearLayout llVideoFragment;
+
     VideoShowGLFrameLayout upperVideoLayout;
     VideoShowGLFrameLayout lowerVideoLayout;
+
     N2MVideo deviceUpper, deviceLower;
     N2MVideo device1, device2;
     VideoCommon videoCommon;
     boolean isCanShow = true;
-    View view ;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(view == null){
-             view = inflater.inflate(R.layout.fragment_video, null);
-            initView(view);
+        if(llVideoFragment == null){
+             llVideoFragment = (LinearLayout) inflater.inflate(R.layout.fragment_video, null);
+            initView(llVideoFragment);
         }else{
-            ViewGroup vg = (ViewGroup)view.getParent();
+            ViewGroup vg = (ViewGroup) llVideoFragment.getParent();
             if(vg != null){
                 vg.removeAllViewsInLayout();
             }
         }
-        return view;
+        return llVideoFragment;
     }
 
 
@@ -59,13 +62,7 @@ public class VideoFragment extends BaseFragment {
         super.initView(view);
         upperVideoLayout = (VideoShowGLFrameLayout)view.findViewById(R.id.videoUp);
         lowerVideoLayout = (VideoShowGLFrameLayout)view.findViewById(R.id.videoDown);
-        lowerVideoLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ((MeetingActivity) getActivity()).changeToVideoSet();
-                return true;
-            }
-        });
+        // upper video: longClick will switch videos
         upperVideoLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -73,6 +70,16 @@ public class VideoFragment extends BaseFragment {
                 return true;
             }
         });
+
+        // lower video: longClick will show VideoSetFragment
+        lowerVideoLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ((MeetingActivity) getActivity()).changeToVideoSet();
+                return true;
+            }
+        });
+
         videoCommon = ((MeetingActivity)getActivity()).getVideoCommon();
     }
     @Override
@@ -125,27 +132,46 @@ public class VideoFragment extends BaseFragment {
         lowerVideoLayout.setVideoRender(videoCommon);
         deviceLower = device;
     }
-    boolean switchVideo(){
 
-        if  (videoCommon.switchVideoRender(upperVideoLayout.mRenderer, lowerVideoLayout.mRenderer))
-        {
-            N2MVideo temp = deviceUpper;
-            deviceUpper = deviceLower;
-            deviceLower = temp;
+    void switchVideo(){
 
-            VideoRenderer mRenderer  = upperVideoLayout.mRenderer;
+        View v0 = llVideoFragment.getChildAt(0);
+        View v1 = llVideoFragment.getChildAt(1);
+        View vTemp = v0;
+        v0 = v1;
+        v1 = vTemp;
 
-            upperVideoLayout.mRenderer = lowerVideoLayout.mRenderer;
-            lowerVideoLayout.mRenderer = mRenderer;
-            upperVideoLayout.setDevice(deviceUpper);
-            lowerVideoLayout.setDevice(deviceLower);
-            return true;
-        }
-        return false;
+        // upper video:switch
+        v0.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                switchVideo();
+                return true;
+            }
+        });
+
+        // lower video:VideSetFragment
+        v1.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ((MeetingActivity) getActivity()).changeToVideoSet();
+                return true;
+            }
+        });
+
+        llVideoFragment.removeAllViews();
+        llVideoFragment.addView(v0);
+        llVideoFragment.addView(v1);
     }
 
-    public synchronized void  refresh(List<N2MVideo> devices) {
+    public synchronized void update2VideoWindowsWithDevices() {
+
         int i = 0;
+
+        // get devices
+        List<N2MVideo> devices = videoCommon.getDevices();
+
+        // determinate device1 and device2
         if(devices != null && !devices.isEmpty()){
             for (N2MVideo n2MVideo : devices){
                 if(n2MVideo.isVideoChecked() ){
@@ -159,6 +185,8 @@ public class VideoFragment extends BaseFragment {
                 }
             }
         }
+
+        // shnow device1 and device2 on the screen
         if (i == 0){
             closeShowUp();
             closeShowDown();

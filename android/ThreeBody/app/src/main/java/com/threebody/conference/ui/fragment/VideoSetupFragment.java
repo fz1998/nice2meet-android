@@ -32,13 +32,6 @@ public class VideoSetupFragment extends BaseFragment{
     @Override
     protected void initView(View view) {
         super.initView(view);
-//        List<User> users = new ArrayList<>();
-//        for(int i = 0; i < 25; i++){
-//            User user = new User();
-//            user.setName("user"+i);
-//            users.add(user);
-//        }
-
         if(adapter == null){
             adapter = new VideoSetAdapter(getActivity(), STSystem.getInstance().getRoomCommons().get(0).getVideoCommon().getDevices());
         }
@@ -51,7 +44,7 @@ public class VideoSetupFragment extends BaseFragment{
         super.onClick(v);
         switch (v.getId()){
             case R.id.btnAddIn:
-                ((MeetingActivity)getActivity()).refreshVideo();
+                ((MeetingActivity)getActivity()).refreshVideoFragmentUI();
                 break;
             default:
                 break;
