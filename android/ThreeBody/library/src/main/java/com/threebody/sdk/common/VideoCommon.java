@@ -1,7 +1,6 @@
 package com.threebody.sdk.common;
 
-import com.threebody.sdk.domain.DeviceBean;
-import com.threebody.sdk.domain.VideoBean;
+import com.threebody.sdk.domain.N2MVideo;
 import com.threebody.sdk.util.LoggerUtil;
 
 import org.st.Screen;
@@ -36,7 +35,7 @@ public class VideoCommon {
     Video video;
     Screen.ScreenListener screenListener;
     Screen screen;
-    List<DeviceBean> devices;
+    List<N2MVideo> devices;
 
     public VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
         this.roomCommon = roomCommon;
@@ -60,11 +59,11 @@ public class VideoCommon {
         initListener();
     }
 
-    private synchronized DeviceBean findDeviceById(int nodeid ,String deviceId){
+    private synchronized N2MVideo findDeviceById(int nodeid ,String deviceId){
         if(devices != null && !devices.isEmpty()){
-            for (DeviceBean deviceBean : devices){
-                if(deviceId.equals(deviceBean.getDeviceId()) && deviceBean.getNodeId() == nodeid){
-                    return deviceBean;
+            for (N2MVideo n2MVideo : devices){
+                if(deviceId.equals(n2MVideo.getDeviceId()) && n2MVideo.getNodeId() == nodeid){
+                    return n2MVideo;
                 }
             }
         }
@@ -74,14 +73,14 @@ public class VideoCommon {
     private int checkDeviceShowCount()
     {
         int count = 0;
-        for (DeviceBean deviceBean: devices){
-            if (deviceBean.isVideoChecked())
+        for (N2MVideo n2MVideo : devices){
+            if (n2MVideo.isVideoChecked())
                 count++;
         }
         return count;
     }
 
-    public List<DeviceBean> getDevices() {
+    public List<N2MVideo> getDevices() {
         return devices;
     }
 
@@ -102,15 +101,15 @@ public class VideoCommon {
                         }
                         user.setVideoOn(true);
 
-                        DeviceBean deviceBean = new DeviceBean(nodeId, deviceId);
+                        N2MVideo n2MVideo = new N2MVideo(nodeId, deviceId);
                         if (checkDeviceShowCount()<2){
-                            deviceBean.setVideoChecked(true);
+                            n2MVideo.setVideoChecked(true);
                         }
 
-                        deviceBean.setUser(user);
-                        devices.add(deviceBean);
+                        n2MVideo.setUser(user);
+                        devices.add(n2MVideo);
                         if(checkCallback()){
-                            callback.onOpenVideo(deviceBean);
+                            callback.onOpenVideo(n2MVideo);
                         }
                     }
                 }
@@ -119,9 +118,9 @@ public class VideoCommon {
             @Override
             synchronized public void onCloseVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onCloseVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
-                DeviceBean deviceBean = findDeviceById(nodeId,deviceId);
-                if(deviceBean != null) {
-                    deviceBean.setVideoChecked(false);
+                N2MVideo n2MVideo = findDeviceById(nodeId,deviceId);
+                if(n2MVideo != null) {
+                    n2MVideo.setVideoChecked(false);
                 }
 
                 if(result == 0){
@@ -132,8 +131,8 @@ public class VideoCommon {
                         }
                         user.setVideoOn(false);
                     }
-                    if(deviceBean != null){
-                        devices.remove(deviceBean);
+                    if(n2MVideo != null){
+                        devices.remove(n2MVideo);
                     }
                 }
 
@@ -170,15 +169,15 @@ public class VideoCommon {
                         }
                         user.setVideoOn(true);
 
-                        DeviceBean deviceBean = new DeviceBean(nodeId, screenId, true);
+                        N2MVideo n2MVideo = new N2MVideo(nodeId, screenId, true);
                         if (checkDeviceShowCount()<2){
-                            deviceBean.setVideoChecked(true);
+                            n2MVideo.setVideoChecked(true);
                         }
 
-                        deviceBean.setUser(user);
-                        devices.add(deviceBean);
+                        n2MVideo.setUser(user);
+                        devices.add(n2MVideo);
                         if(checkCallback()){
-                            callback.onShareScreen(deviceBean);
+                            callback.onShareScreen(n2MVideo);
                         }
                     }
                 }
@@ -187,8 +186,8 @@ public class VideoCommon {
             @Override
             public void onCloseScreen(int result, int nodeId, String screenId){
                 LoggerUtil.info(tag, "onCloseScreen result = "+result+" nodeId = "+nodeId+" deviceId = "+screenId);
-                DeviceBean deviceBean = findDeviceById(nodeId,screenId);
-                deviceBean.setVideoChecked(false);
+                N2MVideo n2MVideo = findDeviceById(nodeId,screenId);
+                n2MVideo.setVideoChecked(false);
                 if(checkCallback()){
                     callback.onCloseScreen(result, nodeId, screenId);
                 }
@@ -200,8 +199,8 @@ public class VideoCommon {
                         }
                         user.setVideoOn(false);
                     }
-                    if(deviceBean != null){
-                        devices.remove(deviceBean);
+                    if(n2MVideo != null){
+                        devices.remove(n2MVideo);
                     }
                 }
             }
@@ -243,7 +242,7 @@ public class VideoCommon {
         return video.setVideoRender(nodeId,deviceId, renderer);
     }
 
-    public  boolean removeSreenRender(int nodeId, String screenId, VideoRenderer renderer){
+    public  boolean removeScreenRender(int nodeId, String screenId, VideoRenderer renderer){
         return screen.removeScreenRender(nodeId, screenId,renderer);
     }
 
@@ -272,9 +271,9 @@ public class VideoCommon {
     }
 
     public interface VideoCallback{
-         void onShareScreen(DeviceBean deviceBean);
+         void onShareScreen(N2MVideo n2MVideo);
          void onCloseScreen(int result, int nodeId, String deviceId);
-         void onOpenVideo(DeviceBean deviceBean);
+         void onOpenVideo(N2MVideo n2MVideo);
          void onCloseVideo(int result, int nodeId, String deviceId);
          void onRequestOpenVideo(int nodeId, String deviceId);
     }

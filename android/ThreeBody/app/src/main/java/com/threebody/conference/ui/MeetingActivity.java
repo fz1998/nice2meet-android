@@ -11,17 +11,16 @@ import android.widget.LinearLayout;
 
 import com.threebody.conference.R;
 import com.threebody.conference.ui.fragment.ChatFragment;
-import com.threebody.conference.ui.fragment.SetFragment;
+import com.threebody.conference.ui.fragment.SetupFragment;
 import com.threebody.conference.ui.fragment.VideoFragment;
-import com.threebody.conference.ui.fragment.VideoSetFragment;
+import com.threebody.conference.ui.fragment.VideoSetupFragment;
 import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.sdk.common.AudioCommon;
 import com.threebody.sdk.common.ChatCommon;
 import com.threebody.sdk.common.RoomCommon;
 import com.threebody.sdk.common.STSystem;
 import com.threebody.sdk.common.VideoCommon;
-import com.threebody.sdk.domain.DeviceBean;
-import com.threebody.sdk.domain.VideoBean;
+import com.threebody.sdk.domain.N2MVideo;
 import com.threebody.sdk.util.LoggerUtil;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import butterknife.InjectView;
 public class MeetingActivity extends BaseActivity {
     @InjectView(R.id.mainScreenLinearLayout)LinearLayout llContainer;
     @InjectView(R.id.flChat)FrameLayout flChat;
-    @InjectView(R.id.flVideo)FrameLayout flVideo;
+    @InjectView(R.id.flVideo_btn)FrameLayout flVideo;
     @InjectView(R.id.flSet)FrameLayout flSet;
     @InjectView(R.id.flExit)FrameLayout flExit;
 
@@ -45,8 +44,8 @@ public class MeetingActivity extends BaseActivity {
     VideoCommon videoCommon;
     ChatFragment chatFragment;
     VideoFragment videoFragment;
-    SetFragment setFragment;
-    VideoSetFragment videoSetFragment;
+    SetupFragment setupFragment;
+    VideoSetupFragment videoSetupFragment;
     List<FrameLayout> frameLayoutList;
     List<Fragment> fragmentList;
     int index = 1;
@@ -66,12 +65,12 @@ public class MeetingActivity extends BaseActivity {
         frameLayoutList.add(flSet);
         chatFragment = new ChatFragment();
         videoFragment = new VideoFragment();
-        setFragment = new SetFragment();
-        videoSetFragment = new VideoSetFragment();
+        setupFragment = new SetupFragment();
+        videoSetupFragment = new VideoSetupFragment();
         fragmentList = new ArrayList<Fragment>();
         fragmentList.add(chatFragment);
         fragmentList.add(videoFragment);
-        fragmentList.add(setFragment);
+        fragmentList.add(setupFragment);
 
         // display video Fragment
         getSupportFragmentManager().beginTransaction().add(R.id.mainScreenLinearLayout, videoFragment).commit();
@@ -85,7 +84,7 @@ public class MeetingActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()){
             case R.id.flChat:
-            case R.id.flVideo:
+            case R.id.flVideo_btn:
             case R.id.flSet:
                 int oldIndex = index;
                 frameLayoutList.get(index).setBackgroundResource(R.color.liquid);
@@ -187,39 +186,39 @@ public class MeetingActivity extends BaseActivity {
         });
         videoCommon = new VideoCommon(roomCommon, new VideoCommon.VideoCallback() {
             @Override
-            public void onOpenVideo(DeviceBean deviceBean) {
+            public void onOpenVideo(N2MVideo n2MVideo) {
                 Message msg = new Message();
                 msg.what = VideoCommon.VIDEO_OPEN;
-                msg.obj = deviceBean;
+                msg.obj = n2MVideo;
                 handler.sendMessage(msg);
             }
 
             @Override
             public void onCloseVideo(int result, int nodeId, String deviceId) {
 
-                DeviceBean deviceBean = new DeviceBean(nodeId,deviceId);
+                N2MVideo n2MVideo = new N2MVideo(nodeId,deviceId);
                 Message msg = new Message();
                 msg.what = VideoCommon.VIDEO_CLOSE;
-                msg.obj = deviceBean;
+                msg.obj = n2MVideo;
 
                 handler.sendMessage(msg);
 
             }
             @Override
-            public void onShareScreen(DeviceBean deviceBean)
+            public void onShareScreen(N2MVideo n2MVideo)
             {
                 Message msg = new Message();
                 msg.what = VideoCommon.SCREEN_OPEN;
-                msg.obj = deviceBean;
+                msg.obj = n2MVideo;
                 handler.sendMessage(msg);
             }
             @Override
             public void onCloseScreen(int result, int nodeId, String deviceId)
             {
-                DeviceBean deviceBean = new DeviceBean(nodeId,deviceId, true);
+                N2MVideo n2MVideo = new N2MVideo(nodeId,deviceId, true);
                 Message msg = new Message();
                 msg.what = VideoCommon.SCREEN_CLOSE;
-                msg.obj = deviceBean;
+                msg.obj = n2MVideo;
                 handler.sendMessage(msg);
             }
             @Override
@@ -266,35 +265,35 @@ public class MeetingActivity extends BaseActivity {
 
             switch (msg.what){
                 case VideoCommon.VIDEO_OPEN:
-                    DeviceBean deviceBean = (DeviceBean)msg.obj;
+                    N2MVideo n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.refresh(videoCommon.getDevices());;
                     //videoFragment.addDevice(deviceBean);
-                    if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
-                        setFragment.openLocalVideo();
+                    if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
+                        setupFragment.openLocalVideo();
                     }
 
                     break;
                 case VideoCommon.VIDEO_CLOSE:
-                    deviceBean = (DeviceBean)msg.obj;
+                    n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.refresh(videoCommon.getDevices());;
-                    if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
-                        setFragment.closeLoacalVideo();
+                    if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
+                        setupFragment.closeLoacalVideo();
                     }
                     break;
                 case VideoCommon.SCREEN_OPEN:
-                    deviceBean = (DeviceBean)msg.obj;
+                    n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.refresh(videoCommon.getDevices());;
                     //videoFragment.addDevice(deviceBean);
-                    if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
-                        setFragment.openLocalVideo();
+                    if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
+                        setupFragment.openLocalVideo();
                     }
 
                     break;
                 case VideoCommon.SCREEN_CLOSE:
-                    deviceBean = (DeviceBean)msg.obj;
+                    n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.refresh(videoCommon.getDevices());;
-                    if(deviceBean.getNodeId() == roomCommon.getMe().getNodeId()){
-                        setFragment.closeLoacalVideo();
+                    if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
+                        setupFragment.closeLoacalVideo();
                     }
                     break;
                 case VideoCommon.VIDEO_STATUS:
@@ -306,7 +305,7 @@ public class MeetingActivity extends BaseActivity {
     };
 
     public void changeToVideoSet() {
-        FragmentUtil.moveToRightFragment(this, R.id.mainScreenLinearLayout, videoSetFragment);
+        FragmentUtil.moveToRightFragment(this, R.id.mainScreenLinearLayout, videoSetupFragment);
     }
 
 

@@ -22,7 +22,7 @@ import butterknife.InjectView;
 /**
  * Created by xiaxin on 15-1-14.
  */
-public class SetFragment extends BaseFragment {
+public class SetupFragment extends BaseFragment {
     @InjectView(R.id.ivVideo)Button ivVideo;
     @InjectView(R.id.ivVideoShow)Button ivVideoShow;
     @InjectView(R.id.ivAudio)Button ivAudio;

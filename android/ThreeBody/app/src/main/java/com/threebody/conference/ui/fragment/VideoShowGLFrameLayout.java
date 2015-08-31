@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.threebody.conference.R;
 import com.threebody.sdk.common.VideoCommon;
-import com.threebody.sdk.domain.DeviceBean;
+import com.threebody.sdk.domain.N2MVideo;
 
 import org.st.VideoRendererView;
 import org.webrtc.VideoRenderer;
@@ -23,14 +23,17 @@ import org.webrtc.VideoRenderer;
  */
 public class VideoShowGLFrameLayout extends FrameLayout {
     TextView tvUserName;
-    LinearLayout llFlFragment;
+    LinearLayout view_window_ll;
     ImageView ivAudioStatus;
-    FrameLayout flVideo;
+//    FrameLayout flVideo;
     ProgressBar progressBar;
+
+    N2MVideo n2MVideo;
+
     GLSurfaceView glView;
-    DeviceBean deviceBean;
     VideoRendererView mRendererView;
     VideoRenderer mRenderer;
+
     View view;
 
     public VideoShowGLFrameLayout(Context context) {
@@ -48,15 +51,16 @@ public class VideoShowGLFrameLayout extends FrameLayout {
         init();
     }
     private void init(){
-        view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_video_view, null);
+        view = LayoutInflater.from(getContext()).inflate(R.layout.video_window, null);
         tvUserName = (TextView)view.findViewById(R.id.tvUserName);
-        llFlFragment = (LinearLayout)view.findViewById(R.id.flVideoFragment);
+        view_window_ll = (LinearLayout)view.findViewById(R.id.Video_window_ll);
         ivAudioStatus = (ImageView)view.findViewById(R.id.ivAudioStatus);
-        flVideo = (FrameLayout)view.findViewById(R.id.flVideo);
+//        flVideo = (FrameLayout)view.findViewById(R.id.flVideo_btn);
+
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
-        glView = (GLSurfaceView)view.findViewById(R.id.videoView);
+        glView = (GLSurfaceView)view.findViewById(R.id.video_window_gl_view);
         addView(view);
-        if(deviceBean != null){
+        if(n2MVideo != null){
             showVideoLayout();
         }
          initVideo();
@@ -70,27 +74,30 @@ public class VideoShowGLFrameLayout extends FrameLayout {
        }
     }
 
-    public void setDevice(DeviceBean device){
+    public void setDevice(N2MVideo device){
 
-        deviceBean = device;
-        if(llFlFragment != null && deviceBean != null){
+        n2MVideo = device;
+        if(view_window_ll != null && n2MVideo != null){
             showVideoLayout();
         }
     }
 
     public void setVideoRender(VideoCommon videoCommon){
-        if (deviceBean.isScreen()){
-            videoCommon.setScreenRender(deviceBean.getNodeId(),deviceBean.getDeviceId(), mRenderer);
+        if (n2MVideo.isScreen()){
+            videoCommon.setScreenRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), mRenderer);
         }
         else {
-            videoCommon.setVideoRender(deviceBean.getNodeId(), deviceBean.getDeviceId(), getRenderer());
+            videoCommon.setVideoRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), getRenderer());
         }
     }
     private void showVideoLayout(){
-        llFlFragment.setVisibility(View.VISIBLE);
-        tvUserName.setText(deviceBean.getUser().getUserName());
-        if(deviceBean.getUser().getRole() != null){
-            if(deviceBean.getUser().isAudioOn()){
+        // show video
+        view_window_ll.setVisibility(View.VISIBLE);
+        // show user name
+        tvUserName.setText(n2MVideo.getUser().getUserName());
+        // show audio icon
+        if(n2MVideo.getUser().getRole() != null){
+            if(n2MVideo.getUser().isAudioOn()){
                 ivAudioStatus.setImageResource(R.drawable.status_sound);
             }else{
                 ivAudioStatus.setImageResource(R.drawable.status_soundoff);
@@ -98,7 +105,7 @@ public class VideoShowGLFrameLayout extends FrameLayout {
         }
     }
 
-    public void setStatus(boolean isOpen) {
+    public void setAudioStatusIcon(boolean isOpen) {
         if(isOpen){
             ivAudioStatus.setImageResource(R.drawable.status_sound);
         }else{
@@ -110,13 +117,14 @@ public class VideoShowGLFrameLayout extends FrameLayout {
         return mRenderer;
     }
 
+    //// TODO: 2015/8/29  why not on VideoCommon object ?
     public void removeVideoRender(VideoCommon videoCommon){
-        if(deviceBean != null){
-            if (deviceBean.isScreen()){
-                videoCommon.removeSreenRender(deviceBean.getNodeId(),deviceBean.getDeviceId(), mRenderer);
+        if(n2MVideo != null){
+            if (n2MVideo.isScreen()){
+                videoCommon.removeScreenRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), mRenderer);
             }
             else {
-                videoCommon.removeVideoRender(deviceBean.getNodeId(), deviceBean.getDeviceId(),mRenderer);
+                videoCommon.removeVideoRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(),mRenderer);
             }
             mRendererView.refresh();
         }

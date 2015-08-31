@@ -2,23 +2,21 @@ package com.threebody.sdk.domain;
 
 import org.st.User;
 
-import java.util.Objects;
-
 /**
  * Created by xiaxin on 15-2-10.
  */
-public class DeviceBean {
+public class N2MVideo {
     int nodeId;
     String deviceId;
     boolean isScreen = false;
     User user;
     boolean isVideoChecked;
-    public DeviceBean(int nodeId, String deviceId) {
+    public N2MVideo(int nodeId, String deviceId) {
         this.nodeId = nodeId;
         this.deviceId = deviceId;
     }
 
-    public DeviceBean(int nodeId, String deviceId, boolean isScreen) {
+    public N2MVideo(int nodeId, String deviceId, boolean isScreen) {
         this.isScreen = isScreen;
         this.nodeId = nodeId;
         this.deviceId = deviceId;
@@ -60,7 +58,7 @@ public class DeviceBean {
     }
 
     public boolean equals(Object device1){
-        DeviceBean device = (DeviceBean) device1;
+        N2MVideo device = (N2MVideo) device1;
         if (device1 == null)
             return false;
         return device.getDeviceId() == this.getDeviceId()

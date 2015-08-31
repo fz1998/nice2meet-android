@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.threebody.conference.R;
-import com.threebody.conference.ui.fragment.VideoSetFragment;
+import com.threebody.conference.ui.fragment.VideoSetupFragment;
 import com.threebody.conference.ui.util.Constans;
 
 /**
@@ -22,7 +22,7 @@ public class VideoSetActivity extends BaseActivity{
     protected void initUI() {
         setContentView(R.layout.activity_video_set);
         super.initUI();
-        getSupportFragmentManager().beginTransaction().add(R.id.videoSetContainer, new VideoSetFragment()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.videoSetContainer, new VideoSetupFragment()).commit();
     }
 
     @Override

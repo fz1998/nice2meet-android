@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 
 import com.threebody.conference.R;
-import com.threebody.sdk.domain.DeviceBean;
+import com.threebody.sdk.domain.N2MVideo;
 
 import org.st.User;
 
@@ -19,18 +19,18 @@ import java.util.List;
  */
 public class VideoSetAdapter extends BaseAdapter {
     Context context;
-    List<DeviceBean> deviceBeans;
+    List<N2MVideo> n2MVideos;
     int firstCheck, secondCheck;
     int checkCount = 0;
-    public VideoSetAdapter(Context context, List<DeviceBean> deviceBeans) {
+    public VideoSetAdapter(Context context, List<N2MVideo> n2MVideos) {
         this.context = context;
-        this.deviceBeans = deviceBeans;
+        this.n2MVideos = n2MVideos;
 //        checkDevice();
     }
     private void checkDevice(){
-        for(int i = 0; i < deviceBeans.size(); i++){
-            DeviceBean deviceBean = deviceBeans.get(i);
-            if(deviceBean.isVideoChecked()){
+        for(int i = 0; i < n2MVideos.size(); i++){
+            N2MVideo n2MVideo = n2MVideos.get(i);
+            if(n2MVideo.isVideoChecked()){
                 if(checkCount == 0){
                     firstCheck = i;
                 }else if(checkCount == 1){
@@ -42,12 +42,12 @@ public class VideoSetAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        return deviceBeans.size();
+        return n2MVideos.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return deviceBeans.get(position);
+        return n2MVideos.get(position);
     }
 
     @Override
@@ -65,10 +65,10 @@ public class VideoSetAdapter extends BaseAdapter {
     }
     private void initView(View view, final int position){
         final CheckBox cb = (CheckBox)view.findViewById(R.id.cbUser);
-        final DeviceBean deviceBean = deviceBeans.get(position);
-        final User user = deviceBean.getUser();
+        final N2MVideo n2MVideo = n2MVideos.get(position);
+        final User user = n2MVideo.getUser();
         cb.setText(user.getUserName());
-        cb.setChecked(deviceBean.isVideoChecked());
+        cb.setChecked(n2MVideo.isVideoChecked());
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +81,7 @@ public class VideoSetAdapter extends BaseAdapter {
                         secondCheck = position;
                         checkCount++;
                     }else {
-                        deviceBeans.get(firstCheck).setVideoChecked(false);
+                        n2MVideos.get(firstCheck).setVideoChecked(false);
                         firstCheck = secondCheck;
                         secondCheck = position;
                     }
@@ -92,7 +92,7 @@ public class VideoSetAdapter extends BaseAdapter {
                     }
 
                 }
-                deviceBean.setVideoChecked(cb.isChecked());
+                n2MVideo.setVideoChecked(cb.isChecked());
                 notifyDataSetChanged();
             }
         });

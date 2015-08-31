@@ -3,18 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/flVideoFragment"
+    android:id="@+id/Video_window_ll"
     android:visibility="visible">
     <include layout="@layout/layout_video_title"/>
     <FrameLayout
-        android:id="@+id/flVideoView"
+        android:id="@+id/video_window_ll_fl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/TextSize10">
         <android.opengl.GLSurfaceView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/videoView"/>
+            android:id="@+id/video_window_gl_view"/>
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

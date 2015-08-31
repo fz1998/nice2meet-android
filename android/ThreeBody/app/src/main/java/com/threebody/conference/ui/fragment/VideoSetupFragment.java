@@ -18,7 +18,7 @@ import butterknife.InjectView;
 /**
  * Created by xiaxin on 15-1-17.
  */
-public class VideoSetFragment extends BaseFragment{
+public class VideoSetupFragment extends BaseFragment{
     @InjectView(R.id.userList)ListView userList;
     @InjectView(R.id.btnAddIn)Button btnAddIn;
     VideoSetAdapter adapter;

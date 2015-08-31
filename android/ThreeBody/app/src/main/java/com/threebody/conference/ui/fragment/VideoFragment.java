@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.threebody.conference.R;
 import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.sdk.common.VideoCommon;
-import com.threebody.sdk.domain.DeviceBean;
+import com.threebody.sdk.domain.N2MVideo;
 
 import org.webrtc.VideoRenderer;
 
@@ -20,9 +20,9 @@ import java.util.List;
  */
 public class VideoFragment extends BaseFragment {
     VideoShowGLFrameLayout upperVideoLayout;
-    VideoShowGLFrameLayout lowerVideoFragment;
-    DeviceBean deviceUpper, deviceLower;
-    DeviceBean device1, device2;
+    VideoShowGLFrameLayout lowerVideoLayout;
+    N2MVideo deviceUpper, deviceLower;
+    N2MVideo device1, device2;
     VideoCommon videoCommon;
     boolean isCanShow = true;
     View view ;
@@ -49,7 +49,7 @@ public class VideoFragment extends BaseFragment {
             upperVideoLayout.setDevice(deviceUpper);
         }
         if(deviceLower != null){
-            lowerVideoFragment.setDevice(deviceLower);
+            lowerVideoLayout.setDevice(deviceLower);
         }
 
     }
@@ -58,8 +58,8 @@ public class VideoFragment extends BaseFragment {
     protected void initView(final View view) {
         super.initView(view);
         upperVideoLayout = (VideoShowGLFrameLayout)view.findViewById(R.id.videoUp);
-        lowerVideoFragment = (VideoShowGLFrameLayout)view.findViewById(R.id.videoDown);
-        lowerVideoFragment.setOnLongClickListener(new View.OnLongClickListener() {
+        lowerVideoLayout = (VideoShowGLFrameLayout)view.findViewById(R.id.videoDown);
+        lowerVideoLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 ((MeetingActivity) getActivity()).changeToVideoSet();
@@ -94,10 +94,10 @@ public class VideoFragment extends BaseFragment {
     }
 
     void closeShowDown(){
-        if (lowerVideoFragment == null)
+        if (lowerVideoLayout == null)
             return;
-        lowerVideoFragment.removeVideoRender(videoCommon);
-        lowerVideoFragment.setDevice(null);
+        lowerVideoLayout.removeVideoRender(videoCommon);
+        lowerVideoLayout.setDevice(null);
         deviceLower = null;
     }
     void closeShowUp(){
@@ -108,7 +108,7 @@ public class VideoFragment extends BaseFragment {
         deviceUpper = null;
     }
 
-    void changeShowUp(DeviceBean device){
+    void changeShowUp(N2MVideo device){
         if (deviceUpper == device)
             return;
         closeShowUp();
@@ -117,44 +117,44 @@ public class VideoFragment extends BaseFragment {
         deviceUpper = device;
     }
 
-    void changeShowDown(DeviceBean device){
+    void changeShowDown(N2MVideo device){
         if (deviceUpper == device)
             return;
         closeShowDown();
-        lowerVideoFragment.setDevice(device);
-        lowerVideoFragment.setVideoRender(videoCommon);
+        lowerVideoLayout.setDevice(device);
+        lowerVideoLayout.setVideoRender(videoCommon);
         deviceLower = device;
     }
     boolean switchVideo(){
 
-        if  (videoCommon.switchVideoRender(upperVideoLayout.mRenderer, lowerVideoFragment.mRenderer))
+        if  (videoCommon.switchVideoRender(upperVideoLayout.mRenderer, lowerVideoLayout.mRenderer))
         {
-            DeviceBean temp = deviceUpper;
+            N2MVideo temp = deviceUpper;
             deviceUpper = deviceLower;
             deviceLower = temp;
 
             VideoRenderer mRenderer  = upperVideoLayout.mRenderer;
 
-            upperVideoLayout.mRenderer = lowerVideoFragment.mRenderer;
-            lowerVideoFragment.mRenderer = mRenderer;
+            upperVideoLayout.mRenderer = lowerVideoLayout.mRenderer;
+            lowerVideoLayout.mRenderer = mRenderer;
             upperVideoLayout.setDevice(deviceUpper);
-            lowerVideoFragment.setDevice(deviceLower);
+            lowerVideoLayout.setDevice(deviceLower);
             return true;
         }
         return false;
     }
 
-    public synchronized void  refresh(List<DeviceBean> devices) {
+    public synchronized void  refresh(List<N2MVideo> devices) {
         int i = 0;
         if(devices != null && !devices.isEmpty()){
-            for (DeviceBean deviceBean : devices){
-                if(deviceBean.isVideoChecked() ){
+            for (N2MVideo n2MVideo : devices){
+                if(n2MVideo.isVideoChecked() ){
                     if(i == 0){
-                        device1 = deviceBean;
+                        device1 = n2MVideo;
                         i+=1;
                     }else if(i == 1){
                         i+=1;
-                        device2 = deviceBean;
+                        device2 = n2MVideo;
                     }
                 }
             }
@@ -175,13 +175,13 @@ public class VideoFragment extends BaseFragment {
     public void setAudioStatus(boolean isOpen, int nodeId){
         if(deviceUpper != null && deviceUpper.getUser() != null){
             if(deviceUpper.getUser().getNodeId() == nodeId){
-                upperVideoLayout.setStatus(isOpen);
+                upperVideoLayout.setAudioStatusIcon(isOpen);
                 return;
             }
         }
         if(deviceLower != null && deviceLower.getUser() != null){
             if(deviceLower.getUser().getNodeId() == nodeId){
-                lowerVideoFragment.setStatus(isOpen);
+                lowerVideoLayout.setAudioStatusIcon(isOpen);
             }
         }
 
@@ -189,6 +189,6 @@ public class VideoFragment extends BaseFragment {
 
     public void closeAll() {
         upperVideoLayout.removeVideoRender(videoCommon);
-        lowerVideoFragment.removeVideoRender(videoCommon);
+        lowerVideoLayout.removeVideoRender(videoCommon);
     }
 }
