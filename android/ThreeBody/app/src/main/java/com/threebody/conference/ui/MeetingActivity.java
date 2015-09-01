@@ -50,6 +50,10 @@ public class MeetingActivity extends BaseActivity {
     List<Fragment> fragmentList;
     int index = 1;
 
+    public VideoFragment getVideoFragment() {
+        return videoFragment;
+    }
+
     @Override
     protected void initUI() {
         setContentView(R.layout.activity_meeting);
@@ -245,8 +249,11 @@ public class MeetingActivity extends BaseActivity {
 
     public void refreshVideoFragmentUI(){
 
-        FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, videoFragment);
-        videoFragment.update2VideoWindowsWithDevices();
+//        FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, videoFragment);
+//        videoFragment.update2VideoWindowsWithDevices();
+
+        FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, setupFragment);
+
 //        videoFragment.update2VideoWindowsWithDevices(videoCommon.getDevices());
     }
 

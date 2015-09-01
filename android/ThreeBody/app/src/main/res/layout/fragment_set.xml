@@ -10,6 +10,9 @@
     <include layout="@layout/layout_set_audio"/>
     <include layout="@layout/layout_set_speaker"/>
     <include layout="@layout/layout_set_cameraswitch"/>
+
+    <include layout="@layout/layout_switchvideo"/>
+
     <include layout="@layout/layout_set_help"/>
 
 </LinearLayout>

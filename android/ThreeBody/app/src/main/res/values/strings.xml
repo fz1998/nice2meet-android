@@ -12,6 +12,7 @@
     <string name="useBackCamera">使用后置摄像头</string>
     <string name="useFrontCamera">使用前置摄像头</string>
     <string name="frontCamera">FRONT_CAMERA</string>
+    <string name="switchVideo">切换上下视频（或长按上视频）</string>
 
     <string name="videoSelect">选择视频</string>
     <string name="openAudio">打开本地音频</string>

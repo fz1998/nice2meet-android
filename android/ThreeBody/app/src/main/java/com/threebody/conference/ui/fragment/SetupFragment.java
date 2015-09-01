@@ -30,6 +30,7 @@ public class SetupFragment extends BaseFragment {
     @InjectView(R.id.btn_audio_switch)Button btnAudioSwitch;
     @InjectView(R.id.btn_speaker_hand_free_switch)Button btnSpeakerHandFreeSwitch;
     @InjectView(R.id.btn_switch_front_back_camera)Button btnSwitchFrontBackCamera;
+    @InjectView(R.id.button_switchvideo_id)Button buttonSwitchVideo;
     @InjectView(R.id.llHelp)LinearLayout llHelp;
 
     View setupFragmentView;
@@ -68,6 +69,8 @@ public class SetupFragment extends BaseFragment {
         btnSpeakerHandFreeSwitch.setOnClickListener(this);
         btnSelectVideo.setOnClickListener(this);
         btnSwitchFrontBackCamera.setOnClickListener(this);
+
+        buttonSwitchVideo.setOnClickListener(this);
 
         if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_ON){
             btnAudioSwitch.setText(R.string.closeAudio);
@@ -176,6 +179,10 @@ public class SetupFragment extends BaseFragment {
                     btnSwitchFrontBackCamera.setText(R.string.useFrontCamera);
                 }
                 roomCommon.getVideoCommon().switchVideo();
+                break;
+            case R.id.button_switchvideo_id:
+                VideoFragment videoFragment = ((MeetingActivity)getActivity()).getVideoFragment();
+                videoFragment.switchVideo();
                 break;
         }
     }
