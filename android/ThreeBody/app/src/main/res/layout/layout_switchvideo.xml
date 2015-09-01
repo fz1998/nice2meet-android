@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/TextSize10"
+        android:gravity="center_vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/video"/>
+
+        <Button
+            android:id="@+id/button_switchvideo_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/switchVideo"
+            android:tag="@string/frontCamera"
+            android:layout_marginLeft="@dimen/TextSize05"
+            android:layout_marginRight="@dimen/TextSize05"
+
+            />
+    </RelativeLayout>
+</LinearLayout>
+
+<!--<TextView-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:textSize="@dimen/TextSize17"-->
+<!--android:textColor="@color/white"-->
+<!--android:text="@string/switchVideo"-->
+<!--android:layout_marginLeft="@dimen/TextSize10"-->
+<!--android:layout_weight="1"/>-->
