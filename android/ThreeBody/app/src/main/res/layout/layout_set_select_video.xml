@@ -18,16 +18,16 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/TextSize17"
             android:textColor="@color/white"
-            android:text="@string/videoShow"
+            android:text="@string/videoSelect"
             android:layout_marginLeft="@dimen/TextSize10"
             android:layout_weight="1"/>
         <Button
-            android:id="@+id/btn_video_show"
+            android:id="@+id/btn_select_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
-            android:text="@string/videoShow"
+            android:text="@string/videoSelect"
             android:layout_marginLeft="@dimen/TextSize05"
             android:layout_marginRight="@dimen/TextSize05"/>
     </LinearLayout>

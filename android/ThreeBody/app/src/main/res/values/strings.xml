@@ -6,22 +6,28 @@
     <string name="action_settings">Settings</string>
 
     <string name="addMeeging">加入会议室</string>
+    <string name="openVideo">打开本地视频</string>
 
-    <string name="openVideo">打开视频</string>
     <string name="switchCamera">切换摄像头</string>
-    <string name="videoShow">播放视频</string>
-    <string name="openAudio">打开音频</string>
+    <string name="useBackCamera">使用后置摄像头</string>
+    <string name="useFrontCamera">使用前置摄像头</string>
+    <string name="frontCamera">FRONT_CAMERA</string>
+
+    <string name="videoSelect">选择视频</string>
+    <string name="openAudio">打开本地音频</string>
     <string name="handsup">举手中...</string>
-    <string name="openSpeaker">打开免提</string>
-    <string name="closeSpeaker">取消免提</string>
-    <string name="closeAudio">关闭音频</string>
-    <string name="closeVideo">关闭视频</string>
+    <string name="openSpeaker">打开本地免提</string>
+    <string name="closeSpeaker">取消本地免提</string>
+    <string name="closeAudio">关闭本地音频</string>
+    <string name="closeVideo">关闭本地视频</string>
     <string name="closefailed">关闭失败</string>
     <string name="handsTip">举手中,请等待主持人回应</string>
     <string name="help">帮助</string>
     <string name="on">开</string>
     <string name="off">关</string>
     <string name="send">发送</string>
+
+
 
     <!-- hint -->
     <string name="inMeetignNum">会议号，如r1</string>

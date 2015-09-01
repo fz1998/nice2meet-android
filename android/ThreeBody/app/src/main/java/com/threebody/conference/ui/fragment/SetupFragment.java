@@ -23,18 +23,39 @@ import butterknife.InjectView;
  * Created by xiaxin on 15-1-14.
  */
 public class SetupFragment extends BaseFragment {
+    public static final String FRONT_CAMERA = "FRONT_CAMERA";
+    public static final String BACK_CAMERA = "BACK_CAMERA";
     @InjectView(R.id.btn_video_switch)Button btnVideoSwitch;
-    @InjectView(R.id.btn_video_show)Button btnVideoShow;
+    @InjectView(R.id.btn_select_video)Button btnSelectVideo;
     @InjectView(R.id.btn_audio_switch)Button btnAudioSwitch;
     @InjectView(R.id.btn_speaker_hand_free_switch)Button btnSpeakerHandFreeSwitch;
     @InjectView(R.id.btn_switch_front_back_camera)Button btnSwitchFrontBackCamera;
     @InjectView(R.id.llHelp)LinearLayout llHelp;
+
+    View setupFragmentView;
+
+    // camera type
+    //// FIXME: 2015/9/1 dirty
+    private static String TO_DISPLAY_CARMERA_TYPE = BACK_CAMERA;
+
+
     RoomCommon roomCommon;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_set, null);
-        initView(view);
-        return view;
+        //// TODO: 2015/9/1 some werid issues, do it some time later.
+//        if (setupFragmentView != null) {
+//            // release current view from its parent, otherwise, this view will be added to 2 different containers, which is not allowed.
+//            ViewGroup vg = (ViewGroup) setupFragmentView.getParent();
+//            if(vg != null){
+//                vg.removeView(setupFragmentView);
+//            }
+//            setupFragmentView.refreshDrawableState();
+//            return setupFragmentView;
+//        } else {
+            setupFragmentView = inflater.inflate(R.layout.fragment_set, null);
+            initView(setupFragmentView);
+            return setupFragmentView;
+//        }
     }
 
     @Override
@@ -45,7 +66,7 @@ public class SetupFragment extends BaseFragment {
         btnAudioSwitch.setOnClickListener(this);
         llHelp.setOnClickListener(this);
         btnSpeakerHandFreeSwitch.setOnClickListener(this);
-        btnVideoShow.setOnClickListener(this);
+        btnSelectVideo.setOnClickListener(this);
         btnSwitchFrontBackCamera.setOnClickListener(this);
 
         if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_ON){
@@ -66,6 +87,13 @@ public class SetupFragment extends BaseFragment {
         }else {
             btnSpeakerHandFreeSwitch.setText(R.string.openSpeaker);
             AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_OFF;
+        }
+
+        // select camera type button
+        if(TO_DISPLAY_CARMERA_TYPE.equals(BACK_CAMERA)) {
+            btnSwitchFrontBackCamera.setText(R.string.useBackCamera);
+        } else {
+            btnSwitchFrontBackCamera.setText(R.string.useFrontCamera);
         }
     }
 
@@ -108,6 +136,7 @@ public class SetupFragment extends BaseFragment {
                 }else if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_ON){
                     if(closeVideo()){
                         btnVideoSwitch.setText(R.string.openVideo);
+                        btnSwitchFrontBackCamera.setText(R.string.useBackCamera);
                     }else{
                         ToastUtil.showToast(getActivity(), R.string.closefailed);
                     }
@@ -133,27 +162,19 @@ public class SetupFragment extends BaseFragment {
                 }
                 btnSpeakerHandFreeSwitch.setEnabled(true);
 
-
-                /*// test for muteMicrophone
-                if(AudioCommon.IS_SPEAKER_ON== AudioCommon.SPEAKER_OFF){
-                    if(muteAudio(true)){
-                        btnSpeakerHandFreeSwitch.setText(R.string.closeSpeaker);
-                        AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_ON;
-                    }
-                }else if(AudioCommon.IS_SPEAKER_ON == AudioCommon.SPEAKER_ON){
-                    if(muteAudio(false)){
-                        AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_OFF;
-                        btnSpeakerHandFreeSwitch.setText(R.string.openSpeaker);
-                    }
-                }else{
-                    ToastUtil.showToast(getActivity(), R.string.handsTip);
-                }*/
-                btnSpeakerHandFreeSwitch.setEnabled(true);
                 break;
-            case R.id.btn_video_show:
+            case R.id.btn_select_video:
                 ((MeetingActivity)getActivity()).changeToVideoSet();
                 break;
             case R.id.btn_switch_front_back_camera:
+                String tag = (String) btnSwitchFrontBackCamera.getTag();
+                if(TO_DISPLAY_CARMERA_TYPE.equals(FRONT_CAMERA)) {
+                    TO_DISPLAY_CARMERA_TYPE = BACK_CAMERA;
+                    btnSwitchFrontBackCamera.setText(R.string.useBackCamera);
+                }  else {
+                    TO_DISPLAY_CARMERA_TYPE = FRONT_CAMERA;
+                    btnSwitchFrontBackCamera.setText(R.string.useFrontCamera);
+                }
                 roomCommon.getVideoCommon().switchVideo();
                 break;
         }

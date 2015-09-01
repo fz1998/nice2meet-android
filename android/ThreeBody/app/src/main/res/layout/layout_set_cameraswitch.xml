@@ -27,7 +27,8 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
-            android:text="@string/switchCamera"
+            android:text="@string/useBackCamera"
+            android:tag="@string/frontCamera"
             android:layout_marginLeft="@dimen/TextSize05"
             android:layout_marginRight="@dimen/TextSize05"/>
     </LinearLayout>
