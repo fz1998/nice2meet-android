@@ -13,7 +13,7 @@ import com.threebody.conference.R;
 import com.threebody.conference.ui.fragment.ChatFragment;
 import com.threebody.conference.ui.fragment.SetupFragment;
 import com.threebody.conference.ui.fragment.VideoFragment;
-import com.threebody.conference.ui.fragment.VideoSetupFragment;
+import com.threebody.conference.ui.fragment.VideoSelectFragment;
 import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.sdk.common.AudioCommon;
 import com.threebody.sdk.common.ChatCommon;
@@ -45,7 +45,7 @@ public class MeetingActivity extends BaseActivity {
     ChatFragment chatFragment;
     VideoFragment videoFragment;
     SetupFragment setupFragment;
-    VideoSetupFragment videoSetupFragment;
+    VideoSelectFragment videoSelectFragment;
     List<FrameLayout> btnList;
     List<Fragment> fragmentList;
     int index = 1;
@@ -67,7 +67,7 @@ public class MeetingActivity extends BaseActivity {
         chatFragment = new ChatFragment();
         videoFragment = new VideoFragment();
         setupFragment = new SetupFragment();
-        videoSetupFragment = new VideoSetupFragment();
+        videoSelectFragment = new VideoSelectFragment();
         fragmentList = new ArrayList<Fragment>();
         fragmentList.add(chatFragment);
         fragmentList.add(videoFragment);
@@ -271,7 +271,7 @@ public class MeetingActivity extends BaseActivity {
                     videoFragment.update2VideoWindowsWithDevices();
                     // update Setup Fragment UI
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
-                        setupFragment.openLocalVideo();
+                        setupFragment.showCloseLocalVideoOnVideoSwitch();
                     }
 
                     break;
@@ -279,14 +279,14 @@ public class MeetingActivity extends BaseActivity {
                     n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.update2VideoWindowsWithDevices();;
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
-                        setupFragment.closeLoacalVideo();
+                        setupFragment.showOpenLocalVideoOnVideoSwitch();
                     }
                     break;
                 case VideoCommon.SCREEN_OPEN:
                     n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.update2VideoWindowsWithDevices();;
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
-                        setupFragment.openLocalVideo();
+                        setupFragment.showCloseLocalVideoOnVideoSwitch();
                     }
 
                     break;
@@ -294,7 +294,7 @@ public class MeetingActivity extends BaseActivity {
                     n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.update2VideoWindowsWithDevices();;
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
-                        setupFragment.closeLoacalVideo();
+                        setupFragment.showOpenLocalVideoOnVideoSwitch();
                     }
                     break;
                 case VideoCommon.VIDEO_STATUS:
@@ -306,7 +306,7 @@ public class MeetingActivity extends BaseActivity {
     };
 
     public void changeToVideoSet() {
-        FragmentUtil.moveToRightFragment(this, R.id.mainScreenLinearLayout, videoSetupFragment);
+        FragmentUtil.moveToRightFragment(this, R.id.mainScreenLinearLayout, videoSelectFragment);
     }
 
 

@@ -49,10 +49,10 @@ public class VideoFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if(deviceUpper != null){
-            upperVideoLayout.setDevice(deviceUpper);
+            upperVideoLayout.setVideoDeviceAndShowVideoWindow(deviceUpper);
         }
         if(deviceLower != null){
-            lowerVideoLayout.setDevice(deviceLower);
+            lowerVideoLayout.setVideoDeviceAndShowVideoWindow(deviceLower);
         }
 
     }
@@ -80,7 +80,12 @@ public class VideoFragment extends BaseFragment {
             }
         });
 
+        
         videoCommon = ((MeetingActivity)getActivity()).getVideoCommon();
+        // set videoCommon for GLFrameLayouts
+        upperVideoLayout.setVideoCommon(videoCommon);
+        lowerVideoLayout.setVideoCommon(videoCommon);
+
     }
     @Override
     public void onStart() {
@@ -103,15 +108,15 @@ public class VideoFragment extends BaseFragment {
     void closeShowDown(){
         if (lowerVideoLayout == null)
             return;
-        lowerVideoLayout.removeVideoRender(videoCommon);
-        lowerVideoLayout.setDevice(null);
+        lowerVideoLayout.removeVideoRender();
+        lowerVideoLayout.setVideoDeviceAndShowVideoWindow(null);
         deviceLower = null;
     }
     void closeShowUp(){
         if (upperVideoLayout == null)
             return;
-        upperVideoLayout.removeVideoRender(videoCommon);
-        upperVideoLayout.setDevice(null);
+        upperVideoLayout.removeVideoRender();
+        upperVideoLayout.setVideoDeviceAndShowVideoWindow(null);
         deviceUpper = null;
     }
 
@@ -119,8 +124,8 @@ public class VideoFragment extends BaseFragment {
         if (deviceUpper == device)
             return;
         closeShowUp();
-        upperVideoLayout.setDevice(device);
-        upperVideoLayout.setVideoRender(videoCommon);
+        upperVideoLayout.setVideoDeviceAndShowVideoWindow(device);
+        upperVideoLayout.setVideoRender();
         deviceUpper = device;
     }
 
@@ -128,8 +133,8 @@ public class VideoFragment extends BaseFragment {
         if (deviceUpper == device)
             return;
         closeShowDown();
-        lowerVideoLayout.setDevice(device);
-        lowerVideoLayout.setVideoRender(videoCommon);
+        lowerVideoLayout.setVideoDeviceAndShowVideoWindow(device);
+        lowerVideoLayout.setVideoRender();
         deviceLower = device;
     }
 
@@ -217,7 +222,7 @@ public class VideoFragment extends BaseFragment {
     }
 
     public void closeAll() {
-        upperVideoLayout.removeVideoRender(videoCommon);
-        lowerVideoLayout.removeVideoRender(videoCommon);
+        upperVideoLayout.removeVideoRender();
+        lowerVideoLayout.removeVideoRender();
     }
 }

@@ -108,6 +108,15 @@ public class VideoCommon {
 
                         n2MVideo.setUser(user);
                         devices.add(n2MVideo);
+
+
+                        //// TODO: 2015/9/1 should display video here ,rather than come all the way from VideoFragment to do this
+
+
+
+
+                        // call back for UI update
+                        // just ask UI to update, no device passed here ?
                         if(checkCallback()){
                             callback.onOpenVideo(n2MVideo);
                         }

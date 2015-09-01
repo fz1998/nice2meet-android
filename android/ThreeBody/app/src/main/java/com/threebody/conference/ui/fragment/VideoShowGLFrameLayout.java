@@ -27,11 +27,14 @@ public class VideoShowGLFrameLayout extends FrameLayout {
     ImageView ivAudioStatus;
     ProgressBar progressBar;
 
-    N2MVideo n2MVideo;
+    // biz objects
+    VideoCommon videoCommon;
 
+    // when N2MVideo and VideoRenderer objects are connected, the video show up
+    N2MVideo n2MVideo;
+    VideoRenderer mRenderer;
     GLSurfaceView glView;
     VideoRendererView mRendererView;
-    VideoRenderer mRenderer;
 
     public VideoShowGLFrameLayout(Context context) {
         super(context);
@@ -71,7 +74,7 @@ public class VideoShowGLFrameLayout extends FrameLayout {
        }
     }
 
-    public void setDevice(N2MVideo device){
+    public void setVideoDeviceAndShowVideoWindow(N2MVideo device){
 
         n2MVideo = device;
         if(llVideoWindow != null && n2MVideo != null){
@@ -79,7 +82,7 @@ public class VideoShowGLFrameLayout extends FrameLayout {
         }
     }
 
-    public void setVideoRender(VideoCommon videoCommon){
+    public void setVideoRender(){
         if (n2MVideo.isScreen()){
             videoCommon.setScreenRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), mRenderer);
         }
@@ -93,13 +96,13 @@ public class VideoShowGLFrameLayout extends FrameLayout {
         // show user name
         tvUserName.setText(n2MVideo.getUser().getUserName());
         // show audio icon
-        if(n2MVideo.getUser().getRole() != null){
+//        if(n2MVideo.getUser().getRole() != null){
             if(n2MVideo.getUser().isAudioOn()){
                 ivAudioStatus.setImageResource(R.drawable.status_sound);
             }else{
                 ivAudioStatus.setImageResource(R.drawable.status_soundoff);
             }
-        }
+//        }
     }
 
     public void setAudioStatusIcon(boolean isOpen) {
@@ -115,7 +118,7 @@ public class VideoShowGLFrameLayout extends FrameLayout {
     }
 
     //// TODO: 2015/8/29  why not on VideoCommon object ?
-    public void removeVideoRender(VideoCommon videoCommon){
+    public void removeVideoRender(){
         if(n2MVideo != null){
             if (n2MVideo.isScreen()){
                 videoCommon.removeScreenRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), mRenderer);
@@ -126,4 +129,10 @@ public class VideoShowGLFrameLayout extends FrameLayout {
             mRendererView.refresh();
         }
     }
+
+
+    public void setVideoCommon(VideoCommon videoCommon) {
+        this.videoCommon = videoCommon;
+    }
+
 }
