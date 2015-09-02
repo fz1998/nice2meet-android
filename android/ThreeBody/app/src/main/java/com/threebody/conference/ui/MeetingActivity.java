@@ -250,11 +250,11 @@ public class MeetingActivity extends BaseActivity {
     public void refreshVideoFragmentUI(){
 
 //        FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, videoFragment);
-//        videoFragment.update2VideoWindowsWithDevices();
+//        videoFragment.refreshVideoWindows();
 
         FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, setupFragment);
 
-//        videoFragment.update2VideoWindowsWithDevices(videoCommon.getDevices());
+//        videoFragment.refreshVideoWindows(videoCommon.getDevices());
     }
 
 
@@ -275,7 +275,7 @@ public class MeetingActivity extends BaseActivity {
             switch (msg.what){
                 case VideoCommon.VIDEO_OPEN:
                     N2MVideo n2MVideo = (N2MVideo)msg.obj;
-                    videoFragment.update2VideoWindowsWithDevices();
+                    videoFragment.refreshVideoWindows();
                     // update Setup Fragment UI
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
                         setupFragment.showCloseLocalVideoOnVideoSwitch();
@@ -284,14 +284,14 @@ public class MeetingActivity extends BaseActivity {
                     break;
                 case VideoCommon.VIDEO_CLOSE:
                     n2MVideo = (N2MVideo)msg.obj;
-                    videoFragment.update2VideoWindowsWithDevices();;
+                    videoFragment.refreshVideoWindows();;
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
                         setupFragment.showOpenLocalVideoOnVideoSwitch();
                     }
                     break;
                 case VideoCommon.SCREEN_OPEN:
                     n2MVideo = (N2MVideo)msg.obj;
-                    videoFragment.update2VideoWindowsWithDevices();;
+                    videoFragment.refreshVideoWindows();;
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
                         setupFragment.showCloseLocalVideoOnVideoSwitch();
                     }
@@ -299,7 +299,7 @@ public class MeetingActivity extends BaseActivity {
                     break;
                 case VideoCommon.SCREEN_CLOSE:
                     n2MVideo = (N2MVideo)msg.obj;
-                    videoFragment.update2VideoWindowsWithDevices();;
+                    videoFragment.refreshVideoWindows();;
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
                         setupFragment.showOpenLocalVideoOnVideoSwitch();
                     }

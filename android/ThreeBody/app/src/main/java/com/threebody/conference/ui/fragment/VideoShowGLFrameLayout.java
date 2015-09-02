@@ -76,13 +76,23 @@ public class VideoShowGLFrameLayout extends FrameLayout {
 
     public void setVideoDeviceAndShowVideoWindow(N2MVideo device){
 
+        // save the device
         n2MVideo = device;
+
+        // to connect video render with the device, from this point, the video could be seen
+        if (device != null) {
+            setVideoRender();
+        } else {
+            removeVideoRender();
+        }
+
+        // show video on the screen
         if(llVideoWindow != null && n2MVideo != null){
             showVideoWindow();
         }
     }
 
-    public void setVideoRender(){
+    private void setVideoRender(){
         if (n2MVideo.isScreen()){
             videoCommon.setScreenRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), mRenderer);
         }
@@ -90,7 +100,9 @@ public class VideoShowGLFrameLayout extends FrameLayout {
             videoCommon.setVideoRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), getRenderer());
         }
     }
-    private void showVideoWindow(){
+
+    public void showVideoWindow(){
+//    private void showVideoWindow(){
         // show video
         llVideoWindow.setVisibility(View.VISIBLE);
         // show user name

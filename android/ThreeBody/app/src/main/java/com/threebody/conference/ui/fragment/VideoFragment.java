@@ -12,8 +12,6 @@ import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.sdk.common.VideoCommon;
 import com.threebody.sdk.domain.N2MVideo;
 
-import java.util.List;
-
 /**
  * Created by xiaxin on 15-1-14.
  */
@@ -63,22 +61,22 @@ public class VideoFragment extends BaseFragment {
         upperVideoLayout = (VideoShowGLFrameLayout)view.findViewById(R.id.videoUp);
         lowerVideoLayout = (VideoShowGLFrameLayout)view.findViewById(R.id.videoDown);
         // upper video: longClick will switch videos
-        upperVideoLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                switchVideo();
-                return true;
-            }
-        });
-
-        // lower video: longClick will show VideoSetFragment
-        lowerVideoLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ((MeetingActivity) getActivity()).changeToVideoSet();
-                return true;
-            }
-        });
+//        upperVideoLayout.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                switchVideo();
+//                return true;
+//            }
+//        });
+//
+//        // lower video: longClick will show VideoSetFragment
+//        lowerVideoLayout.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                ((MeetingActivity) getActivity()).changeToVideoSet();
+//                return true;
+//            }
+//        });
 
         
         videoCommon = ((MeetingActivity)getActivity()).getVideoCommon();
@@ -108,14 +106,14 @@ public class VideoFragment extends BaseFragment {
     void closeShowDown(){
         if (lowerVideoLayout == null)
             return;
-        lowerVideoLayout.removeVideoRender();
+//        lowerVideoLayout.removeVideoRender();
         lowerVideoLayout.setVideoDeviceAndShowVideoWindow(null);
         deviceLower = null;
     }
     void closeShowUp(){
         if (upperVideoLayout == null)
             return;
-        upperVideoLayout.removeVideoRender();
+//        upperVideoLayout.removeVideoRender();
         upperVideoLayout.setVideoDeviceAndShowVideoWindow(null);
         deviceUpper = null;
     }
@@ -125,7 +123,6 @@ public class VideoFragment extends BaseFragment {
             return;
         closeShowUp();
         upperVideoLayout.setVideoDeviceAndShowVideoWindow(device);
-        upperVideoLayout.setVideoRender();
         deviceUpper = device;
     }
 
@@ -134,12 +131,15 @@ public class VideoFragment extends BaseFragment {
             return;
         closeShowDown();
         lowerVideoLayout.setVideoDeviceAndShowVideoWindow(device);
-        lowerVideoLayout.setVideoRender();
         deviceLower = device;
     }
 
     // TODO: 2015/8/31 To use singleton instance for click handler.
     void switchVideo(){
+        //// FIXME: 2015/9/2 look at this new solution later.
+//        VideoShowGLFrameLayout temp = upperVideoLayout;
+//        upperVideoLayout = lowerVideoLayout;
+//        lowerVideoLayout = temp;
 
         View v0 = llVideoFragment.getChildAt(0);
         View v1 = llVideoFragment.getChildAt(1);
@@ -170,39 +170,42 @@ public class VideoFragment extends BaseFragment {
         llVideoFragment.addView(v1);
     }
 
-    public synchronized void update2VideoWindowsWithDevices() {
-
-        int i = 0;
-
-        // get devices
-        List<N2MVideo> devices = videoCommon.getDevices();
-
-        // determinate device1 and device2
-        if(devices != null && !devices.isEmpty()){
-            for (N2MVideo n2MVideo : devices){
-                if(n2MVideo.isVideoChecked() ){
-                    if(i == 0){
-                        device1 = n2MVideo;
-                        i+=1;
-                    }else if(i == 1){
-                        i+=1;
-                        device2 = n2MVideo;
-                    }
-                }
-            }
-        }
-
-        // shnow device1 and device2 on the screen
-        if (i == 0){
-            closeShowUp();
-            closeShowDown();
-        }else if (i == 1){
-            closeShowDown();
-            changeShowUp(device1);
-        }else if (i  == 2){
-            changeShowUp(device1);
-            changeShowDown(device2);
-        }
+    public synchronized void refreshVideoWindows() {
+//    public synchronized void refreshVideoWindows() {
+        upperVideoLayout.showVideoWindow();
+        lowerVideoLayout.showVideoWindow();
+//
+//        int i = 0;
+//
+//        // get devices
+//        List<N2MVideo> devices = videoCommon.getDevices();
+//
+//        // determinate device1 and device2
+//        if(devices != null && !devices.isEmpty()){
+//            for (N2MVideo n2MVideo : devices){
+//                if(n2MVideo.isVideoChecked() ){
+//                    if(i == 0){
+//                        device1 = n2MVideo;
+//                        i+=1;
+//                    }else if(i == 1){
+//                        i+=1;
+//                        device2 = n2MVideo;
+//                    }
+//                }
+//            }
+//        }
+//
+//        // shnow device1 and device2 on the screen
+//        if (i == 0){
+//            closeShowUp();
+//            closeShowDown();
+//        }else if (i == 1){
+//            closeShowDown();
+//            changeShowUp(device1);
+//        }else if (i  == 2){
+//            changeShowUp(device1);
+//            changeShowDown(device2);
+//        }
     }
 
 

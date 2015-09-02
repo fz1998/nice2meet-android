@@ -37,6 +37,10 @@ public class VideoCommon {
     Screen screen;
     List<N2MVideo> devices;
 
+
+    // for VideoScreen controller
+    N2MVideo upperVideo, lowerVideo;
+
     public VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
         this.roomCommon = roomCommon;
         this.callback = callback;
@@ -111,6 +115,7 @@ public class VideoCommon {
 
 
                         //// TODO: 2015/9/1 should display video here ,rather than come all the way from VideoFragment to do this
+                        // save this information: this video should be connected to some screen view to show
 
 
 
