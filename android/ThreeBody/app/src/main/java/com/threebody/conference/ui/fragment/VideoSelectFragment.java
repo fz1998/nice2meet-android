@@ -18,13 +18,13 @@ import butterknife.InjectView;
 /**
  * Created by xiaxin on 15-1-17.
  */
-public class VideoSetupFragment extends BaseFragment{
+public class VideoSelectFragment extends BaseFragment{
     @InjectView(R.id.userList)ListView userList;
     @InjectView(R.id.btnAddIn)Button btnAddIn;
     VideoSetAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_video_set, null);
+        View view = inflater.inflate(R.layout.fragment_video_select, null);
         initView(view);
         return view;
     }

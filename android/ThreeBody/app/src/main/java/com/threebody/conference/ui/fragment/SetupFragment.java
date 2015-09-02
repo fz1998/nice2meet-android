@@ -270,12 +270,12 @@ public class SetupFragment extends BaseFragment {
     private boolean closeVideo(){
         return roomCommon.getVideoCommon().closeVideo(roomCommon.getMe().getNodeId());
     }
-    public void openLocalVideo(){
+    public void showCloseLocalVideoOnVideoSwitch(){
         if(btnVideoSwitch != null){
             btnVideoSwitch.setText(R.string.closeVideo);
         }
     }
-    public void closeLoacalVideo(){
+    public void showOpenLocalVideoOnVideoSwitch(){
         if(btnVideoSwitch != null){
             btnVideoSwitch.setText(R.string.openVideo);
         }
