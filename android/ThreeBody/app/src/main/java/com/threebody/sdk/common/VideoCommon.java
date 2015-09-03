@@ -253,11 +253,11 @@ public class VideoCommon {
 
     public boolean setVideoRender(int nodeId,  String deviceId, VideoRenderer renderer){
         LoggerUtil.info(getClass().getName(), " nodeId = "+nodeId+" renderer = "+renderer.toString());
-        return video.setVideoRender(nodeId,deviceId, renderer);
+        return video.setVideoRender(nodeId, deviceId, renderer);
     }
 
     public  boolean removeScreenRender(int nodeId, String screenId, VideoRenderer renderer){
-        return screen.removeScreenRender(nodeId, screenId,renderer);
+        return screen.removeScreenRender(nodeId, screenId, renderer);
     }
 
     public  boolean removeVideoRender(int nodeId,String deviceId, VideoRenderer renderer){
