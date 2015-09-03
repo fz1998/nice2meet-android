@@ -11,6 +11,8 @@ import org.webrtc.VideoRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.tee3.n2m.VideoDisplayController;
+
 /**
  * Created by xiaxin on 15-2-4.
  */
@@ -37,6 +39,11 @@ public class VideoCommon {
     Screen screen;
     List<N2MVideo> devices;
 
+    public void setVideoDisplayController(VideoDisplayController videoDisplayController) {
+        this.videoDisplayController = videoDisplayController;
+    }
+
+    private VideoDisplayController videoDisplayController;
 
     // for VideoScreen controller
     N2MVideo upperVideo, lowerVideo;
@@ -113,11 +120,12 @@ public class VideoCommon {
                         n2MVideo.setUser(user);
                         devices.add(n2MVideo);
 
+                        videoDisplayController.addVideo(n2MVideo);
 
                         //// TODO: 2015/9/1 should display video here ,rather than come all the way from VideoFragment to do this
                         // save this information: this video should be connected to some screen view to show
 
-
+//                        videoController.
 
 
                         // call back for UI update

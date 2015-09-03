@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/ll_video_fragment">
-    <com.threebody.conference.ui.fragment.VideoShowGLFrameLayout
+    <com.threebody.conference.ui.fragment.VideoWindow
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_36_80"
         android:id="@+id/videoUp"
         android:tag="upperVideo"
         android:layout_weight="1"/>
-    <com.threebody.conference.ui.fragment.VideoShowGLFrameLayout
+    <com.threebody.conference.ui.fragment.VideoWindow
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_36_80"
         android:id="@+id/videoDown"

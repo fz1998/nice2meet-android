@@ -10,7 +10,8 @@ import android.widget.LinearLayout;
 import com.threebody.conference.R;
 import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.sdk.common.VideoCommon;
-import com.threebody.sdk.domain.N2MVideo;
+
+import cn.tee3.n2m.VideoDisplayController;
 
 /**
  * Created by xiaxin on 15-1-14.
@@ -19,12 +20,15 @@ public class VideoFragment extends BaseFragment {
     // LinearLayout for the whole VideoFragment
     LinearLayout llVideoFragment;
 
-    VideoShowGLFrameLayout upperVideoLayout;
-    VideoShowGLFrameLayout lowerVideoLayout;
+    VideoWindow upperVideoWindow;
+    VideoWindow lowerVideoWindow;
 
-    N2MVideo deviceUpper, deviceLower;
-    N2MVideo device1, device2;
+//    N2MVideo deviceUpper, deviceLower;
+//    N2MVideo device1, device2;
+
     VideoCommon videoCommon;
+    VideoDisplayController videoDisplayController;
+
     boolean isCanShow = true;
 
 
@@ -46,22 +50,21 @@ public class VideoFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(deviceUpper != null){
-            upperVideoLayout.setVideoDeviceAndShowVideoWindow(deviceUpper);
-        }
-        if(deviceLower != null){
-            lowerVideoLayout.setVideoDeviceAndShowVideoWindow(deviceLower);
-        }
-
+//        if(deviceUpper != null){
+//            upperVideoWindow.setVideoDeviceAndShowVideoWindow(deviceUpper);
+//        }
+//        if(deviceLower != null){
+//            lowerVideoWindow.setVideoDeviceAndShowVideoWindow(deviceLower);
+//        }
     }
 
     @Override
     protected void initView(final View view) {
         super.initView(view);
-        upperVideoLayout = (VideoShowGLFrameLayout)view.findViewById(R.id.videoUp);
-        lowerVideoLayout = (VideoShowGLFrameLayout)view.findViewById(R.id.videoDown);
+        upperVideoWindow = (VideoWindow)view.findViewById(R.id.videoUp);
+        lowerVideoWindow = (VideoWindow)view.findViewById(R.id.videoDown);
         // upper video: longClick will switch videos
-//        upperVideoLayout.setOnLongClickListener(new View.OnLongClickListener() {
+//        upperVideoWindow.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override
 //            public boolean onLongClick(View v) {
 //                switchVideo();
@@ -70,7 +73,7 @@ public class VideoFragment extends BaseFragment {
 //        });
 //
 //        // lower video: longClick will show VideoSetFragment
-//        lowerVideoLayout.setOnLongClickListener(new View.OnLongClickListener() {
+//        lowerVideoWindow.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override
 //            public boolean onLongClick(View v) {
 //                ((MeetingActivity) getActivity()).changeToVideoSet();
@@ -78,13 +81,21 @@ public class VideoFragment extends BaseFragment {
 //            }
 //        });
 
-        
-        videoCommon = ((MeetingActivity)getActivity()).getVideoCommon();
-        // set videoCommon for GLFrameLayouts
-        upperVideoLayout.setVideoCommon(videoCommon);
-        lowerVideoLayout.setVideoCommon(videoCommon);
 
+        // init VideoCommon
+        videoCommon = ((MeetingActivity)getActivity()).getVideoCommon();
+        upperVideoWindow.setVideoCommon(videoCommon);
+        lowerVideoWindow.setVideoCommon(videoCommon);
+
+        // init VideoDisplayController
+        videoDisplayController = new VideoDisplayController();
+        videoDisplayController.setLowerVideoWindow(lowerVideoWindow);
+        videoDisplayController.setUpperVideoWindow(upperVideoWindow);
+        videoDisplayController.setVideoCommon(videoCommon);
+
+        videoCommon.setVideoDisplayController(videoDisplayController);
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -103,43 +114,43 @@ public class VideoFragment extends BaseFragment {
         isCanShow = true;
     }
 
-    void closeShowDown(){
-        if (lowerVideoLayout == null)
-            return;
-//        lowerVideoLayout.removeVideoRender();
-        lowerVideoLayout.setVideoDeviceAndShowVideoWindow(null);
-        deviceLower = null;
-    }
-    void closeShowUp(){
-        if (upperVideoLayout == null)
-            return;
-//        upperVideoLayout.removeVideoRender();
-        upperVideoLayout.setVideoDeviceAndShowVideoWindow(null);
-        deviceUpper = null;
-    }
-
-    void changeShowUp(N2MVideo device){
-        if (deviceUpper == device)
-            return;
-        closeShowUp();
-        upperVideoLayout.setVideoDeviceAndShowVideoWindow(device);
-        deviceUpper = device;
-    }
-
-    void changeShowDown(N2MVideo device){
-        if (deviceUpper == device)
-            return;
-        closeShowDown();
-        lowerVideoLayout.setVideoDeviceAndShowVideoWindow(device);
-        deviceLower = device;
-    }
+//    void closeShowDown(){
+//        if (lowerVideoWindow == null)
+//            return;
+////        lowerVideoWindow.removeVideoRender();
+//        lowerVideoWindow.setVideoDeviceAndShowVideoWindow(null);
+//        deviceLower = null;
+//    }
+//    void closeShowUp(){
+//        if (upperVideoWindow == null)
+//            return;
+////        upperVideoWindow.removeVideoRender();
+//        upperVideoWindow.setVideoDeviceAndShowVideoWindow(null);
+//        deviceUpper = null;
+//    }
+//
+//    void changeShowUp(N2MVideo device){
+//        if (deviceUpper == device)
+//            return;
+//        closeShowUp();
+//        upperVideoWindow.setVideoDeviceAndShowVideoWindow(device);
+//        deviceUpper = device;
+//    }
+//
+//    void changeShowDown(N2MVideo device){
+//        if (deviceUpper == device)
+//            return;
+//        closeShowDown();
+//        lowerVideoWindow.setVideoDeviceAndShowVideoWindow(device);
+//        deviceLower = device;
+//    }
 
     // TODO: 2015/8/31 To use singleton instance for click handler.
     void switchVideo(){
         //// FIXME: 2015/9/2 look at this new solution later.
-//        VideoShowGLFrameLayout temp = upperVideoLayout;
-//        upperVideoLayout = lowerVideoLayout;
-//        lowerVideoLayout = temp;
+//        VideoShowGLFrameLayout temp = upperVideoWindow;
+//        upperVideoWindow = lowerVideoWindow;
+//        lowerVideoWindow = temp;
 
         View v0 = llVideoFragment.getChildAt(0);
         View v1 = llVideoFragment.getChildAt(1);
@@ -172,8 +183,8 @@ public class VideoFragment extends BaseFragment {
 
     public synchronized void refreshVideoWindows() {
 //    public synchronized void refreshVideoWindows() {
-        upperVideoLayout.showVideoWindow();
-        lowerVideoLayout.showVideoWindow();
+        upperVideoWindow.show();
+        lowerVideoWindow.show();
 //
 //        int i = 0;
 //
@@ -210,22 +221,22 @@ public class VideoFragment extends BaseFragment {
 
 
     public void setAudioStatus(boolean isOpen, int nodeId){
-        if(deviceUpper != null && deviceUpper.getUser() != null){
-            if(deviceUpper.getUser().getNodeId() == nodeId){
-                upperVideoLayout.setAudioStatusIcon(isOpen);
-                return;
-            }
-        }
-        if(deviceLower != null && deviceLower.getUser() != null){
-            if(deviceLower.getUser().getNodeId() == nodeId){
-                lowerVideoLayout.setAudioStatusIcon(isOpen);
-            }
-        }
+//        if(deviceUpper != null && deviceUpper.getUser() != null){
+//            if(deviceUpper.getUser().getNodeId() == nodeId){
+                upperVideoWindow.setAudioStatusIcon(isOpen);
+//                return;
+//            }
+//        }
+//        if(deviceLower != null && deviceLower.getUser() != null){
+//            if(deviceLower.getUser().getNodeId() == nodeId){
+                lowerVideoWindow.setAudioStatusIcon(isOpen);
+//            }
+//        }
 
     }
 
     public void closeAll() {
-        upperVideoLayout.removeVideoRender();
-        lowerVideoLayout.removeVideoRender();
+        upperVideoWindow.removeVideoRender();
+        lowerVideoWindow.removeVideoRender();
     }
 }

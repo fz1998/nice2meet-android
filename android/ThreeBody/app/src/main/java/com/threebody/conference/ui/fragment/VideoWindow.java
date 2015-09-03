@@ -20,7 +20,7 @@ import org.webrtc.VideoRenderer;
 /**
  * Created by xiaxin on 2015/3/28.
  */
-public class VideoShowGLFrameLayout extends FrameLayout {
+public class VideoWindow extends FrameLayout {
     View llVideoWindow;
 
     TextView tvUserName;
@@ -35,18 +35,19 @@ public class VideoShowGLFrameLayout extends FrameLayout {
     VideoRenderer mRenderer;
     GLSurfaceView glView;
     VideoRendererView mRendererView;
+    private N2MVideo video;
 
-    public VideoShowGLFrameLayout(Context context) {
+    public VideoWindow(Context context) {
         super(context);
         init();
     }
 
-    public VideoShowGLFrameLayout(Context context, AttributeSet attrs) {
+    public VideoWindow(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public VideoShowGLFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public VideoWindow(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -61,7 +62,7 @@ public class VideoShowGLFrameLayout extends FrameLayout {
         glView = (GLSurfaceView) llVideoWindow.findViewById(R.id.v_gl_video_window);
         addView(llVideoWindow);
         if(n2MVideo != null){
-            showVideoWindow();
+            show();
         }
          initVideo();
     }
@@ -88,7 +89,7 @@ public class VideoShowGLFrameLayout extends FrameLayout {
 
         // show video on the screen
         if(llVideoWindow != null && n2MVideo != null){
-            showVideoWindow();
+            show();
         }
     }
 
@@ -101,21 +102,26 @@ public class VideoShowGLFrameLayout extends FrameLayout {
         }
     }
 
-    public void showVideoWindow(){
-//    private void showVideoWindow(){
-        // show video
+    public void show(){
+
+        if (n2MVideo == null) {
+            return;
+        }
+
+        // show the whole window
+
         llVideoWindow.setVisibility(View.VISIBLE);
+
         // show user name
         tvUserName.setText(n2MVideo.getUser().getUserName());
+
         // show audio icon
-//        if(n2MVideo.getUser().getRole() != null){
-            if(n2MVideo.getUser().isAudioOn()){
-                ivAudioStatus.setImageResource(R.drawable.status_sound);
-            }else{
-                ivAudioStatus.setImageResource(R.drawable.status_soundoff);
-            }
-//        }
-    }
+        if (n2MVideo.getUser().isAudioOn()) {
+            ivAudioStatus.setImageResource(R.drawable.status_sound);
+        } else {
+            ivAudioStatus.setImageResource(R.drawable.status_soundoff);
+        }
+}
 
     public void setAudioStatusIcon(boolean isOpen) {
         if(isOpen){
@@ -147,4 +153,15 @@ public class VideoShowGLFrameLayout extends FrameLayout {
         this.videoCommon = videoCommon;
     }
 
+    public boolean isBoundVideo() {
+        return n2MVideo != null;
+    }
+
+    public N2MVideo getVideo() {
+        return video;
+    }
+
+    public void setVideo(N2MVideo video) {
+        this.video = video;
+    }
 }
