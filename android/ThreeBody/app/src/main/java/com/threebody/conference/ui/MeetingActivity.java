@@ -247,12 +247,23 @@ public class MeetingActivity extends BaseActivity {
 
 
 
+    public static final int FLAG_FROM_SETUP_FRAGMENT = 0;
+    public static final int FLAG_FROM_VIDEO_FRAGMENT = 1;
+
     public void refreshVideoFragmentUI(){
 
 //        FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, videoFragment);
 //        videoFragment.refreshVideoWindows();
+        videoFragment.refreshVideoWindows();
 
-        FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, setupFragment);
+        onBackPressed();
+
+
+//        if (flag == FLAG_FROM_SETUP_FRAGMENT) {
+//            FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, setupFragment);
+//        }else if (flag == FLAG_FROM_VIDEO_FRAGMENT) {
+//            FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, videoFragment);
+//        }
 
 //        videoFragment.refreshVideoWindows(videoCommon.getDevices());
     }
@@ -266,7 +277,12 @@ public class MeetingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        if (videoSelectFragment.isVisible()) {
+            super.onBackPressed();
+            return;
+        }
         showDialog();
+
     }
     Handler handler = new Handler(){
         @Override

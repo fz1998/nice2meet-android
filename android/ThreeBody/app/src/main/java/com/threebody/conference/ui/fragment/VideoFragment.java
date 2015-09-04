@@ -17,20 +17,19 @@ import cn.tee3.n2m.VideoDisplayController;
  * Created by xiaxin on 15-1-14.
  */
 public class VideoFragment extends BaseFragment {
-    // LinearLayout for the whole VideoFragment
+
     LinearLayout llVideoFragment;
 
     VideoWindow upperVideoWindow;
     VideoWindow lowerVideoWindow;
 
-//    N2MVideo deviceUpper, deviceLower;
-//    N2MVideo device1, device2;
-
     VideoCommon videoCommon;
+
+    public VideoDisplayController getVideoDisplayController() {
+        return videoDisplayController;
+    }
+
     VideoDisplayController videoDisplayController;
-
-    boolean isCanShow = true;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,12 +49,6 @@ public class VideoFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        if(deviceUpper != null){
-//            upperVideoWindow.setVideoDeviceAndShowVideoWindow(deviceUpper);
-//        }
-//        if(deviceLower != null){
-//            lowerVideoWindow.setVideoDeviceAndShowVideoWindow(deviceLower);
-//        }
     }
 
     @Override
@@ -96,67 +89,16 @@ public class VideoFragment extends BaseFragment {
         videoCommon.setVideoDisplayController(videoDisplayController);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        isCanShow = true;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        isCanShow = false;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        isCanShow = true;
-    }
-
-//    void closeShowDown(){
-//        if (lowerVideoWindow == null)
-//            return;
-////        lowerVideoWindow.removeVideoRender();
-//        lowerVideoWindow.setVideoDeviceAndShowVideoWindow(null);
-//        deviceLower = null;
-//    }
-//    void closeShowUp(){
-//        if (upperVideoWindow == null)
-//            return;
-////        upperVideoWindow.removeVideoRender();
-//        upperVideoWindow.setVideoDeviceAndShowVideoWindow(null);
-//        deviceUpper = null;
-//    }
-//
-//    void changeShowUp(N2MVideo device){
-//        if (deviceUpper == device)
-//            return;
-//        closeShowUp();
-//        upperVideoWindow.setVideoDeviceAndShowVideoWindow(device);
-//        deviceUpper = device;
-//    }
-//
-//    void changeShowDown(N2MVideo device){
-//        if (deviceUpper == device)
-//            return;
-//        closeShowDown();
-//        lowerVideoWindow.setVideoDeviceAndShowVideoWindow(device);
-//        deviceLower = device;
-//    }
-
     // TODO: 2015/8/31 To use singleton instance for click handler.
     void switchVideo(){
-        //// FIXME: 2015/9/2 look at this new solution later.
-//        VideoShowGLFrameLayout temp = upperVideoWindow;
-//        upperVideoWindow = lowerVideoWindow;
-//        lowerVideoWindow = temp;
 
-        switchVideoInsideFragment();
+        //// FIXME: 2015/9/2 look at this new solution later.
+        switchWindowsInsideFragment();
         videoDisplayController.switchWindowPosition();
     }
 
-    private void switchVideoInsideFragment() {
+    private void switchWindowsInsideFragment() {
+
         View v0 = llVideoFragment.getChildAt(0);
         View v1 = llVideoFragment.getChildAt(1);
         View vTemp = v0;
@@ -187,41 +129,8 @@ public class VideoFragment extends BaseFragment {
     }
 
     public synchronized void refreshVideoWindows() {
-//    public synchronized void refreshVideoWindows() {
         upperVideoWindow.show();
         lowerVideoWindow.show();
-//
-//        int i = 0;
-//
-//        // get devices
-//        List<N2MVideo> devices = videoCommon.getDevices();
-//
-//        // determinate device1 and device2
-//        if(devices != null && !devices.isEmpty()){
-//            for (N2MVideo video : devices){
-//                if(video.isVideoChecked() ){
-//                    if(i == 0){
-//                        device1 = video;
-//                        i+=1;
-//                    }else if(i == 1){
-//                        i+=1;
-//                        device2 = video;
-//                    }
-//                }
-//            }
-//        }
-//
-//        // shnow device1 and device2 on the screen
-//        if (i == 0){
-//            closeShowUp();
-//            closeShowDown();
-//        }else if (i == 1){
-//            closeShowDown();
-//            changeShowUp(device1);
-//        }else if (i  == 2){
-//            changeShowUp(device1);
-//            changeShowDown(device2);
-//        }
     }
 
 

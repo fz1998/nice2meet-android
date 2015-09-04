@@ -82,7 +82,7 @@ public class VideoWindow extends FrameLayout {
 //
 //        // to connect video render with the device, from this point, the video could be seen
 //        if (device != null) {
-//            setVideoRender();
+//            attachRenderToVideo();
 //        } else {
 //            removeVideoRender();
 //        }
@@ -93,32 +93,35 @@ public class VideoWindow extends FrameLayout {
 //        }
 //    }
 //
-//    private void setVideoRender() {
+//    private void attachRenderToVideo() {
 //        if (video.isScreen()) {
 //            videoCommon.setScreenRender(video.getNodeId(), video.getDeviceId(), mRenderer);
 //        } else {
-//            videoCommon.setVideoRender(video.getNodeId(), video.getDeviceId(), getRenderer());
+//            videoCommon.attachRenderToVideo(video.getNodeId(), video.getDeviceId(), getRenderer());
 //        }
 //    }
 
     public void show() {
 
         if (video == null) {
+            // could be detached or never attached.
+            tvUserName.setText("");
             return;
-        }
-
-        // show the whole window
-
-        llVideoWindow.setVisibility(View.VISIBLE);
-
-        // show user name
-        tvUserName.setText(video.getUser().getUserName());
-
-        // show audio icon
-        if (video.getUser().isAudioOn()) {
-            ivAudioStatus.setImageResource(R.drawable.status_sound);
         } else {
-            ivAudioStatus.setImageResource(R.drawable.status_soundoff);
+
+            // show the whole window
+
+            llVideoWindow.setVisibility(View.VISIBLE);
+
+            // show user name
+            tvUserName.setText(video.getUser().getUserName());
+
+            // show audio icon
+            if (video.getUser().isAudioOn()) {
+                ivAudioStatus.setImageResource(R.drawable.status_sound);
+            } else {
+                ivAudioStatus.setImageResource(R.drawable.status_soundoff);
+            }
         }
     }
 
@@ -161,6 +164,14 @@ public class VideoWindow extends FrameLayout {
 
     public void attachVideo(N2MVideo video) {
         this.video = video;
-        videoCommon.setVideoRender(video.getNodeId(), video.getDeviceId(), mRenderer);
+        videoCommon.attachRenderToVideo(video.getNodeId(), video.getDeviceId(), mRenderer);
+    }
+
+    public void detachVideo(N2MVideo video) {
+        if (this.video == video) {
+            videoCommon.removeVideoRender(video.getNodeId(), video.getDeviceId(), mRenderer);
+            mRendererView.refresh();
+            this.video = null;
+        }
     }
 }

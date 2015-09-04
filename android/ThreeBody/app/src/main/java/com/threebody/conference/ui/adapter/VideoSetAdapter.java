@@ -12,6 +12,7 @@ import com.threebody.sdk.domain.N2MVideo;
 
 import org.st.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,11 @@ import java.util.List;
  */
 public class VideoSetAdapter extends BaseAdapter {
     Context context;
+
+    public List<N2MVideo> getVideoList() {
+        return n2MVideos;
+    }
+
     List<N2MVideo> n2MVideos;
     int firstCheck, secondCheck;
     int checkCount = 0;

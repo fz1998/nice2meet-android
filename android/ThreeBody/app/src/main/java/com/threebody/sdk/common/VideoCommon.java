@@ -37,6 +37,7 @@ public class VideoCommon {
     Video video;
     Screen.ScreenListener screenListener;
     Screen screen;
+
     List<N2MVideo> devices;
 
     public void setVideoDisplayController(VideoDisplayController videoDisplayController) {
@@ -44,9 +45,6 @@ public class VideoCommon {
     }
 
     private VideoDisplayController videoDisplayController;
-
-    // for VideoScreen controller
-    N2MVideo upperVideo, lowerVideo;
 
     public VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
         this.roomCommon = roomCommon;
@@ -120,13 +118,9 @@ public class VideoCommon {
                         n2MVideo.setUser(user);
                         devices.add(n2MVideo);
 
-                        videoDisplayController.addVideo(n2MVideo);
-
                         //// TODO: 2015/9/1 should display video here ,rather than come all the way from VideoFragment to do this
-                        // save this information: this video should be connected to some screen view to show
-
-//                        videoController.
-
+                        // add new device to video display controller, attaching it to VideoWindow if possible
+                        videoDisplayController.addVideo(n2MVideo);
 
                         // call back for UI update
                         // just ask UI to update, no device passed here ?
@@ -254,12 +248,7 @@ public class VideoCommon {
         return false;
     }
 
-    public boolean setScreenRender(int nodeId, String screenId, VideoRenderer renderer){
-        LoggerUtil.info(getClass().getName(), " nodeId = "+nodeId+" renderer = "+renderer.toString());
-        return screen.setScreenRender(nodeId, screenId, renderer);
-    }
-
-    public boolean setVideoRender(int nodeId,  String deviceId, VideoRenderer renderer){
+    public boolean attachRenderToVideo(int nodeId, String deviceId, VideoRenderer renderer){
         LoggerUtil.info(getClass().getName(), " nodeId = "+nodeId+" renderer = "+renderer.toString());
         return video.setVideoRender(nodeId, deviceId, renderer);
     }
@@ -270,12 +259,7 @@ public class VideoCommon {
 
     public  boolean removeVideoRender(int nodeId,String deviceId, VideoRenderer renderer){
 //        return video.removeVideoRender(nodeId, deviceId, renderer);
-          return video.removeVideoRender(nodeId,renderer);
-    }
-
-    public  boolean switchVideoRender( VideoRenderer renderer1, VideoRenderer renderer2){
-//        return video.removeVideoRender(nodeId, deviceId, renderer);
-        return video.switchRender(renderer1, renderer2);
+          return video.removeVideoRender(nodeId, renderer);
     }
 
     public  boolean switchVideo( ){

@@ -13,6 +13,7 @@ public class FragmentUtil {
 	public static void moveToRightFragment(ActionBarActivity activity, int containerViewId, Fragment fragment){
 		FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
 		transaction.setCustomAnimations(R.anim.translate_in_to_left, R.anim.translate_out_to_left);
+		transaction.addToBackStack(null);
 		transaction.replace(containerViewId, fragment);
 		transaction.commit();
 	}
@@ -20,6 +21,7 @@ public class FragmentUtil {
 	public static void moveToLeftFragment(ActionBarActivity activity,int containerViewId, Fragment fragment){
 		FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
 		transaction.setCustomAnimations(R.anim.translate_in_to_right, R.anim.translate_out_to_right);
+		transaction.addToBackStack(null);
 		transaction.replace(containerViewId, fragment);
 		transaction.commit();
 	}

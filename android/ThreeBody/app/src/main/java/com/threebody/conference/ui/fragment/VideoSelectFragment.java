@@ -12,6 +12,9 @@ import com.threebody.conference.R;
 import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.conference.ui.adapter.VideoSetAdapter;
 import com.threebody.sdk.common.STSystem;
+import com.threebody.sdk.domain.N2MVideo;
+
+import java.util.List;
 
 import butterknife.InjectView;
 
@@ -44,6 +47,10 @@ public class VideoSelectFragment extends BaseFragment{
         super.onClick(v);
         switch (v.getId()){
             case R.id.btnAddIn:
+//                List<N2MVideo> checkedVideoList = adapter.getSelectedVideo();
+                List<N2MVideo> videoList = adapter.getVideoList();
+                ((MeetingActivity) getActivity()).getVideoFragment().getVideoDisplayController().handleVideoSelection(videoList);
+
                 ((MeetingActivity)getActivity()).refreshVideoFragmentUI();
                 break;
             default:

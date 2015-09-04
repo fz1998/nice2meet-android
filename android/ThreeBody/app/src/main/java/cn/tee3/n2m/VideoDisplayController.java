@@ -6,8 +6,6 @@ import com.threebody.conference.ui.fragment.VideoWindow;
 import com.threebody.sdk.common.VideoCommon;
 import com.threebody.sdk.domain.N2MVideo;
 
-import org.webrtc.VideoRenderer;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +18,15 @@ public class VideoDisplayController {
     private VideoWindow lowerVideoWindow;
 
     List<N2MVideo> videoList = new ArrayList<N2MVideo>();
+    List<N2MVideo> displayedVideoList = new ArrayList<N2MVideo>();
     private VideoCommon videoCommon;
 
     public void addVideo(N2MVideo video) {
         videoList.add(video);
+        attachVideo(video);
+    }
+
+    private void attachVideo(N2MVideo video) {
         if (attachToUpperWindowIfAvailable(video)){
             return;
         }
@@ -35,6 +38,7 @@ public class VideoDisplayController {
             return false;
         } else {
             lowerVideoWindow.attachVideo(video);
+            displayedVideoList.add(video);
             return true;
         }
     }
@@ -44,6 +48,7 @@ public class VideoDisplayController {
             return false;
         } else {
             upperVideoWindow.attachVideo(video);
+            displayedVideoList.add(video);
             return true;
         }
     }
@@ -52,29 +57,73 @@ public class VideoDisplayController {
         this.upperVideoWindow = upperVideoWindow;
     }
 
-    public VideoWindow getUpperVideoWindow() {
-        return upperVideoWindow;
-    }
-
     public void setLowerVideoWindow(VideoWindow lowerVideoWindow) {
         this.lowerVideoWindow = lowerVideoWindow;
-    }
-
-    public VideoWindow getLowerVideoWindow() {
-        return lowerVideoWindow;
     }
 
     public void setVideoCommon(VideoCommon videoCommon) {
         this.videoCommon = videoCommon;
     }
 
-    public VideoCommon getVideoCommon() {
-        return videoCommon;
-    }
-
     public void switchWindowPosition() {
         VideoWindow temp = upperVideoWindow;
         upperVideoWindow = lowerVideoWindow;
         lowerVideoWindow = temp;
+    }
+
+    public void handleVideoSelection(List<N2MVideo> videoList) {
+
+        // detached unselected videos
+        List<N2MVideo> unselectedVideoList = getUnselectedVideo(videoList);
+        for (N2MVideo video: unselectedVideoList){
+            detachVideo(video);
+
+            if (displayedVideoList.contains(video)) {
+                displayedVideoList.remove(video);
+            }
+        }
+
+        //compare all
+        List<N2MVideo> selectedVideoList = getSelectedVideo(videoList);
+        removeDisplayedVideosFromSelectedList(selectedVideoList);
+
+        for (N2MVideo selectedVideo: selectedVideoList){
+            attachVideo(selectedVideo);
+        }
+    }
+
+    private void detachVideo(N2MVideo video) {
+        upperVideoWindow.detachVideo(video);
+        lowerVideoWindow.detachVideo(video);
+    }
+
+    private void removeDisplayedVideosFromSelectedList(List<N2MVideo> selectedVideoList) {
+        for (N2MVideo selectedVideo: selectedVideoList){
+            for (N2MVideo shownVideo: displayedVideoList) {
+                if (selectedVideo == shownVideo) {
+                    selectedVideoList.remove(selectedVideo);
+                }
+            }
+        }
+    }
+
+    private List<N2MVideo> getSelectedVideo(List<N2MVideo> videoList) {
+        List<N2MVideo> list = new ArrayList<N2MVideo>();
+        for (N2MVideo video : videoList) {
+            if (video.isVideoChecked()){
+                list.add(video);
+            }
+        }
+        return list;
+    }
+
+    private List<N2MVideo> getUnselectedVideo(List<N2MVideo> videoList) {
+        List<N2MVideo> list = new ArrayList<N2MVideo>();
+        for (N2MVideo video : videoList) {
+            if (!video.isVideoChecked()){
+                list.add(video);
+            }
+        }
+        return list;
     }
 }
