@@ -24,34 +24,29 @@ public class VideoDisplayController {
 
     public void addVideo(N2MVideo video) {
         videoList.add(video);
-        handleUpperWindow(video);
-        handleLowerWindow(video);
-
-    }
-
-    private void handleLowerWindow(N2MVideo video) {
-//        // get video render
-//        if(!lowerVideoWindow.isBoundVideo()){
-//            return;
-//        }
-//        VideoRenderer render = lowerVideoWindow.getRenderer();
-//        // connect render with
-//        videoCommon.setVideoRender(video.getNodeId(), video.getDeviceId(), render);
-    }
-
-    private void handleUpperWindow(N2MVideo video) {
-        // get video render
-        if(upperVideoWindow.isBoundVideo()){
+        if (attachToUpperWindowIfAvailable(video)){
             return;
         }
-        VideoRenderer render = upperVideoWindow.getRenderer();
-        // connect render with video device
-        videoCommon.setVideoRender(video.getNodeId(), video.getDeviceId(), render);
-
-        // save video for VideoWindow
-        upperVideoWindow.setVideo(video);
+        attachToLowerWindowIfAvailable(video);
     }
 
+    private boolean attachToLowerWindowIfAvailable(N2MVideo video) {
+        if(lowerVideoWindow.isVideoAttached()){
+            return false;
+        } else {
+            lowerVideoWindow.attachVideo(video);
+            return true;
+        }
+    }
+
+    private boolean attachToUpperWindowIfAvailable(N2MVideo video) {
+        if(upperVideoWindow.isVideoAttached()){
+            return false;
+        } else {
+            upperVideoWindow.attachVideo(video);
+            return true;
+        }
+    }
 
     public void setUpperVideoWindow(VideoWindow upperVideoWindow) {
         this.upperVideoWindow = upperVideoWindow;
@@ -75,5 +70,11 @@ public class VideoDisplayController {
 
     public VideoCommon getVideoCommon() {
         return videoCommon;
+    }
+
+    public void switchWindowPosition() {
+        VideoWindow temp = upperVideoWindow;
+        upperVideoWindow = lowerVideoWindow;
+        lowerVideoWindow = temp;
     }
 }

@@ -31,11 +31,10 @@ public class VideoWindow extends FrameLayout {
     VideoCommon videoCommon;
 
     // when N2MVideo and VideoRenderer objects are connected, the video show up
-    N2MVideo n2MVideo;
+    N2MVideo video;
     VideoRenderer mRenderer;
     GLSurfaceView glView;
     VideoRendererView mRendererView;
-    private N2MVideo video;
 
     public VideoWindow(Context context) {
         super(context);
@@ -51,7 +50,8 @@ public class VideoWindow extends FrameLayout {
         super(context, attrs, defStyleAttr);
         init();
     }
-    private void init(){
+
+    private void init() {
         // the container for all views inside llVideoFragment window
         llVideoWindow = LayoutInflater.from(getContext()).inflate(R.layout.video_window, null);
 
@@ -61,50 +61,49 @@ public class VideoWindow extends FrameLayout {
         progressBar = (ProgressBar) llVideoWindow.findViewById(R.id.progressBar);
         glView = (GLSurfaceView) llVideoWindow.findViewById(R.id.v_gl_video_window);
         addView(llVideoWindow);
-        if(n2MVideo != null){
+        if (video != null) {
             show();
         }
-         initVideo();
+        initVideo();
     }
 
-    private  void initVideo(){
-       if(mRendererView == null){
-           mRendererView = new VideoRendererView(glView, true);
-           mRendererView.setScalingType(VideoRendererView.ScalingType.Scale_Aspect_Full);
-           mRenderer = new VideoRenderer(mRendererView.getRendererCallback());
-       }
-    }
-
-    public void setVideoDeviceAndShowVideoWindow(N2MVideo device){
-
-        // save the device
-        n2MVideo = device;
-
-        // to connect video render with the device, from this point, the video could be seen
-        if (device != null) {
-            setVideoRender();
-        } else {
-            removeVideoRender();
-        }
-
-        // show video on the screen
-        if(llVideoWindow != null && n2MVideo != null){
-            show();
+    private void initVideo() {
+        if (mRendererView == null) {
+            mRendererView = new VideoRendererView(glView, true);
+            mRendererView.setScalingType(VideoRendererView.ScalingType.Scale_Aspect_Full);
+            mRenderer = new VideoRenderer(mRendererView.getRendererCallback());
         }
     }
 
-    private void setVideoRender(){
-        if (n2MVideo.isScreen()){
-            videoCommon.setScreenRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), mRenderer);
-        }
-        else {
-            videoCommon.setVideoRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), getRenderer());
-        }
-    }
+//    public void setVideoDeviceAndShowVideoWindow(N2MVideo device) {
+//
+//        // save the device
+//        video = device;
+//
+//        // to connect video render with the device, from this point, the video could be seen
+//        if (device != null) {
+//            setVideoRender();
+//        } else {
+//            removeVideoRender();
+//        }
+//
+//        // show video on the screen
+//        if (llVideoWindow != null && video != null) {
+//            show();
+//        }
+//    }
+//
+//    private void setVideoRender() {
+//        if (video.isScreen()) {
+//            videoCommon.setScreenRender(video.getNodeId(), video.getDeviceId(), mRenderer);
+//        } else {
+//            videoCommon.setVideoRender(video.getNodeId(), video.getDeviceId(), getRenderer());
+//        }
+//    }
 
-    public void show(){
+    public void show() {
 
-        if (n2MVideo == null) {
+        if (video == null) {
             return;
         }
 
@@ -113,20 +112,20 @@ public class VideoWindow extends FrameLayout {
         llVideoWindow.setVisibility(View.VISIBLE);
 
         // show user name
-        tvUserName.setText(n2MVideo.getUser().getUserName());
+        tvUserName.setText(video.getUser().getUserName());
 
         // show audio icon
-        if (n2MVideo.getUser().isAudioOn()) {
+        if (video.getUser().isAudioOn()) {
             ivAudioStatus.setImageResource(R.drawable.status_sound);
         } else {
             ivAudioStatus.setImageResource(R.drawable.status_soundoff);
         }
-}
+    }
 
     public void setAudioStatusIcon(boolean isOpen) {
-        if(isOpen){
+        if (isOpen) {
             ivAudioStatus.setImageResource(R.drawable.status_sound);
-        }else{
+        } else {
             ivAudioStatus.setImageResource(R.drawable.status_soundoff);
         }
     }
@@ -136,13 +135,12 @@ public class VideoWindow extends FrameLayout {
     }
 
     //// TODO: 2015/8/29  why not on VideoCommon object ?
-    public void removeVideoRender(){
-        if(n2MVideo != null){
-            if (n2MVideo.isScreen()){
-                videoCommon.removeScreenRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(), mRenderer);
-            }
-            else {
-                videoCommon.removeVideoRender(n2MVideo.getNodeId(), n2MVideo.getDeviceId(),mRenderer);
+    public void removeVideoRender() {
+        if (video != null) {
+            if (video.isScreen()) {
+                videoCommon.removeScreenRender(video.getNodeId(), video.getDeviceId(), mRenderer);
+            } else {
+                videoCommon.removeVideoRender(video.getNodeId(), video.getDeviceId(), mRenderer);
             }
             mRendererView.refresh();
         }
@@ -153,15 +151,16 @@ public class VideoWindow extends FrameLayout {
         this.videoCommon = videoCommon;
     }
 
-    public boolean isBoundVideo() {
-        return n2MVideo != null;
+    public boolean isVideoAttached() {
+        return video != null;
     }
 
     public N2MVideo getVideo() {
         return video;
     }
 
-    public void setVideo(N2MVideo video) {
+    public void attachVideo(N2MVideo video) {
         this.video = video;
+        videoCommon.setVideoRender(video.getNodeId(), video.getDeviceId(), mRenderer);
     }
 }

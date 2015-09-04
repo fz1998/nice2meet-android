@@ -64,22 +64,22 @@ public class VideoFragment extends BaseFragment {
         upperVideoWindow = (VideoWindow)view.findViewById(R.id.videoUp);
         lowerVideoWindow = (VideoWindow)view.findViewById(R.id.videoDown);
         // upper video: longClick will switch videos
-//        upperVideoWindow.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                switchVideo();
-//                return true;
-//            }
-//        });
-//
-//        // lower video: longClick will show VideoSetFragment
-//        lowerVideoWindow.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                ((MeetingActivity) getActivity()).changeToVideoSet();
-//                return true;
-//            }
-//        });
+        upperVideoWindow.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                switchVideo();
+                return true;
+            }
+        });
+
+        // lower video: longClick will show VideoSetFragment
+        lowerVideoWindow.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ((MeetingActivity) getActivity()).changeToVideoSet();
+                return true;
+            }
+        });
 
 
         // init VideoCommon
@@ -152,6 +152,11 @@ public class VideoFragment extends BaseFragment {
 //        upperVideoWindow = lowerVideoWindow;
 //        lowerVideoWindow = temp;
 
+        switchVideoInsideFragment();
+        videoDisplayController.switchWindowPosition();
+    }
+
+    private void switchVideoInsideFragment() {
         View v0 = llVideoFragment.getChildAt(0);
         View v1 = llVideoFragment.getChildAt(1);
         View vTemp = v0;
@@ -193,14 +198,14 @@ public class VideoFragment extends BaseFragment {
 //
 //        // determinate device1 and device2
 //        if(devices != null && !devices.isEmpty()){
-//            for (N2MVideo n2MVideo : devices){
-//                if(n2MVideo.isVideoChecked() ){
+//            for (N2MVideo video : devices){
+//                if(video.isVideoChecked() ){
 //                    if(i == 0){
-//                        device1 = n2MVideo;
+//                        device1 = video;
 //                        i+=1;
 //                    }else if(i == 1){
 //                        i+=1;
-//                        device2 = n2MVideo;
+//                        device2 = video;
 //                    }
 //                }
 //            }
