@@ -19,6 +19,7 @@ public class BaseActivity extends ActionBarActivity implements View.OnClickListe
     protected void initUI(){
         ButterKnife.inject(this);
     }
+
     @Override
     public void onClick(View v) {
 

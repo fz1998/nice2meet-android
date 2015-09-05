@@ -83,6 +83,7 @@ public class JoinRoomActivity extends BaseActivity implements RoomService.JoinRe
         final String password = etPassword.getText().toString();
 
         // obtain a room
+        // TODO: 2015/9/5 to use SingletonRoomSystem
         RoomService roomService = STSystem.getInstance().obtainRoom(num);
 
         // set join result listener
@@ -101,6 +102,8 @@ public class JoinRoomActivity extends BaseActivity implements RoomService.JoinRe
             intent.setClass(JoinRoomActivity.this, MeetingActivity.class);
             startActivity(intent);
             finish();
+        } else {
+            // TODO: 2015/9/5 show error.
         }
     }
 }

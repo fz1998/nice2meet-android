@@ -37,11 +37,6 @@ public class MeetingActivity extends BaseActivity {
     @InjectView(R.id.flSetup_btn)FrameLayout flSetupBtn;
     @InjectView(R.id.flExit_btn)FrameLayout flExitBtn;
 
-    RoomService roomService;
-    ChatService chatService;
-    AudioService audioService;
-    VideoService videoService;
-
     ChatFragment chatFragment;
     VideoFragment videoFragment;
     SetupFragment setupFragment;
@@ -49,6 +44,13 @@ public class MeetingActivity extends BaseActivity {
     List<FrameLayout> btnList;
     List<Fragment> fragmentList;
     int fragmentIndex = 1;
+
+    // biz objects
+    RoomService roomService;
+    ChatService chatService;
+    AudioService audioService;
+    VideoService videoService;
+
 
     public VideoFragment getVideoFragment() {
         return videoFragment;
@@ -139,6 +141,7 @@ public class MeetingActivity extends BaseActivity {
 
     private void initBizObjects(){
         // roomCommon
+        // FIXME: 2015/9/5 to use SingletonRoomSystem
         roomService = STSystem.getInstance().getRoomService();
         // chatModule common
         chatService = new ChatService(roomService, new ChatService.ChatCallback() {

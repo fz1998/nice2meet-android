@@ -31,8 +31,9 @@ public class N2MApplication extends Application implements RoomSystem.RoomSystem
     }
 
     @Override
-    public void onInit(int i) {
-        if (i != 0) {
+    public void onInit(int result) {
+        if (result != 0) {
+            //// TODO: 2015/9/5 show error on the screen.
             Log.i("n2m", "init error.");
         } else {
             Log.i("n2m", "init done.");

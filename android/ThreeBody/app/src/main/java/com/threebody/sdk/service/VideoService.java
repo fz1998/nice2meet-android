@@ -27,21 +27,21 @@ public class VideoService {
     public static final int SCREEN_OPEN= 40004;
     public static final int SCREEN_CLOSE= 40005;
 
+    private VideoDisplayController videoDisplayController;
+
     //// FIXME: 2015/9/5 no use static flag
     public static  int IS_CAMERA_OPEN = CAMERA_OFF;
-
     Video.CameraType currentCameraType;
     RoomService roomService;
     protected VideoCallback callback;
     Video videoModule;
     Screen.ScreenListener screenListener;
+
     Screen screenModule;
 
     public void setVideoDisplayController(VideoDisplayController videoDisplayController) {
         this.videoDisplayController = videoDisplayController;
     }
-
-    private VideoDisplayController videoDisplayController;
 
     public VideoService(RoomService roomService, VideoCallback callback) {
         this.roomService = roomService;
