@@ -300,7 +300,7 @@ public class MeetingActivity extends BaseActivity {
                     break;
                 case VideoCommon.VIDEO_CLOSE:
                     n2MVideo = (N2MVideo)msg.obj;
-                    videoFragment.refreshVideoWindows();;
+                    videoFragment.refreshVideoWindows();
                     if(n2MVideo.getNodeId() == roomCommon.getMe().getNodeId()){
                         setupFragment.showOpenLocalVideoOnVideoSwitch();
                     }

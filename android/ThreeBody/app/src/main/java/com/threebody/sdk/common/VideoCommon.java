@@ -8,7 +8,6 @@ import org.st.User;
 import org.st.Video;
 import org.webrtc.VideoRenderer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.tee3.n2m.VideoDisplayController;
@@ -34,11 +33,9 @@ public class VideoCommon {
     Video.CameraType currentCameraType;
     RoomCommon roomCommon;
     protected VideoCallback callback;
-    Video video;
+    Video videoModule;
     Screen.ScreenListener screenListener;
     Screen screen;
-
-    List<N2MVideo> devices;
 
     public void setVideoDisplayController(VideoDisplayController videoDisplayController) {
         this.videoDisplayController = videoDisplayController;
@@ -49,7 +46,7 @@ public class VideoCommon {
     public VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
         this.roomCommon = roomCommon;
         this.callback = callback;
-        video = roomCommon.getRoom().getVideo();
+        videoModule = roomCommon.getRoom().getVideo();
         screen = roomCommon.getRoom().getScreen();
         init();
     }
@@ -59,18 +56,17 @@ public class VideoCommon {
     }
 
     private void init(){
-        if(devices == null){
-            devices = new ArrayList<>();
-        }
-        video = roomCommon.getRoom().getVideo();
-        video.setAutoRotation(false);
+
+        videoModule = roomCommon.getRoom().getVideo();
+        videoModule.setAutoRotation(false);
         roomCommon.setVideoCommon(this);
         initListener();
     }
 
     private synchronized N2MVideo findDeviceById(int nodeid ,String deviceId){
-        if(devices != null && !devices.isEmpty()){
-            for (N2MVideo n2MVideo : devices){
+        List<N2MVideo> videos = videoDisplayController.getVideoList();
+        if(videos != null && !videos.isEmpty()){
+            for (N2MVideo n2MVideo : videos){
                 if(deviceId.equals(n2MVideo.getDeviceId()) && n2MVideo.getNodeId() == nodeid){
                     return n2MVideo;
                 }
@@ -79,22 +75,13 @@ public class VideoCommon {
         return null;
     }
 
-    private int checkDeviceShowCount()
-    {
-        int count = 0;
-        for (N2MVideo n2MVideo : devices){
-            if (n2MVideo.isVideoChecked())
-                count++;
-        }
-        return count;
-    }
-
+    //// FIXME: 2015/9/5 used by videoModule selection list adaptor, need be careful.
     public List<N2MVideo> getDevices() {
-        return devices;
+        return videoDisplayController.getVideoList();
     }
 
     private void initListener(){
-        if (video == null)
+        if (videoModule == null)
             return;
 
         Video.VideoListener listener = new Video.VideoListener() {
@@ -109,23 +96,17 @@ public class VideoCommon {
                             IS_CAMERA_OPEN = CAMERA_ON;
                         }
                         user.setVideoOn(true);
+                        N2MVideo video = new N2MVideo(nodeId, deviceId);
+                        video.setUser(user);
 
-                        N2MVideo n2MVideo = new N2MVideo(nodeId, deviceId);
-                        if (checkDeviceShowCount()<2){
-                            n2MVideo.setVideoChecked(true);
-                        }
-
-                        n2MVideo.setUser(user);
-                        devices.add(n2MVideo);
-
-                        //// TODO: 2015/9/1 should display video here ,rather than come all the way from VideoFragment to do this
+                        //// TODO: 2015/9/1 should display videoModule here ,rather than come all the way from VideoFragment to do this
                         // add new device to video display controller, attaching it to VideoWindow if possible
-                        videoDisplayController.addVideo(n2MVideo);
+                        videoDisplayController.addVideo(video);
 
                         // call back for UI update
                         // just ask UI to update, no device passed here ?
                         if(checkCallback()){
-                            callback.onOpenVideo(n2MVideo);
+                            callback.onOpenVideo(video);
                         }
                     }
                 }
@@ -147,8 +128,9 @@ public class VideoCommon {
                         }
                         user.setVideoOn(false);
                     }
+
                     if(n2MVideo != null){
-                        devices.remove(n2MVideo);
+                        videoDisplayController.deleteVideo(n2MVideo);
                     }
                 }
 
@@ -167,36 +149,36 @@ public class VideoCommon {
 
             @Override
             synchronized public void onVideoData(int nodeId, String deviceId, byte[] data, int len, int width, int height) {
-                //todo implement this if need to take care of raw video data
+                //todo implement this if need to take care of raw videoModule data
             }
         };
-        video.setListener(listener);
+        videoModule.setListener(listener);
 
         screenListener = new Screen.ScreenListener(){
             @Override
             public void onShareScreen(int result, int nodeId, String screenId){
                 LoggerUtil.info(tag, "onShareScreen result = "+result+" nodeId = "+nodeId+" deviceId = "+screenId);
 
-                if(result == 0){
-                    User user = roomCommon.findUserById(nodeId);
-                    if(user != null){
-                        if(user.getNodeId() == roomCommon.getMe().getNodeId()){
-                            IS_CAMERA_OPEN = CAMERA_ON;
-                        }
-                        user.setVideoOn(true);
-
-                        N2MVideo n2MVideo = new N2MVideo(nodeId, screenId, true);
-                        if (checkDeviceShowCount()<2){
-                            n2MVideo.setVideoChecked(true);
-                        }
-
-                        n2MVideo.setUser(user);
-                        devices.add(n2MVideo);
-                        if(checkCallback()){
-                            callback.onShareScreen(n2MVideo);
-                        }
-                    }
-                }
+//                if(result == 0){
+//                    User user = roomCommon.findUserById(nodeId);
+//                    if(user != null){
+//                        if(user.getNodeId() == roomCommon.getMe().getNodeId()){
+//                            IS_CAMERA_OPEN = CAMERA_ON;
+//                        }
+//                        user.setVideoOn(true);
+//
+//                        N2MVideo n2MVideo = new N2MVideo(nodeId, screenId, true);
+//                        if (checkDeviceShowCount()<2){
+//                            n2MVideo.setVideoChecked(true);
+//                        }
+//
+//                        n2MVideo.setUser(user);
+//                        devices.add(n2MVideo);
+//                        if(checkCallback()){
+//                            callback.onShareScreen(n2MVideo);
+//                        }
+//                    }
+//                }
             }
 
             @Override
@@ -215,12 +197,10 @@ public class VideoCommon {
                         }
                         user.setVideoOn(false);
                     }
-                    if(n2MVideo != null){
-                        devices.remove(n2MVideo);
-                    }
                 }
             }
         };
+
         if (screen == null)
             return;
         screen.setListener(screenListener);
@@ -228,11 +208,11 @@ public class VideoCommon {
     }
 
     public boolean openVideo(int nodeId){
-        if(video.openLocalVideo(Video.CameraType.Front)){
+        if(videoModule.openLocalVideo(Video.CameraType.Front)){
             currentCameraType  = Video.CameraType.Front;
             IS_CAMERA_OPEN = CAMERA_ON;
             return true;
-        }else if(video.openLocalVideo(Video.CameraType.Back)){
+        }else if(videoModule.openLocalVideo(Video.CameraType.Back)){
             currentCameraType  = Video.CameraType.Back;
             IS_CAMERA_OPEN = CAMERA_ON;
             return true;
@@ -241,7 +221,7 @@ public class VideoCommon {
     }
 
     public boolean closeVideo(int nodeId){
-        if(video.closeVideo(nodeId)){
+        if(videoModule.closeVideo(nodeId)){
             IS_CAMERA_OPEN = CAMERA_OFF;
             return true;
         }
@@ -249,8 +229,8 @@ public class VideoCommon {
     }
 
     public boolean attachRenderToVideo(int nodeId, String deviceId, VideoRenderer renderer){
-        LoggerUtil.info(getClass().getName(), " nodeId = "+nodeId+" renderer = "+renderer.toString());
-        return video.setVideoRender(nodeId, deviceId, renderer);
+        LoggerUtil.info(getClass().getName(), " nodeId = " + nodeId + " renderer = " + renderer.toString());
+        return videoModule.setVideoRender(nodeId, deviceId, renderer);
     }
 
     public  boolean removeScreenRender(int nodeId, String screenId, VideoRenderer renderer){
@@ -258,14 +238,14 @@ public class VideoCommon {
     }
 
     public  boolean removeVideoRender(int nodeId,String deviceId, VideoRenderer renderer){
-//        return video.removeVideoRender(nodeId, deviceId, renderer);
-          return video.removeVideoRender(nodeId, renderer);
+//        return videoModule.removeVideoRender(nodeId, deviceId, renderer);
+          return videoModule.removeVideoRender(nodeId, renderer);
     }
 
     public  boolean switchVideo( ){
         Video.CameraType now = (currentCameraType== Video.CameraType.Back ? Video.CameraType.Front: Video.CameraType.Back);
-//        return video.removeVideoRender(nodeId, deviceId, renderer);
-        if (video.switchLocalVideo(now)){
+//        return videoModule.removeVideoRender(nodeId, deviceId, renderer);
+        if (videoModule.switchLocalVideo(now)){
             currentCameraType = now;
             return true;
         }

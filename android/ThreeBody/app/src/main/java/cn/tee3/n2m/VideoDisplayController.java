@@ -24,6 +24,7 @@ public class VideoDisplayController {
     public void addVideo(N2MVideo video) {
         videoList.add(video);
         attachVideo(video);
+//        video.setVideoChecked(true);
     }
 
     private void attachVideo(N2MVideo video) {
@@ -39,6 +40,8 @@ public class VideoDisplayController {
         } else {
             lowerVideoWindow.attachVideo(video);
             displayedVideoList.add(video);
+
+            video.setVideoChecked(true);
             return true;
         }
     }
@@ -49,6 +52,8 @@ public class VideoDisplayController {
         } else {
             upperVideoWindow.attachVideo(video);
             displayedVideoList.add(video);
+
+            video.setVideoChecked(true);
             return true;
         }
     }
@@ -98,7 +103,12 @@ public class VideoDisplayController {
     }
 
     private void removeDisplayedVideosFromSelectedList(List<N2MVideo> selectedVideoList) {
+        List<N2MVideo> list = new ArrayList<N2MVideo>();
         for (N2MVideo selectedVideo: selectedVideoList){
+            list.add(selectedVideo);
+        }
+
+        for (N2MVideo selectedVideo: list){
             for (N2MVideo shownVideo: displayedVideoList) {
                 if (selectedVideo == shownVideo) {
                     selectedVideoList.remove(selectedVideo);
@@ -125,5 +135,16 @@ public class VideoDisplayController {
             }
         }
         return list;
+    }
+
+    public List<N2MVideo> getVideoList() {
+        return videoList;
+    }
+
+    public void deleteVideo(N2MVideo video) {
+        videoList.remove(video);
+        //// FIXME: 2015/9/5 delete from displayList?
+        video.setVideoChecked(false);
+        detachVideo(video);
     }
 }
