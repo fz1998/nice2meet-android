@@ -1,0 +1,26 @@
+
+	* issues left
+	*
+		* 功能
+		*
+			* weird onOpenVideo
+			* video selection page
+			* JS cannot turn off video open by Android
+			* audio icon not shown
+			* fragment switch的动画没有了
+			* Screen Sharing not done yet
+			* 选择远端视频显示时间非常延迟很长，非常慢
+			* help没有内容
+			* 当chat窗口没有显示，收到消息没有用红字提示
+
+		* 代码重构
+		*
+			* 里面很多静碠全局变量的使用
+			* 将Library与app完全合并成一个单独项目
+			*
+				* sdk的package不应该存在的
+
+			* package或许可按功能来划分，而不是按类型
+
+
+
