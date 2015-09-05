@@ -74,7 +74,7 @@
             android:hint="@string/inPswd"/>
     </LinearLayout>
     <Button
-        android:id="@+id/btnAddIn"
+        android:id="@+id/btnJoin"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_7_80"
         android:layout_marginTop="@dimen/TextSize20"

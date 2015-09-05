@@ -3,7 +3,7 @@ package cn.tee3.n2m;
 //import com.threebody.conference.ui.fragment.VideoWindow;
 
 import com.threebody.conference.ui.fragment.VideoWindow;
-import com.threebody.sdk.common.VideoCommon;
+import com.threebody.sdk.service.VideoService;
 import com.threebody.sdk.domain.N2MVideo;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class VideoDisplayController {
 
     List<N2MVideo> videoList = new ArrayList<N2MVideo>();
     List<N2MVideo> displayedVideoList = new ArrayList<N2MVideo>();
-    private VideoCommon videoCommon;
+    private VideoService videoService;
 
     public void addVideo(N2MVideo video) {
         videoList.add(video);
@@ -66,8 +66,8 @@ public class VideoDisplayController {
         this.lowerVideoWindow = lowerVideoWindow;
     }
 
-    public void setVideoCommon(VideoCommon videoCommon) {
-        this.videoCommon = videoCommon;
+    public void setVideoService(VideoService videoService) {
+        this.videoService = videoService;
     }
 
     public void switchWindowPosition() {
@@ -78,17 +78,16 @@ public class VideoDisplayController {
 
     public void handleVideoSelection(List<N2MVideo> videoList) {
 
-        // detached unselected videos
+        // detach unselected videos
         List<N2MVideo> unselectedVideoList = getUnselectedVideo(videoList);
         for (N2MVideo video: unselectedVideoList){
             detachVideo(video);
-
             if (displayedVideoList.contains(video)) {
                 displayedVideoList.remove(video);
             }
         }
 
-        //compare all
+        //attach selected videos, unless it has already been attached.
         List<N2MVideo> selectedVideoList = getSelectedVideo(videoList);
         removeDisplayedVideosFromSelectedList(selectedVideoList);
 
@@ -144,6 +143,8 @@ public class VideoDisplayController {
     public void deleteVideo(N2MVideo video) {
         videoList.remove(video);
         //// FIXME: 2015/9/5 delete from displayList?
+        displayedVideoList.remove(video);
+
         video.setVideoChecked(false);
         detachVideo(video);
     }

@@ -1,4 +1,4 @@
-package com.threebody.sdk.common;
+package com.threebody.sdk.service;
 
 import org.st.Room;
 import org.st.RoomSystem;
@@ -12,8 +12,8 @@ import java.util.List;
 public class STSystem {
     private static STSystem instance ;
     protected RoomSystem roomSystem;
-    static List<RoomCommon> roomCommons;
-    private RoomCommon roomCommon;
+    static List<RoomService> roomServices;
+    private RoomService roomService;
 
     public static STSystem getInstance(){
        if(instance == null){
@@ -23,7 +23,7 @@ public class STSystem {
     }
     private STSystem(){
         roomSystem = new RoomSystem();
-        roomCommons = new ArrayList<>();
+        roomServices = new ArrayList<>();
     }
 
 //    public void createRoom(RoomCommon roomCommon){
@@ -33,22 +33,22 @@ public class STSystem {
 //        roomCommon.setRoom(room);
 //    }
 
-    public RoomCommon obtainRoom(String roomNumber) {
-        this.roomCommon = new RoomCommon(roomNumber);
-        roomCommons.add(roomCommon);
-        Room room = roomSystem.createRoom(roomCommon.getRoomListener(), roomNumber);
-        this.roomCommon.setRoom(room);
-        return roomCommon;
+    public RoomService obtainRoom(String roomNumber) {
+        this.roomService = new RoomService(roomNumber);
+        roomServices.add(roomService);
+        Room room = roomSystem.createRoom(roomService.getRoomListener(), roomNumber);
+        this.roomService.setRoom(room);
+        return roomService;
     }
 
 
 
-    public  List<RoomCommon> getRoomCommons() {
-        return roomCommons;
+    public  List<RoomService> getRoomCommons() {
+        return roomServices;
     }
 
-    public RoomCommon getRoomCommon() {
-        return roomCommon;
+    public RoomService getRoomService() {
+        return roomService;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.threebody.sdk.common;
+package com.threebody.sdk.service;
 
 import com.threebody.sdk.domain.MessageBean;
 
@@ -13,46 +13,46 @@ import java.util.Map;
 /**
  * Created by xiaxin on 15-2-4.
  */
-public class ChatCommon {
+public class ChatService {
 
     public static final int PUBLIC_MESSAGE = 0;
     Map<Integer, List<MessageBean>> messageMap;
 
     public static final int RECEIVE_PUBLIC_MESSAGE = 10000;
 
-    protected Chat chat;
+    protected Chat chatModule;
     ChatCallback callback;
 
-    RoomCommon roomCommon;
-    public ChatCommon(RoomCommon roomCommon, ChatCallback callback){
+    RoomService roomService;
+    public ChatService(RoomService roomService, ChatCallback callback){
         this.callback = callback;
-        this.roomCommon = roomCommon;
-        chat = roomCommon.getRoom().getChat();
-        roomCommon.setChatCommon(this);
+        this.roomService = roomService;
+        chatModule = roomService.getRoom().getChat();
+        roomService.setChatService(this);
         messageMap = new HashMap<>();
         messageMap.put(PUBLIC_MESSAGE, new ArrayList<MessageBean>());
         initListener();
     }
 
     public boolean sendPublicMessage(String message){
-        User user = roomCommon.getMe();
+        User user = roomService.getMe();
         if(user != null){
             MessageBean msg = new MessageBean(message, user.getUserName(), user.getNodeId(), true, true);
             addPublicMessage(msg);
-            if(chat != null){
-                return chat.sendPublicMessage(message);
+            if(chatModule != null){
+                return chatModule.sendPublicMessage(message);
             }
         }
         return false;
     }
 
     private void initListener(){
-        if (chat == null)
+        if (chatModule == null)
             return;
         Chat.ChatListener listener = new Chat.ChatListener() {
             @Override
             synchronized public void onReceivePublicMessage(int nodeId, String message) {
-                User user = roomCommon.findUserById(nodeId);
+                User user = roomService.findUserById(nodeId);
                 String name = "";
                 if(user != null){
                     name = user.getUserName();
@@ -80,7 +80,7 @@ public class ChatCommon {
                 }
             }
         };
-        chat.setListener(listener);
+        chatModule.setListener(listener);
     }
 
     private boolean checkCallback(){
@@ -121,6 +121,5 @@ public class ChatCommon {
 
         void onReceiveData(int nodeId, java.lang.String data);
     }
-
 
 }

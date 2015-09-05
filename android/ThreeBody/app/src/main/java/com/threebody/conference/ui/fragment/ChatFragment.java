@@ -16,8 +16,8 @@ import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.conference.ui.adapter.MessageAdapter;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
-import com.threebody.sdk.common.ChatCommon;
-import com.threebody.sdk.common.RoomCommon;
+import com.threebody.sdk.service.ChatService;
+import com.threebody.sdk.service.RoomService;
 
 import java.io.UnsupportedEncodingException;
 
@@ -27,13 +27,12 @@ import butterknife.InjectView;
  * Created by xiaxin on 15-1-14.
  */
 public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
-//    @InjectView(R.id.swipe)SwipeRefreshLayout srl;
     @InjectView(R.id.lvChat)ListView lvChat;
     @InjectView(R.id.btnSend)Button btnSend;
     @InjectView(R.id.etSend)EditText etSend;
     MessageAdapter adapter;
-    ChatCommon chatCommon;
-    RoomCommon roomCommon;
+    ChatService chatService;
+    RoomService roomService;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, null);
@@ -44,40 +43,33 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     protected void initView(View view) {
         super.initView(view);
-//        srl.setOnRefreshListener(this);
-//        srl.setColorScheme(android.R.color.holo_green_dark, android.R.color.holo_green_light,
-//                android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        chatCommon = ((MeetingActivity)getActivity()).getChatCommon();
-        roomCommon = ((MeetingActivity)getActivity()).getRoomCommon();
+        chatService = ((MeetingActivity)getActivity()).getChatService();
+        roomService = ((MeetingActivity)getActivity()).getRoomService();
         btnSend.setOnClickListener(this);
-        adapter = new MessageAdapter(getActivity(), chatCommon.getPublicMessgeList());
+        adapter = new MessageAdapter(getActivity(), chatService.getPublicMessgeList());
         lvChat.setAdapter(adapter);
     }
 
+    //// TODO: 2015/9/5 What's this for ? should be handled somehow ?
     @Override
     public void onRefresh() {
-//        srl.setRefreshing(true);
     }
+
     private void sendMessage(){
         if(!TextViewUtil.isNullOrEmpty(etSend)){
             ToastUtil.showToast(getActivity(), R.string.noSendMessage);
             return;
         }
-//        MessageBean messageBean = new MessageBean();
-//        messageBean.setMe(true);
-//        messageBean.setMessage(etSend.getText().toString());
-//        messageBean.setPublic(true);
-//        messageBean.setName(roomCommon.getMe().getUserName());
-//        messageBean.setNodeId(ChatCommon.PUBLIC_MESSAGE);
+
         String message = "";
         try {
              message = new String(etSend.getText().toString().getBytes(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        chatCommon
+        chatService
                 .sendPublicMessage(message);
-        adapter.refresh(chatCommon.getPublicMessgeList());
+        adapter.refresh(chatService.getPublicMessgeList());
         etSend.setText("");
         lvChat.smoothScrollToPosition(adapter.getCount() - 1);
     }
@@ -95,7 +87,7 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
     public void receivePublicMessage(){
         android.os.Message msg = new android.os.Message();
-        msg.what = ChatCommon.RECEIVE_PUBLIC_MESSAGE;
+        msg.what = ChatService.RECEIVE_PUBLIC_MESSAGE;
         handler.sendMessage(msg);
     }
     public Handler handler = new Handler(){
@@ -103,10 +95,10 @@ public class ChatFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case ChatCommon.RECEIVE_PUBLIC_MESSAGE:
-                    if(chatCommon != null){
-                        if(chatCommon.getPublicMessgeList() != null){
-                            adapter.refresh(chatCommon.getPublicMessgeList());
+                case ChatService.RECEIVE_PUBLIC_MESSAGE:
+                    if(chatService != null){
+                        if(chatService.getPublicMessgeList() != null){
+                            adapter.refresh(chatService.getPublicMessgeList());
                             lvChat.smoothScrollToPosition(adapter.getCount() - 1);
                         }
                     }

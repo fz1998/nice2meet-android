@@ -10,10 +10,6 @@ public class HttpHelper {
 
     AsyncHttpClient client = new AsyncHttpClient();
     private static HttpHelper instance = new HttpHelper();
-    public static final int METHOD_POST = 0;
-    public static final int METHOD_GET = 1;
-    public static final int METHOD_DELETE = 2;
-    public static final int METHOD_PUT = 3;
 
     private HttpHelper(){
 
@@ -26,10 +22,5 @@ public class HttpHelper {
             client.cancelRequests(context, true);
         }
     }
-    //登录
-    public void login(LoginRequest request, MyParser parser, Class cls){
-        HttpUtil.httpActionText(client, UrlUtil.getUrl(UrlUtil.LOGIN), request, parser, null, cls, METHOD_GET);
-    }
-
 
 }

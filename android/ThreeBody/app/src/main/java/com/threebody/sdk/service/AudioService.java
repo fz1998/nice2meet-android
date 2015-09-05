@@ -1,4 +1,4 @@
-package com.threebody.sdk.common;
+package com.threebody.sdk.service;
 
 
 import com.threebody.sdk.util.LoggerUtil;
@@ -6,7 +6,7 @@ import com.threebody.sdk.util.LoggerUtil;
 import org.st.Audio;
 import org.st.User;
 
-public class AudioCommon {
+public class AudioService {
     String tag = getClass().getName();
     public static final int MIC_OFF = 0;
     public static final int MIC_ON = 1;
@@ -18,21 +18,21 @@ public class AudioCommon {
     public static int IS_MIC_ON = MIC_OFF;
     public static int IS_SPEAKER_ON = MIC_OFF;
 
-    private Audio audio;
+    private Audio audioModule;
 
     AudioCallback callback;
-    RoomCommon roomCommon;
+    RoomService roomService;
 
-    public AudioCommon(RoomCommon roomCommon, AudioCallback callbak){
-        audio = roomCommon.getRoom().getAudio();
+    public AudioService(RoomService roomService, AudioCallback callbak){
+        audioModule = roomService.getRoom().getAudio();
         this.callback = callbak;
-        roomCommon.setAudioCommon(this);
-        this.roomCommon = roomCommon;
+        roomService.setAudioService(this);
+        this.roomService = roomService;
         initListener();
     }
 
     private boolean checkMe(int nodeId){
-        User me = roomCommon.getCurrentUser();
+        User me = roomService.getCurrentUser();
         if(me != null){
             if(me.getNodeId() == nodeId){
                 return true;
@@ -46,14 +46,14 @@ public class AudioCommon {
         if(checkMe(nodeId)){
             IS_MIC_ON = MIC_HANDS_UP;
         }
-        if(audio != null){
-            return audio.openMicrophone(nodeId);
+        if(audioModule != null){
+            return audioModule.openMicrophone(nodeId);
         }
         return false;
     }
     public boolean closeMic(int id){
-        if(audio != null){
-            boolean isSucceed = audio.closeMicrophone(id);
+        if(audioModule != null){
+            boolean isSucceed = audioModule.closeMicrophone(id);
             if(isSucceed){
                 IS_MIC_ON = MIC_OFF;
             }
@@ -62,8 +62,8 @@ public class AudioCommon {
         return false;
     }
     public boolean muteMic(int id, boolean mute){
-        if(audio != null){
-            boolean isSucceed = audio.muteMicrophone(id, mute);
+        if(audioModule != null){
+            boolean isSucceed = audioModule.muteMicrophone(id, mute);
             if(isSucceed){
                // IS_MIC_ON = MIC_OFF;
             }
@@ -73,8 +73,8 @@ public class AudioCommon {
     }
 
     public int getMaxAudio(){
-        if(audio != null){
-            return audio.getMaxAudio();
+        if(audioModule != null){
+            return audioModule.getMaxAudio();
         }
         return -1;
     }
@@ -84,19 +84,19 @@ public class AudioCommon {
      * @return
      */
     protected int getSurplusAudio(){
-        if(audio != null){
-            return audio.getSurplusAudio();
+        if(audioModule != null){
+            return audioModule.getSurplusAudio();
         }
         return -1;
     }
     private void initListener(){
-        if (audio == null)
+        if (audioModule == null)
             return;
         Audio.AudioListener listener = new Audio.AudioListener() {
             @Override
             synchronized public void onOpenMicrophone(int result, int nodeId) {
                 LoggerUtil.info(tag, "onOpenMic result = "+result+" nodeId = "+nodeId);
-                User user = roomCommon.findUserById(nodeId);
+                User user = roomService.findUserById(nodeId);
                 if(user != null){
                     user.setAudioOn(true);
                 }
@@ -113,7 +113,7 @@ public class AudioCommon {
             @Override
             synchronized public void onCloseMicrophone(int result, int nodeId) {
                 LoggerUtil.info(tag, "onCloseMic result = "+result+" nodeId = "+nodeId);
-                User user = roomCommon.findUserById(nodeId);
+                User user = roomService.findUserById(nodeId);
                 if(user != null){
                     user.setAudioOn(false);
                 }
@@ -134,7 +134,7 @@ public class AudioCommon {
                 }
             }
         };
-        audio.setListener(listener);
+        audioModule.setListener(listener);
     }
     private boolean checkCallback(){
         if(callback == null){

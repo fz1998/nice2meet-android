@@ -56,7 +56,7 @@ public class MessageAdapter extends BaseAdapter {
         ViewHolder holder = null;
         MessageBean messageBean = messageBeans.get(position);
         if(type == 1){
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_message_left, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.chat_message_left, null);
             if(convertView.getTag() == null){
                 holder = new ViewHolder();
                 holder.tvName = (TextView)convertView.findViewById(R.id.tvUserName);
@@ -68,7 +68,7 @@ public class MessageAdapter extends BaseAdapter {
             }
 
         }else{
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_message_right, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.chat_message_right, null);
             if(convertView.getTag() == null){
 
                 holder = new ViewHolder();

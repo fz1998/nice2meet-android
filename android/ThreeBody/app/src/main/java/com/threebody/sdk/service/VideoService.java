@@ -1,4 +1,4 @@
-package com.threebody.sdk.common;
+package com.threebody.sdk.service;
 
 import com.threebody.sdk.domain.N2MVideo;
 import com.threebody.sdk.util.LoggerUtil;
@@ -15,7 +15,7 @@ import cn.tee3.n2m.VideoDisplayController;
 /**
  * Created by xiaxin on 15-2-4.
  */
-public class VideoCommon {
+public class VideoService {
 
     protected String tag = getClass().getName();
     public static final int CAMERA_OFF = 0;
@@ -27,15 +27,15 @@ public class VideoCommon {
     public static final int SCREEN_OPEN= 40004;
     public static final int SCREEN_CLOSE= 40005;
 
-    //fixme
+    //// FIXME: 2015/9/5 no use static flag
     public static  int IS_CAMERA_OPEN = CAMERA_OFF;
 
     Video.CameraType currentCameraType;
-    RoomCommon roomCommon;
+    RoomService roomService;
     protected VideoCallback callback;
     Video videoModule;
     Screen.ScreenListener screenListener;
-    Screen screen;
+    Screen screenModule;
 
     public void setVideoDisplayController(VideoDisplayController videoDisplayController) {
         this.videoDisplayController = videoDisplayController;
@@ -43,23 +43,23 @@ public class VideoCommon {
 
     private VideoDisplayController videoDisplayController;
 
-    public VideoCommon(RoomCommon roomCommon, VideoCallback callback) {
-        this.roomCommon = roomCommon;
+    public VideoService(RoomService roomService, VideoCallback callback) {
+        this.roomService = roomService;
         this.callback = callback;
-        videoModule = roomCommon.getRoom().getVideo();
-        screen = roomCommon.getRoom().getScreen();
+        videoModule = roomService.getRoom().getVideo();
+        screenModule = roomService.getRoom().getScreen();
         init();
     }
 
-    public RoomCommon getRoomCommon() {
-        return roomCommon;
+    public RoomService getRoomService() {
+        return roomService;
     }
 
     private void init(){
 
-        videoModule = roomCommon.getRoom().getVideo();
+        videoModule = roomService.getRoom().getVideo();
         videoModule.setAutoRotation(false);
-        roomCommon.setVideoCommon(this);
+        roomService.setVideoService(this);
         initListener();
     }
 
@@ -90,9 +90,9 @@ public class VideoCommon {
                 LoggerUtil.info(tag, "onOpenVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
 
                 if(result == 0){
-                    User user = roomCommon.findUserById(nodeId);
+                    User user = roomService.findUserById(nodeId);
                     if(user != null){
-                        if(user.getNodeId() == roomCommon.getMe().getNodeId()){
+                        if(user.getNodeId() == roomService.getMe().getNodeId()){
                             IS_CAMERA_OPEN = CAMERA_ON;
                         }
                         user.setVideoOn(true);
@@ -121,9 +121,9 @@ public class VideoCommon {
                 }
 
                 if(result == 0){
-                    User user = roomCommon.findUserById(nodeId);
+                    User user = roomService.findUserById(nodeId);
                     if(user != null){
-                        if(user.getNodeId() == getRoomCommon().getMe().getNodeId()){
+                        if(user.getNodeId() == getRoomService().getMe().getNodeId()){
                             IS_CAMERA_OPEN = CAMERA_OFF;
                         }
                         user.setVideoOn(false);
@@ -190,9 +190,9 @@ public class VideoCommon {
                     callback.onCloseScreen(result, nodeId, screenId);
                 }
                 if(result == 0){
-                    User user = roomCommon.findUserById(nodeId);
+                    User user = roomService.findUserById(nodeId);
                     if(user != null){
-                        if(user.getNodeId() == getRoomCommon().getMe().getNodeId()){
+                        if(user.getNodeId() == getRoomService().getMe().getNodeId()){
                             IS_CAMERA_OPEN = CAMERA_OFF;
                         }
                         user.setVideoOn(false);
@@ -201,9 +201,9 @@ public class VideoCommon {
             }
         };
 
-        if (screen == null)
+        if (screenModule == null)
             return;
-        screen.setListener(screenListener);
+        screenModule.setListener(screenListener);
 
     }
 
@@ -234,7 +234,7 @@ public class VideoCommon {
     }
 
     public  boolean removeScreenRender(int nodeId, String screenId, VideoRenderer renderer){
-        return screen.removeScreenRender(nodeId, screenId, renderer);
+        return screenModule.removeScreenRender(nodeId, screenId, renderer);
     }
 
     public  boolean removeVideoRender(int nodeId,String deviceId, VideoRenderer renderer){

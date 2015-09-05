@@ -3,7 +3,7 @@ package com.threebody.sdk.domain;
 
 import com.threebody.sdk.util.StringUtil;
 
-public class BaseDomain extends Object{
+public class BaseDomain {
 	
 	@Override
 	public String toString() {

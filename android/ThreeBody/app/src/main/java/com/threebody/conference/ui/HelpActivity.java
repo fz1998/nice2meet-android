@@ -9,6 +9,7 @@ public class HelpActivity extends BaseActivity{
     @Override
     protected void initUI() {
         super.initUI();
-        SwipeRefreshLayout srl;
+        //// FIXME: 2015/9/5 What's this ?
+//        SwipeRefreshLayout srl;
     }
 }

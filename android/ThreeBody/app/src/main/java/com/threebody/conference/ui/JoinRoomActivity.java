@@ -9,8 +9,8 @@ import com.threebody.conference.R;
 import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.conference.ui.view.HttpProgressDialog;
-import com.threebody.sdk.common.RoomCommon;
-import com.threebody.sdk.common.STSystem;
+import com.threebody.sdk.service.RoomService;
+import com.threebody.sdk.service.STSystem;
 import com.threebody.sdk.util.LoggerUtil;
 
 import java.util.UUID;
@@ -18,27 +18,24 @@ import java.util.UUID;
 import butterknife.InjectView;
 import cn.tee3.n2m.Constants;
 
-public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinResultCallback {
+public class JoinRoomActivity extends BaseActivity implements RoomService.JoinResultCallback {
 
-    @InjectView(R.id.etNum)
-    EditText etNum;
-    @InjectView(R.id.etName)
-    EditText etName;
-    @InjectView(R.id.etPassword)
-    EditText etPassword;
-    @InjectView(R.id.btnAddIn)
-    Button btnAddIn;
+    @InjectView(R.id.etNum) EditText etNum;
+    @InjectView(R.id.etName) EditText etName;
+    @InjectView(R.id.etPassword) EditText etPassword;
+    @InjectView(R.id.btnJoin) Button btnJoin;
 
+    //// TODO: 2015/9/5 Why HttpProgressDialog here ? What's the meaning ?
     HttpProgressDialog dialog;
 
     @Override
     protected void initUI() {
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_join_room);
         super.initUI();
         getSupportActionBar().hide();
-        btnAddIn.setOnClickListener(this);
+        btnJoin.setOnClickListener(this);
         String defaultName = android.os.Build.MODEL + ":"
-                + android.os.Build.VERSION.SDK + "_"
+                + android.os.Build.VERSION.SDK_INT + "_"
                 + android.os.Build.VERSION.RELEASE;
         etNum.setText("");
         etName.setText(defaultName);
@@ -52,7 +49,7 @@ public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinRes
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.btnAddIn:
+            case R.id.btnJoin:
 
                 if (!TextViewUtil.isNullOrEmpty(etNum)) {
                     ToastUtil.showToast(this, R.string.noMeetNum);
@@ -86,13 +83,13 @@ public class JoinRoomActivity extends BaseActivity implements RoomCommon.JoinRes
         final String password = etPassword.getText().toString();
 
         // obtain a room
-        RoomCommon roomCommon = STSystem.getInstance().obtainRoom(num);
+        RoomService roomService = STSystem.getInstance().obtainRoom(num);
 
         // set join result listener
-        roomCommon.setJoinResultCallback(this);
+        roomService.setJoinResultCallback(this);
 
         // join
-        roomCommon.join(userId, name, password);
+        roomService.join(userId, name, password);
     }
 
 

@@ -1,4 +1,4 @@
-package com.threebody.sdk.common;
+package com.threebody.sdk.service;
 
 import android.util.Log;
 
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by xiaxin on 15-2-4.
  */
-public class RoomCommon {
+public class RoomService {
 
     String tag = getClass().getName();
     protected Room room;
@@ -23,12 +23,12 @@ public class RoomCommon {
     JoinResultCallback joinResultCallback;
     private Room.RoomListener roomListener;
 
-    protected ChatCommon chatCommon;
-    protected AudioCommon audioCommon;
-    protected VideoCommon videoCommon;
+    protected ChatService chatService;
+    protected AudioService audioService;
+    protected VideoService videoService;
     protected String roomId;
 
-    protected RoomCommon(String roomId){
+    protected RoomService(String roomId){
         this.roomId = roomId;
 
         if(users == null){
@@ -48,32 +48,24 @@ public class RoomCommon {
         this.room = room;
     }
 
-    public void setChatCommon(ChatCommon chatCommon) {
-        this.chatCommon = chatCommon;
+    public void setChatService(ChatService chatService) {
+        this.chatService = chatService;
     }
 
-    public AudioCommon getAudioCommon() {
-        return audioCommon;
+    public AudioService getAudioService() {
+        return audioService;
     }
 
-    public void setAudioCommon(AudioCommon audioCommon) {
-        this.audioCommon = audioCommon;
+    public void setAudioService(AudioService audioService) {
+        this.audioService = audioService;
     }
 
-    public VideoCommon getVideoCommon() {
-        return videoCommon;
+    public VideoService getVideoService() {
+        return videoService;
     }
 
-    public void setVideoCommon(VideoCommon videoCommon) {
-        this.videoCommon = videoCommon;
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public List<User> getUsers() {
-        return users;
+    public void setVideoService(VideoService videoService) {
+        this.videoService = videoService;
     }
 
     /**
@@ -167,7 +159,6 @@ public class RoomCommon {
                             break;
                         }
                     }
-//                    users.remove(user);
                 }
             }
 
@@ -229,6 +220,5 @@ public class RoomCommon {
     public interface JoinResultCallback {
         void onJoinResult(int result);
     }
-
 
 }

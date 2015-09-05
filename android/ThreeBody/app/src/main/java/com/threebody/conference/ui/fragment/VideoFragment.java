@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import com.threebody.conference.R;
 import com.threebody.conference.ui.MeetingActivity;
-import com.threebody.sdk.common.VideoCommon;
+import com.threebody.sdk.service.VideoService;
 
 import cn.tee3.n2m.VideoDisplayController;
 
@@ -23,7 +23,7 @@ public class VideoFragment extends BaseFragment {
     VideoWindow upperVideoWindow;
     VideoWindow lowerVideoWindow;
 
-    VideoCommon videoCommon;
+    VideoService videoService;
 
     public VideoDisplayController getVideoDisplayController() {
         return videoDisplayController;
@@ -76,17 +76,17 @@ public class VideoFragment extends BaseFragment {
 
 
         // init VideoCommon
-        videoCommon = ((MeetingActivity)getActivity()).getVideoCommon();
-        upperVideoWindow.setVideoCommon(videoCommon);
-        lowerVideoWindow.setVideoCommon(videoCommon);
+        videoService = ((MeetingActivity)getActivity()).getVideoService();
+        upperVideoWindow.setVideoService(videoService);
+        lowerVideoWindow.setVideoService(videoService);
 
         // init VideoDisplayController
         videoDisplayController = new VideoDisplayController();
         videoDisplayController.setLowerVideoWindow(lowerVideoWindow);
         videoDisplayController.setUpperVideoWindow(upperVideoWindow);
-        videoDisplayController.setVideoCommon(videoCommon);
+        videoDisplayController.setVideoService(videoService);
 
-        videoCommon.setVideoDisplayController(videoDisplayController);
+        videoService.setVideoDisplayController(videoDisplayController);
     }
 
     // TODO: 2015/8/31 To use singleton instance for click handler.

@@ -12,10 +12,10 @@ import android.media.AudioManager;
 import com.threebody.conference.R;
 import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.conference.ui.util.ToastUtil;
-import com.threebody.sdk.common.AudioCommon;
-import com.threebody.sdk.common.RoomCommon;
-import com.threebody.sdk.common.STSystem;
-import com.threebody.sdk.common.VideoCommon;
+import com.threebody.sdk.service.AudioService;
+import com.threebody.sdk.service.RoomService;
+import com.threebody.sdk.service.STSystem;
+import com.threebody.sdk.service.VideoService;
 
 import butterknife.InjectView;
 
@@ -40,7 +40,7 @@ public class SetupFragment extends BaseFragment {
     private static String TO_DISPLAY_CARMERA_TYPE = BACK_CAMERA;
 
 
-    RoomCommon roomCommon;
+    RoomService roomService;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //// TODO: 2015/9/1 some werid issues, do it some time later.
@@ -53,7 +53,7 @@ public class SetupFragment extends BaseFragment {
 //            setupFragmentView.refreshDrawableState();
 //            return setupFragmentView;
 //        } else {
-            setupFragmentView = inflater.inflate(R.layout.fragment_set, null);
+            setupFragmentView = inflater.inflate(R.layout.fragment_setup, null);
             initView(setupFragmentView);
             return setupFragmentView;
 //        }
@@ -62,7 +62,7 @@ public class SetupFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         super.initView(view);
-        roomCommon = STSystem.getInstance().getRoomCommons().get(0);
+        roomService = STSystem.getInstance().getRoomCommons().get(0);
         btnVideoSwitch.setOnClickListener(this);
         btnAudioSwitch.setOnClickListener(this);
         llHelp.setOnClickListener(this);
@@ -72,24 +72,24 @@ public class SetupFragment extends BaseFragment {
 
         buttonSwitchVideo.setOnClickListener(this);
 
-        if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_ON){
+        if(AudioService.IS_MIC_ON == AudioService.MIC_ON){
             btnAudioSwitch.setText(R.string.closeAudio);
-        }else if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_HANDS_UP){
+        }else if(AudioService.IS_MIC_ON == AudioService.MIC_HANDS_UP){
             btnAudioSwitch.setText(R.string.handsup);
         }
-        if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_ON){
+        if(VideoService.IS_CAMERA_OPEN == VideoService.CAMERA_ON){
             btnVideoSwitch.setText(R.string.closeVideo);
-        }else if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_HOLD){
+        }else if(VideoService.IS_CAMERA_OPEN == VideoService.CAMERA_HOLD){
             btnAudioSwitch.setText(R.string.handsup);
         }
         AudioManager audioManager =
                 ((AudioManager) getActivity().getSystemService(getActivity().AUDIO_SERVICE));
         if (audioManager.isSpeakerphoneOn()){
             btnSpeakerHandFreeSwitch.setText(R.string.closeSpeaker);
-            AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_ON;
+            AudioService.IS_SPEAKER_ON = AudioService.SPEAKER_ON;
         }else {
             btnSpeakerHandFreeSwitch.setText(R.string.openSpeaker);
-            AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_OFF;
+            AudioService.IS_SPEAKER_ON = AudioService.SPEAKER_OFF;
         }
 
         // select camera type button
@@ -106,16 +106,16 @@ public class SetupFragment extends BaseFragment {
         switch (v.getId()){
             case R.id.btn_audio_switch:
                 btnAudioSwitch.setEnabled(false);
-                if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_OFF){
+                if(AudioService.IS_MIC_ON == AudioService.MIC_OFF){
                     if(openAudio()){
                         btnAudioSwitch.setText(R.string.closeAudio);
 
                     }else{
-                        AudioCommon.IS_MIC_ON = AudioCommon.MIC_HANDS_UP;
+                        AudioService.IS_MIC_ON = AudioService.MIC_HANDS_UP;
                         btnAudioSwitch.setText(R.string.handsup);
 
                     }
-                }else if(AudioCommon.IS_MIC_ON == AudioCommon.MIC_ON){
+                }else if(AudioService.IS_MIC_ON == AudioService.MIC_ON){
                     if(closeAudio()){
                         btnAudioSwitch.setText(R.string.openAudio);
                     }else{
@@ -128,15 +128,15 @@ public class SetupFragment extends BaseFragment {
                 break;
             case R.id.btn_video_switch:
                 btnVideoSwitch.setEnabled(false);
-                if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_OFF){
+                if(VideoService.IS_CAMERA_OPEN == VideoService.CAMERA_OFF){
                     if(openVideo()){
                         btnVideoSwitch.setText(R.string.closeVideo);
                     }else{
-                        VideoCommon.IS_CAMERA_OPEN = VideoCommon.CAMERA_HOLD;
+                        VideoService.IS_CAMERA_OPEN = VideoService.CAMERA_HOLD;
                         btnVideoSwitch.setText(R.string.handsup);
 
                     }
-                }else if(VideoCommon.IS_CAMERA_OPEN == VideoCommon.CAMERA_ON){
+                }else if(VideoService.IS_CAMERA_OPEN == VideoService.CAMERA_ON){
                     if(closeVideo()){
                         btnVideoSwitch.setText(R.string.openVideo);
                         btnSwitchFrontBackCamera.setText(R.string.useBackCamera);
@@ -150,14 +150,14 @@ public class SetupFragment extends BaseFragment {
                 break;
             case R.id.btn_speaker_hand_free_switch:
                 btnSpeakerHandFreeSwitch.setEnabled(false);
-                if(AudioCommon.IS_SPEAKER_ON== AudioCommon.SPEAKER_OFF){
+                if(AudioService.IS_SPEAKER_ON== AudioService.SPEAKER_OFF){
                     if(setPlayoutSpeaker(true)){
                         btnSpeakerHandFreeSwitch.setText(R.string.closeSpeaker);
-                        AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_ON;
+                        AudioService.IS_SPEAKER_ON = AudioService.SPEAKER_ON;
                     }
-                }else if(AudioCommon.IS_SPEAKER_ON == AudioCommon.SPEAKER_ON){
+                }else if(AudioService.IS_SPEAKER_ON == AudioService.SPEAKER_ON){
                     if(setPlayoutSpeaker(false)){
-                        AudioCommon.IS_SPEAKER_ON = AudioCommon.SPEAKER_OFF;
+                        AudioService.IS_SPEAKER_ON = AudioService.SPEAKER_OFF;
                         btnSpeakerHandFreeSwitch.setText(R.string.openSpeaker);
                     }
                 }else{
@@ -178,7 +178,7 @@ public class SetupFragment extends BaseFragment {
                     TO_DISPLAY_CARMERA_TYPE = FRONT_CAMERA;
                     btnSwitchFrontBackCamera.setText(R.string.useFrontCamera);
                 }
-                roomCommon.getVideoCommon().switchVideo();
+                roomService.getVideoService().switchVideo();
                 break;
             case R.id.button_switchvideo_id:
                 VideoFragment videoFragment = ((MeetingActivity)getActivity()).getVideoFragment();
@@ -187,7 +187,7 @@ public class SetupFragment extends BaseFragment {
         }
     }
     private boolean openAudio(){
-        return roomCommon.getAudioCommon().openMic(roomCommon.getMe().getNodeId());
+        return roomService.getAudioService().openMic(roomService.getMe().getNodeId());
     }
     private boolean openSpeaker(){
         AudioManager audioManager =
@@ -247,11 +247,11 @@ public class SetupFragment extends BaseFragment {
     }
 
     private boolean muteAudio(boolean mute){
-        return roomCommon.getAudioCommon().muteMic(roomCommon.getMe().getNodeId(), mute);
+        return roomService.getAudioService().muteMic(roomService.getMe().getNodeId(), mute);
     }
 
     private boolean closeAudio(){
-        return roomCommon.getAudioCommon().closeMic(roomCommon.getMe().getNodeId());
+        return roomService.getAudioService().closeMic(roomService.getMe().getNodeId());
     }
     public void openLocalAudio(){
         if(btnAudioSwitch != null){
@@ -265,10 +265,10 @@ public class SetupFragment extends BaseFragment {
 
     }
     private boolean openVideo(){
-        return roomCommon.getVideoCommon().openVideo(roomCommon.getMe().getNodeId());
+        return roomService.getVideoService().openVideo(roomService.getMe().getNodeId());
     }
     private boolean closeVideo(){
-        return roomCommon.getVideoCommon().closeVideo(roomCommon.getMe().getNodeId());
+        return roomService.getVideoService().closeVideo(roomService.getMe().getNodeId());
     }
     public void showCloseLocalVideoOnVideoSwitch(){
         if(btnVideoSwitch != null){

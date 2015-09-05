@@ -27,7 +27,7 @@
         android:background="@color/liquid">
 
         <Button
-            android:id="@+id/btnAddIn"
+            android:id="@+id/btnJoin"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_7_80"
             android:layout_margin="@dimen/TextSize10"

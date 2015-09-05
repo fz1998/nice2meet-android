@@ -8,7 +8,7 @@
     android:gravity="center">
 
     <FrameLayout
-        android:id="@+id/flChat"
+        android:id="@+id/flChat_btn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -39,7 +39,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/flSet"
+        android:id="@+id/flSetup_btn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -54,7 +54,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/flExit"
+        android:id="@+id/flExit_btn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"

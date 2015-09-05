@@ -11,11 +11,6 @@ public class TextViewUtil {
 				return true;
 			}
 		}
-		
-		
 		return false;
 	}
-
-
-
 }

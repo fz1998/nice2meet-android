@@ -17,15 +17,14 @@ public class MyProgressDialog extends ProgressDialog{
 			this.message = message;
 		}
 	}
-	public MyProgressDialog(Context context){
-		super(context);
-	}
+
 	public MyProgressDialog(Context context, String message) {
 		super(context);
 		if(message != null){
 			this.message = message;
 		}
 	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

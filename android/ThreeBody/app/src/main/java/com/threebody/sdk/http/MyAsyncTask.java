@@ -39,12 +39,9 @@ public class MyAsyncTask extends AsyncTask<Void, Void, BaseResponse>{
 	@Override
 	protected void onPostExecute(BaseResponse result) {
 		super.onPostExecute(result);
-//        LoggerUtil.info(getClass().getName(), result.getLongErrorCode() + " " + result.getCode());
-
 		if(result != null){
             parser.onFinish(result);
 		}
-//		dialogDismiss();
 		parser.onFinish(null);
 	}
 

@@ -15,9 +15,9 @@ public class N2MApplication extends Application implements RoomSystem.RoomSystem
     public void onCreate() {
         super.onCreate();
 
-        RoomSystem.initializeAndroidGlobals(this, true, true);
-        RoomSystem.setVideoOptions(Constants.VIDEO_HGIGHT, Constants.VIDEO_WIDTH, Constants.VIDEO_FRAME_RATE);
-        RoomSystem.logEnable(true);
+        SingletonRoomSystem.getInstance().initializeAndroidGlobals(this, true, true);
+        SingletonRoomSystem.getInstance().setVideoOptions(Constants.VIDEO_HEIGHT, Constants.VIDEO_WIDTH, Constants.VIDEO_FRAME_RATE);
+        SingletonRoomSystem.getInstance().logEnable(true);
 
         // TODO: 2015/8/22  RoomSystem should be a signleton
         SingletonRoomSystem.getInstance().init(this, Constants.SERVER_URL, Constants.ACCESS_KEY, Constants.SECRET_KEY);
