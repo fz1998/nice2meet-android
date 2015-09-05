@@ -6,12 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.threebody.conference.R;
 import com.threebody.sdk.domain.N2MVideo;
 
 import org.st.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +29,7 @@ public class VideoSelectAdapter extends BaseAdapter {
 
     List<N2MVideo> n2MVideos;
     int firstCheck, secondCheck;
+//    List<Integer> positionArray = new ArrayList<Integer>();
     int checkCount = 0;
 
     public VideoSelectAdapter(Context context, List<N2MVideo> n2MVideos) {
@@ -35,18 +39,22 @@ public class VideoSelectAdapter extends BaseAdapter {
     }
 
     private void checkDevice(){
-        for(int i = 0; i < n2MVideos.size(); i++){
-            N2MVideo n2MVideo = n2MVideos.get(i);
+        checkCount = 0;
+        for(int position = 0; position < n2MVideos.size(); position++){
+            N2MVideo n2MVideo = n2MVideos.get(position);
             if(n2MVideo.isVideoChecked()){
                 if(checkCount == 0){
-                    firstCheck = i;
+                    firstCheck = position;
                 }else if(checkCount == 1){
-                    secondCheck = i;
+                    secondCheck = position;
                 }
                 checkCount++;
+
+//                replaceArrayWithData(checkCount, position);
             }
         }
     }
+
     @Override
     public int getCount() {
         return n2MVideos.size();
@@ -79,30 +87,37 @@ public class VideoSelectAdapter extends BaseAdapter {
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(cb.isChecked()){
-                    if(checkCount == 0){
+                checkDevice();
+                if (cb.isChecked()) {
+                    if (checkCount == 0) {
                         firstCheck = position;
+//                        replaceArrayWithData(checkCount, position);
                         checkCount++;
-
-                    }else if(checkCount == 1){
+                    } else if (checkCount == 1) {
                         secondCheck = position;
+//                        replaceArrayWithData(checkCount, position);
                         checkCount++;
-                    }else {
-                        n2MVideos.get(firstCheck).setVideoChecked(false);
-                        firstCheck = secondCheck;
-                        secondCheck = position;
+                    } else {
+                        cb.setChecked(false);
+                        Toast.makeText(context, "最多加入两路视频", Toast.LENGTH_SHORT).show();
                     }
-                }else{
+                } else {
                     checkCount--;
-                    if(position == firstCheck){
+                    if (position == firstCheck) {
                         firstCheck = secondCheck;
+//                        replaceArrayWithData(0, positionArray.get(1));
                     }
-
                 }
+//                Toast.makeText(context, "firstCheck:" + firstCheck + "," + positionArray.get(0).toString() +
+//                        "  secondCheck:" + secondCheck + "," + positionArray.get(1).toString(), Toast.LENGTH_SHORT).show();
                 n2MVideo.setVideoChecked(cb.isChecked());
                 notifyDataSetChanged();
             }
         });
     }
 
+//    private void replaceArrayWithData(int checkCount, int position) {
+//        if (positionArray.size() >= checkCount && positionArray.get(checkCount - 1) != null) positionArray.remove(checkCount - 1);
+//        positionArray.add(checkCount - 1, Integer.valueOf(position));
+//    }
 }
