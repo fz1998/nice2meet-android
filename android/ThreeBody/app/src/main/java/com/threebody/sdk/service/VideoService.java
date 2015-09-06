@@ -92,7 +92,7 @@ public class VideoService {
                 if(result == 0){
                     User user = roomService.findUserById(nodeId);
                     if(user != null){
-                        if(user.getNodeId() == roomService.getMe().getNodeId()){
+                        if(videoBelongToCurrentUser(user)){
                             IS_CAMERA_OPEN = CAMERA_ON;
                         }
                         user.setVideoOn(true);
@@ -110,6 +110,10 @@ public class VideoService {
                         }
                     }
                 }
+            }
+
+            private boolean videoBelongToCurrentUser(User user) {
+                return user.getNodeId() == roomService.getMe().getNodeId();
             }
 
             @Override
@@ -242,7 +246,7 @@ public class VideoService {
           return videoModule.removeVideoRender(nodeId, renderer);
     }
 
-    public  boolean switchVideo( ){
+    public  boolean switchCamera(){
         Video.CameraType now = (currentCameraType== Video.CameraType.Back ? Video.CameraType.Front: Video.CameraType.Back);
 //        return videoModule.removeVideoRender(nodeId, deviceId, renderer);
         if (videoModule.switchLocalVideo(now)){

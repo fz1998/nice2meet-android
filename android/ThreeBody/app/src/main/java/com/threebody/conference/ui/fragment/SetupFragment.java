@@ -178,7 +178,7 @@ public class SetupFragment extends BaseFragment {
                     TO_DISPLAY_CARMERA_TYPE = FRONT_CAMERA;
                     btnSwitchFrontBackCamera.setText(R.string.useFrontCamera);
                 }
-                roomService.getVideoService().switchVideo();
+                roomService.getVideoService().switchCamera();
                 break;
             case R.id.button_switchvideo_id:
                 VideoFragment videoFragment = ((MeetingActivity)getActivity()).getVideoFragment();
