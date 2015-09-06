@@ -11,7 +11,7 @@ import android.widget.ListView;
 import com.threebody.conference.R;
 import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.conference.ui.adapter.VideoSelectAdapter;
-import com.threebody.sdk.service.STSystem;
+import com.threebody.sdk.service.N2MRoomSystem;
 import com.threebody.sdk.domain.N2MVideo;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class VideoSelectFragment extends BaseFragment{
         super.initView(view);
         if(adapter == null){
             //// TODO: 2015/9/5 get(0) should be cleaned
-            adapter = new VideoSelectAdapter(getActivity(), STSystem.getInstance().getRoomCommons().get(0).getVideoService().getDevices());
+            adapter = new VideoSelectAdapter(getActivity(), N2MRoomSystem.instance().getRoomService().getVideoService().getDevices());
         }
         userList.setAdapter(adapter);
         btnAddIn.setOnClickListener(this);

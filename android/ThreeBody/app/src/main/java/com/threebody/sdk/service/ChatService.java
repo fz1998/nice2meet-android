@@ -27,7 +27,7 @@ public class ChatService {
     public ChatService(RoomService roomService, ChatCallback callback){
         this.callback = callback;
         this.roomService = roomService;
-        chatModule = roomService.getRoom().getChat();
+        chatModule = roomService.getRoomModule().getChat();
         roomService.setChatService(this);
         messageMap = new HashMap<>();
         messageMap.put(PUBLIC_MESSAGE, new ArrayList<MessageBean>());

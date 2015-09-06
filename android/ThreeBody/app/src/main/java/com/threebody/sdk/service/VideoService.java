@@ -46,8 +46,8 @@ public class VideoService {
     public VideoService(RoomService roomService, VideoCallback callback) {
         this.roomService = roomService;
         this.callback = callback;
-        videoModule = roomService.getRoom().getVideo();
-        screenModule = roomService.getRoom().getScreen();
+        videoModule = roomService.getRoomModule().getVideo();
+        screenModule = roomService.getRoomModule().getScreen();
         init();
     }
 
@@ -57,7 +57,7 @@ public class VideoService {
 
     private void init(){
 
-        videoModule = roomService.getRoom().getVideo();
+        videoModule = roomService.getRoomModule().getVideo();
         videoModule.setAutoRotation(false);
         roomService.setVideoService(this);
         initListener();

@@ -3,6 +3,8 @@ package cn.tee3.n2m;
 import android.app.Application;
 import android.util.Log;
 
+import com.threebody.sdk.service.N2MRoomSystem;
+
 import org.st.RoomInfo;
 import org.st.RoomSystem;
 
@@ -15,19 +17,18 @@ public class N2MApplication extends Application implements RoomSystem.RoomSystem
     public void onCreate() {
         super.onCreate();
 
-        SingletonRoomSystem.getInstance().initializeAndroidGlobals(this, true, true);
-        SingletonRoomSystem.getInstance().setVideoOptions(Constants.VIDEO_HEIGHT, Constants.VIDEO_WIDTH, Constants.VIDEO_FRAME_RATE);
-        SingletonRoomSystem.getInstance().logEnable(true);
+        N2MRoomSystem.instance().getRoomSystem().initializeAndroidGlobals(this, true, true);
+        N2MRoomSystem.instance().getRoomSystem().setVideoOptions(Constants.VIDEO_HEIGHT, Constants.VIDEO_WIDTH, Constants.VIDEO_FRAME_RATE);
+        N2MRoomSystem.instance().getRoomSystem().logEnable(true);
 
         // TODO: 2015/8/22  RoomSystem should be a signleton
-        SingletonRoomSystem.getInstance().init(this, Constants.SERVER_URL, Constants.ACCESS_KEY, Constants.SECRET_KEY);
+        N2MRoomSystem.instance().getRoomSystem().init(this, Constants.SERVER_URL, Constants.ACCESS_KEY, Constants.SECRET_KEY);
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        //// TODO: 2015/8/22 singleton
-        SingletonRoomSystem.getInstance().unInit();
+        N2MRoomSystem.instance().getRoomSystem().unInit();
     }
 
     @Override

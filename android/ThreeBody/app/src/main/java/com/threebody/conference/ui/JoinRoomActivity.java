@@ -10,7 +10,7 @@ import com.threebody.conference.ui.util.TextViewUtil;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.conference.ui.view.HttpProgressDialog;
 import com.threebody.sdk.service.RoomService;
-import com.threebody.sdk.service.STSystem;
+import com.threebody.sdk.service.N2MRoomSystem;
 import com.threebody.sdk.util.LoggerUtil;
 
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class JoinRoomActivity extends BaseActivity implements RoomService.JoinRe
         etName.setText(defaultName);
         etPassword.setText("admin");
 
-        //todo for testing, need to delete.
+        // TODO: 2015/9/6 for testing only, need to delete.
         joinConference();
     }
 
@@ -82,9 +82,9 @@ public class JoinRoomActivity extends BaseActivity implements RoomService.JoinRe
         final String name = etName.getText().toString();
         final String password = etPassword.getText().toString();
 
-        // obtain a room
+        // obtain a roomModule
         // TODO: 2015/9/5 to use SingletonRoomSystem
-        RoomService roomService = STSystem.getInstance().obtainRoom(num);
+        RoomService roomService = N2MRoomSystem.instance().obtainRoom(num);
 
         // set join result listener
         roomService.setJoinResultCallback(this);

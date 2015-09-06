@@ -16,11 +16,11 @@ import java.util.List;
 public class RoomService {
 
     String tag = getClass().getName();
-    protected Room room;
-    User me;
-    List<User> users;
+    private Room roomModule;
+    private User me;
+    private List<User> users;
 
-    JoinResultCallback joinResultCallback;
+    private JoinResultCallback joinResultCallback;
     private Room.RoomListener roomListener;
 
     protected ChatService chatService;
@@ -41,11 +41,11 @@ public class RoomService {
         return me;
     }
 
-    public Room getRoom(){
-        return this.room;
+    public Room getRoomModule(){
+        return this.roomModule;
     }
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setRoomModule(Room roomModule) {
+        this.roomModule = roomModule;
     }
 
     public void setChatService(ChatService chatService) {
@@ -76,7 +76,7 @@ public class RoomService {
      * @return
      */
     public boolean join(String userId, String userName, String password){
-        return room.join(userId, userName, password);
+        return roomModule.join(userId, userName, password);
     }
 
     /**
@@ -84,9 +84,9 @@ public class RoomService {
      * @return
      */
     public  boolean leave(){
-        if(room.leave()){
+        if(roomModule.leave()){
             dispose();
-            STSystem.getInstance().getRoomCommons().remove(this);
+//            N2MRoomSystem.instance().getRoomCommons().remove(this);
         }
 
         return false;
@@ -98,12 +98,10 @@ public class RoomService {
     public void dispose(){
         long begin= System.currentTimeMillis();
         Log.d("dispose begin time", "ms = " +begin);
-        room.dispose();
+        roomModule.dispose();
         long end = System.currentTimeMillis();
         Log.d("dispose end time", "ms = " +end);
         Log.d("dispose end time", "ms = " +(end-begin));
-
-
     }
 
 
@@ -112,11 +110,11 @@ public class RoomService {
      * @return
      */
     User getCurrentUser(){
-       return room.getSelf();
+       return roomModule.getSelf();
     }
 
     public User findUserById(int nodeId){
-        return room.getUser(nodeId);
+        return roomModule.getUser(nodeId);
     }
 
     private void initListener(){

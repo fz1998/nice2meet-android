@@ -17,7 +17,7 @@ import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.sdk.service.AudioService;
 import com.threebody.sdk.service.ChatService;
 import com.threebody.sdk.service.RoomService;
-import com.threebody.sdk.service.STSystem;
+import com.threebody.sdk.service.N2MRoomSystem;
 import com.threebody.sdk.service.VideoService;
 import com.threebody.sdk.domain.N2MVideo;
 import com.threebody.sdk.util.LoggerUtil;
@@ -142,7 +142,7 @@ public class MeetingActivity extends BaseActivity {
     private void initBizObjects(){
         // roomCommon
         // FIXME: 2015/9/5 to use SingletonRoomSystem
-        roomService = STSystem.getInstance().getRoomService();
+        roomService = N2MRoomSystem.instance().getRoomService();
         // chatModule common
         chatService = new ChatService(roomService, new ChatService.ChatCallback() {
             @Override

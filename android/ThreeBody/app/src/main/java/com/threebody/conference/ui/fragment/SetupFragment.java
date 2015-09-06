@@ -14,7 +14,7 @@ import com.threebody.conference.ui.MeetingActivity;
 import com.threebody.conference.ui.util.ToastUtil;
 import com.threebody.sdk.service.AudioService;
 import com.threebody.sdk.service.RoomService;
-import com.threebody.sdk.service.STSystem;
+import com.threebody.sdk.service.N2MRoomSystem;
 import com.threebody.sdk.service.VideoService;
 
 import butterknife.InjectView;
@@ -62,7 +62,7 @@ public class SetupFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         super.initView(view);
-        roomService = STSystem.getInstance().getRoomCommons().get(0);
+        roomService = N2MRoomSystem.instance().getRoomService();
         btnVideoSwitch.setOnClickListener(this);
         btnAudioSwitch.setOnClickListener(this);
         llHelp.setOnClickListener(this);

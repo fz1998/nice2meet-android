@@ -24,7 +24,7 @@ public class AudioService {
     RoomService roomService;
 
     public AudioService(RoomService roomService, AudioCallback callbak){
-        audioModule = roomService.getRoom().getAudio();
+        audioModule = roomService.getRoomModule().getAudio();
         this.callback = callbak;
         roomService.setAudioService(this);
         this.roomService = roomService;
