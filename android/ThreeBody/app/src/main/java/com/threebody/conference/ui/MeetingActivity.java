@@ -322,7 +322,7 @@ public class MeetingActivity extends BaseActivity {
         }
     };
 
-    public void changeToVideoSet() {
+    public void showVideoSelectFragment() {
         FragmentUtil.moveToRightFragment(this, R.id.mainScreenLinearLayout, videoSelectFragment);
     }
 }

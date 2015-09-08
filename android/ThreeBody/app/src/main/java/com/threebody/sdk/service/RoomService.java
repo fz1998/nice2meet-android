@@ -86,7 +86,6 @@ public class RoomService {
     public  boolean leave(){
         if(roomModule.leave()){
             dispose();
-//            N2MRoomSystem.instance().getRoomCommons().remove(this);
         }
 
         return false;

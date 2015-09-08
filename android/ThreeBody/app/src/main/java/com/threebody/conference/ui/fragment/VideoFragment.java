@@ -69,7 +69,7 @@ public class VideoFragment extends BaseFragment {
         lowerVideoWindow.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                ((MeetingActivity) getActivity()).changeToVideoSet();
+                ((MeetingActivity) getActivity()).showVideoSelectFragment();
                 return true;
             }
         });
@@ -118,7 +118,7 @@ public class VideoFragment extends BaseFragment {
         v1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                ((MeetingActivity) getActivity()).changeToVideoSet();
+                ((MeetingActivity) getActivity()).showVideoSelectFragment();
                 return true;
             }
         });

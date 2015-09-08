@@ -156,7 +156,7 @@ public class SetupFragment extends BaseFragment {
 
                 break;
             case R.id.btn_select_video:
-                ((MeetingActivity)getActivity()).changeToVideoSet();
+                ((MeetingActivity)getActivity()).showVideoSelectFragment();
                 break;
             case R.id.btn_switch_front_back_camera:
                 String tag = (String) btnSwitchFrontBackCamera.getTag();

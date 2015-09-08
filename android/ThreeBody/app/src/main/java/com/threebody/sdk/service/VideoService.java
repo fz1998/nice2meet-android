@@ -54,7 +54,7 @@ public class VideoService {
         initListener();
     }
 
-    private synchronized N2MVideo findDeviceById(int nodeid ,String deviceId){
+    private synchronized N2MVideo findVideoById(int nodeid, String deviceId){
         List<N2MVideo> videos = videoDisplayController.getVideoList();
         if(videos != null && !videos.isEmpty()){
             for (N2MVideo n2MVideo : videos){
@@ -110,7 +110,7 @@ public class VideoService {
             @Override
             synchronized public void onCloseVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onCloseVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
-                N2MVideo n2MVideo = findDeviceById(nodeId,deviceId);
+                N2MVideo n2MVideo = findVideoById(nodeId, deviceId);
                 if(n2MVideo != null) {
                     n2MVideo.setVideoChecked(false);
                 }
@@ -144,7 +144,7 @@ public class VideoService {
 
             @Override
             synchronized public void onVideoData(int nodeId, String deviceId, byte[] data, int len, int width, int height) {
-                // TODO: 2015/9/8 implement this if need to take care of raw videoModule data, in the future.
+                // TODO: 2015/9/8 implement this if need to take care of raw video data, in the future.
             }
         };
         videoModule.setListener(listener);
@@ -188,7 +188,7 @@ public class VideoService {
             public void onCloseScreen(int result, int nodeId, String screenId){
 
                 LoggerUtil.info(tag, "onCloseScreen result = "+result+" nodeId = "+nodeId+" deviceId = "+screenId);
-                N2MVideo video = findDeviceById(nodeId,screenId);
+                N2MVideo video = findVideoById(nodeId, screenId);
                 if (video != null) {
                     video.setVideoChecked(false);
                 }
