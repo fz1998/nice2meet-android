@@ -153,7 +153,7 @@ public class VideoService {
 
             @Override
             synchronized public void onVideoData(int nodeId, String deviceId, byte[] data, int len, int width, int height) {
-                //todo implement this if need to take care of raw videoModule data
+                // TODO: 2015/9/8 implement this if need to take care of raw videoModule data, in the future.
             }
         };
         videoModule.setListener(listener);
@@ -161,37 +161,45 @@ public class VideoService {
         screenListener = new Screen.ScreenListener(){
             @Override
             public void onShareScreen(int result, int nodeId, String screenId){
+
                 LoggerUtil.info(tag, "onShareScreen result = "+result+" nodeId = "+nodeId+" deviceId = "+screenId);
 
-//                if(result == 0){
-//                    User user = roomCommon.findUserById(nodeId);
-//                    if(user != null){
-//                        if(user.getNodeId() == roomCommon.getMe().getNodeId()){
-//                            IS_CAMERA_OPEN = CAMERA_ON;
-//                        }
-//                        user.setVideoOn(true);
-//
-//                        N2MVideo n2MVideo = new N2MVideo(nodeId, screenId, true);
-//                        if (checkDeviceShowCount()<2){
-//                            n2MVideo.setVideoChecked(true);
-//                        }
-//
-//                        n2MVideo.setUser(user);
-//                        devices.add(n2MVideo);
-//                        if(checkCallback()){
-//                            callback.onShareScreen(n2MVideo);
-//                        }
-//                    }
-//                }
+                if(result == 0){
+                    User user = roomService.findUserById(nodeId);
+                    if(user != null){
+                        if(videoBelongToCurrentUser(user)){
+                            IS_CAMERA_OPEN = CAMERA_ON;
+                        }
+                        user.setVideoOn(true);
+                        user.setUserName(user.getUserName() + " Screen"); // TODO: 2015/9/8 dirty. set user name as name + "screen"
+                        N2MVideo video = new N2MVideo(nodeId, screenId, true);
+                        video.setUser(user);
+
+                        //// TODO: 2015/9/1 should display videoModule here ,rather than come all the way from VideoFragment to do this
+                        // add new device to video display controller, attaching it to VideoWindow if possible
+                        videoDisplayController.addVideo(video);
+
+                        // call back for UI update
+                        // just ask UI to update, no device passed here ?
+                        if(checkCallback()){
+                            callback.onShareScreen(video);
+                        }
+                    }
+                }
+            }
+
+            // TODO: 2015/9/8 duplicated code here.
+            private boolean videoBelongToCurrentUser(User user) {
+                return user.getNodeId() == roomService.getMe().getNodeId();
             }
 
             @Override
             public void onCloseScreen(int result, int nodeId, String screenId){
+
                 LoggerUtil.info(tag, "onCloseScreen result = "+result+" nodeId = "+nodeId+" deviceId = "+screenId);
-                N2MVideo n2MVideo = findDeviceById(nodeId,screenId);
-                n2MVideo.setVideoChecked(false);
-                if(checkCallback()){
-                    callback.onCloseScreen(result, nodeId, screenId);
+                N2MVideo video = findDeviceById(nodeId,screenId);
+                if (video != null) {
+                    video.setVideoChecked(false);
                 }
                 if(result == 0){
                     User user = roomService.findUserById(nodeId);
@@ -201,13 +209,19 @@ public class VideoService {
                         }
                         user.setVideoOn(false);
                     }
+                    if(video != null){
+                        videoDisplayController.deleteVideo(video);
+                    }
+                }
+                if(checkCallback()){
+                    callback.onCloseScreen(result, nodeId, screenId);
                 }
             }
         };
 
-        if (screenModule == null)
-            return;
-        screenModule.setListener(screenListener);
+        if (screenModule != null) {
+            screenModule.setListener(screenListener);
+        }
 
     }
 
