@@ -135,15 +135,23 @@ public class VideoFragment extends BaseFragment {
 
 
     public void setAudioStatus(boolean isOpen, int nodeId){
+
+        if (upperVideoWindow.getVideo().getNodeId() == nodeId){
+            //upperwindow
+            upperVideoWindow.setAudioStatusIcon(isOpen);
+        }else {
+            lowerVideoWindow.setAudioStatusIcon(isOpen);
+        }
+
 //        if(deviceUpper != null && deviceUpper.getUser() != null){
 //            if(deviceUpper.getUser().getNodeId() == nodeId){
-                upperVideoWindow.setAudioStatusIcon(isOpen);
+//                upperVideoWindow.setAudioStatusIcon(isOpen);
 //                return;
 //            }
 //        }
 //        if(deviceLower != null && deviceLower.getUser() != null){
 //            if(deviceLower.getUser().getNodeId() == nodeId){
-                lowerVideoWindow.setAudioStatusIcon(isOpen);
+//                lowerVideoWindow.setAudioStatusIcon(isOpen);
 //            }
 //        }
 

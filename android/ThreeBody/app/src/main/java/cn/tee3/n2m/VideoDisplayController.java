@@ -14,6 +14,10 @@ import java.util.List;
  */
 public class VideoDisplayController {
 
+    public VideoWindow getUpperVideoWindow() {
+        return upperVideoWindow;
+    }
+
     private VideoWindow upperVideoWindow;
     private VideoWindow lowerVideoWindow;
 

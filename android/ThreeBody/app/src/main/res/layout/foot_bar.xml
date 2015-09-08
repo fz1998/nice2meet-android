@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_7_80"
     android:orientation="horizontal"
-    android:background="@drawable/topbg"
+    android:background="#000000"
     android:layout_gravity="bottom"
     android:gravity="center">
 
     <FrameLayout
         android:id="@+id/flChat_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:tag="0"
@@ -21,10 +21,40 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/TextSize10"/>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <FrameLayout
+                android:id="@+id/layout_chat_number_id"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="#ff0000"
+                android:visibility="invisible"
+                >
+
+                <TextView
+                    android:id="@+id/text_chat_number_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:text="123"
+                    android:textColor="#ffffff"
+                    />
+
+            </FrameLayout>
+
+        </RelativeLayout>
+
     </FrameLayout>
     <FrameLayout
         android:id="@+id/flVideo_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/botbg"
@@ -40,7 +70,7 @@
 
     <FrameLayout
         android:id="@+id/flSetup_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:tag="2"
@@ -55,7 +85,7 @@
 
     <FrameLayout
         android:id="@+id/flExit_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:layout_gravity="center">
@@ -68,3 +98,5 @@
     </FrameLayout>
 
 </LinearLayout>
+
+    <!--android:background="@drawable/topbg"-->
