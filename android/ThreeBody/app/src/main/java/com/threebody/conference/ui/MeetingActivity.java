@@ -32,6 +32,12 @@ import butterknife.InjectView;
  */
 public class MeetingActivity extends BaseActivity {
 
+    public static final int SCREEN_CLOSE= 40005;
+    public static final int SCREEN_OPEN= 40004;
+    public static final int VIDEO_STATUS = 40003;
+    public static final int VIDEO_CLOSE= 40002;
+    public static final int VIDEO_OPEN= 40001;
+
     @InjectView(R.id.flChat_btn)FrameLayout flChatBtn;
     @InjectView(R.id.flVideo_btn)FrameLayout flVideoBtn;
     @InjectView(R.id.flSetup_btn)FrameLayout flSetupBtn;
@@ -168,7 +174,7 @@ public class MeetingActivity extends BaseActivity {
 
                 if(result == 0){
                     Message msg = new Message();
-                    msg.what = VideoService.VIDEO_STATUS;
+                    msg.what = VIDEO_STATUS;
                     msg.obj = true;
                     msg.arg1 = nodeId;
                     handler.sendMessage(msg);
@@ -180,7 +186,7 @@ public class MeetingActivity extends BaseActivity {
 
                 if(result == 0){
                     Message msg = new Message();
-                    msg.what = VideoService.VIDEO_STATUS;
+                    msg.what = VIDEO_STATUS;
                     msg.obj = true;
                     msg.arg1 = nodeId;
                     handler.sendMessage(msg);
@@ -196,7 +202,7 @@ public class MeetingActivity extends BaseActivity {
             @Override
             public void onOpenVideo(N2MVideo n2MVideo) {
                 Message msg = new Message();
-                msg.what = VideoService.VIDEO_OPEN;
+                msg.what = VIDEO_OPEN;
                 msg.obj = n2MVideo;
                 handler.sendMessage(msg);
             }
@@ -206,7 +212,7 @@ public class MeetingActivity extends BaseActivity {
 
                 N2MVideo n2MVideo = new N2MVideo(nodeId,deviceId);
                 Message msg = new Message();
-                msg.what = VideoService.VIDEO_CLOSE;
+                msg.what = VIDEO_CLOSE;
                 msg.obj = n2MVideo;
 
                 handler.sendMessage(msg);
@@ -216,7 +222,7 @@ public class MeetingActivity extends BaseActivity {
             public void onShareScreen(N2MVideo n2MVideo)
             {
                 Message msg = new Message();
-                msg.what = VideoService.SCREEN_OPEN;
+                msg.what = SCREEN_OPEN;
                 msg.obj = n2MVideo;
                 handler.sendMessage(msg);
             }
@@ -225,7 +231,7 @@ public class MeetingActivity extends BaseActivity {
             {
                 N2MVideo n2MVideo = new N2MVideo(nodeId,deviceId, true);
                 Message msg = new Message();
-                msg.what = VideoService.SCREEN_CLOSE;
+                msg.what = SCREEN_CLOSE;
                 msg.obj = n2MVideo;
                 handler.sendMessage(msg);
             }
@@ -270,12 +276,14 @@ public class MeetingActivity extends BaseActivity {
         showDialog();
 
     }
+
+
     Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
 
             switch (msg.what){
-                case VideoService.VIDEO_OPEN:
+                case VIDEO_OPEN:
                     N2MVideo n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.refreshVideoWindows();
                     // update Setup Fragment UI
@@ -284,14 +292,14 @@ public class MeetingActivity extends BaseActivity {
                     }
 
                     break;
-                case VideoService.VIDEO_CLOSE:
+                case VIDEO_CLOSE:
                     n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.refreshVideoWindows();
                     if(n2MVideo.getNodeId() == roomService.getMe().getNodeId()){
                         setupFragment.showOpenLocalVideoOnVideoSwitch();
                     }
                     break;
-                case VideoService.SCREEN_OPEN:
+                case SCREEN_OPEN:
                     n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.refreshVideoWindows();;
                     if(n2MVideo.getNodeId() == roomService.getMe().getNodeId()){
@@ -299,14 +307,14 @@ public class MeetingActivity extends BaseActivity {
                     }
 
                     break;
-                case VideoService.SCREEN_CLOSE:
+                case SCREEN_CLOSE:
                     n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.refreshVideoWindows();;
                     if(n2MVideo.getNodeId() == roomService.getMe().getNodeId()){
                         setupFragment.showOpenLocalVideoOnVideoSwitch();
                     }
                     break;
-                case VideoService.VIDEO_STATUS:
+                case VIDEO_STATUS:
                     boolean isOpen = (Boolean)msg.obj;
                     videoFragment.setAudioStatus(isOpen, msg.arg1);
                     break;

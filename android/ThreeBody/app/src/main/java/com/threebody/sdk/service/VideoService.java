@@ -18,26 +18,18 @@ import cn.tee3.n2m.VideoDisplayController;
 public class VideoService {
 
     protected String tag = getClass().getName();
-    public static final int CAMERA_OFF = 0;
-    public static final int CAMERA_ON = 1;
-    public static final int CAMERA_HOLD = 2;
-    public static final int VIDEO_OPEN= 40001;
-    public static final int VIDEO_CLOSE= 40002;
-    public static final int VIDEO_STATUS = 40003;
-    public static final int SCREEN_OPEN= 40004;
-    public static final int SCREEN_CLOSE= 40005;
 
     private VideoDisplayController videoDisplayController;
 
-    //// FIXME: 2015/9/5 no use static flag
-    public static  int IS_CAMERA_OPEN = CAMERA_OFF;
     Video.CameraType currentCameraType;
     RoomService roomService;
-    protected VideoCallback callback;
     Video videoModule;
-    Screen.ScreenListener screenListener;
+    private boolean isVideoOn = false;
 
+    Screen.ScreenListener screenListener;
     Screen screenModule;
+
+    protected VideoCallback callback;
 
     public void setVideoDisplayController(VideoDisplayController videoDisplayController) {
         this.videoDisplayController = videoDisplayController;
@@ -56,7 +48,6 @@ public class VideoService {
     }
 
     private void init(){
-
         videoModule = roomService.getRoomModule().getVideo();
         videoModule.setAutoRotation(false);
         roomService.setVideoService(this);
@@ -93,7 +84,7 @@ public class VideoService {
                     User user = roomService.findUserById(nodeId);
                     if(user != null){
                         if(videoBelongToCurrentUser(user)){
-                            IS_CAMERA_OPEN = CAMERA_ON;
+                            isVideoOn = true;
                         }
                         user.setVideoOn(true);
                         N2MVideo video = new N2MVideo(nodeId, deviceId);
@@ -105,7 +96,7 @@ public class VideoService {
 
                         // call back for UI update
                         // just ask UI to update, no device passed here ?
-                        if(checkCallback()){
+                        if(callback != null){
                             callback.onOpenVideo(video);
                         }
                     }
@@ -128,7 +119,7 @@ public class VideoService {
                     User user = roomService.findUserById(nodeId);
                     if(user != null){
                         if(user.getNodeId() == getRoomService().getMe().getNodeId()){
-                            IS_CAMERA_OPEN = CAMERA_OFF;
+                            isVideoOn = false;
                         }
                         user.setVideoOn(false);
                     }
@@ -138,7 +129,7 @@ public class VideoService {
                     }
                 }
 
-                if(checkCallback()){
+                if(callback != null){
                     callback.onCloseVideo(result, nodeId, deviceId);
                 }
             }
@@ -146,7 +137,7 @@ public class VideoService {
             @Override
             synchronized public void onRequestOpenVideo(int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onRequestOpenVideo nodeId = "+nodeId+" deviceId = "+deviceId);
-                if(checkCallback()){
+                if(callback != null){
                     callback.onRequestOpenVideo(nodeId, deviceId);
                 }
             }
@@ -168,7 +159,7 @@ public class VideoService {
                     User user = roomService.findUserById(nodeId);
                     if(user != null){
                         if(videoBelongToCurrentUser(user)){
-                            IS_CAMERA_OPEN = CAMERA_ON;
+                            isVideoOn = true;
                         }
                         user.setVideoOn(true);
                         user.setUserName(user.getUserName() + " Screen"); // TODO: 2015/9/8 dirty. set user name as name + "screen"
@@ -181,7 +172,7 @@ public class VideoService {
 
                         // call back for UI update
                         // just ask UI to update, no device passed here ?
-                        if(checkCallback()){
+                        if(callback != null){
                             callback.onShareScreen(video);
                         }
                     }
@@ -205,7 +196,7 @@ public class VideoService {
                     User user = roomService.findUserById(nodeId);
                     if(user != null){
                         if(user.getNodeId() == getRoomService().getMe().getNodeId()){
-                            IS_CAMERA_OPEN = CAMERA_OFF;
+                            isVideoOn = false;
                         }
                         user.setVideoOn(false);
                     }
@@ -213,7 +204,7 @@ public class VideoService {
                         videoDisplayController.deleteVideo(video);
                     }
                 }
-                if(checkCallback()){
+                if(callback != null){
                     callback.onCloseScreen(result, nodeId, screenId);
                 }
             }
@@ -225,14 +216,14 @@ public class VideoService {
 
     }
 
-    public boolean openVideo(int nodeId){
+    public boolean openLocalVideo(int nodeId){
         if(videoModule.openLocalVideo(Video.CameraType.Front)){
             currentCameraType  = Video.CameraType.Front;
-            IS_CAMERA_OPEN = CAMERA_ON;
+            isVideoOn = true;
             return true;
         }else if(videoModule.openLocalVideo(Video.CameraType.Back)){
             currentCameraType  = Video.CameraType.Back;
-            IS_CAMERA_OPEN = CAMERA_ON;
+            isVideoOn = true;
             return true;
         }
         return false;
@@ -240,7 +231,7 @@ public class VideoService {
 
     public boolean closeVideo(int nodeId){
         if(videoModule.closeVideo(nodeId)){
-            IS_CAMERA_OPEN = CAMERA_OFF;
+            isVideoOn = false;
             return true;
         }
         return false;
@@ -256,22 +247,21 @@ public class VideoService {
     }
 
     public  boolean removeVideoRender(int nodeId,String deviceId, VideoRenderer renderer){
-//        return videoModule.removeVideoRender(nodeId, deviceId, renderer);
           return videoModule.removeVideoRender(nodeId, renderer);
     }
 
     public  boolean switchCamera(){
         Video.CameraType now = (currentCameraType== Video.CameraType.Back ? Video.CameraType.Front: Video.CameraType.Back);
-//        return videoModule.removeVideoRender(nodeId, deviceId, renderer);
-        if (videoModule.switchLocalVideo(now)){
+        if (videoModule.switchLocalVideo(now)) {
             currentCameraType = now;
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
-    protected boolean checkCallback(){
-        return callback != null;
+    public boolean isVideoOn() {
+        return isVideoOn;
     }
 
     public interface VideoCallback{
