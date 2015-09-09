@@ -30,6 +30,10 @@ public class VideoWindow extends FrameLayout {
     // biz objects
     VideoService videoService;
 
+    public N2MVideo getVideo() {
+        return video;
+    }
+
     // when N2MVideo and VideoRenderer objects are connected, the video show up
     N2MVideo video;
     VideoRenderer mRenderer;
@@ -81,17 +85,18 @@ public class VideoWindow extends FrameLayout {
         if (video == null) {
             // could be detached or never attached.
             tvUserName.setText("");
+            ivAudioStatus.setVisibility(INVISIBLE);
             return;
         } else {
 
             // show the whole window
 
             llVideoWindow.setVisibility(View.VISIBLE);
-
             // show user name
             tvUserName.setText(video.getUser().getUserName());
 
             // show audio icon
+            ivAudioStatus.setVisibility(VISIBLE);
             if (video.getUser().isAudioOn()) {
                 ivAudioStatus.setImageResource(R.drawable.status_sound);
             } else {

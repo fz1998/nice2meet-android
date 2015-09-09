@@ -2,17 +2,23 @@ package com.threebody.conference.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.threebody.conference.R;
 import com.threebody.conference.ui.fragment.ChatFragment;
 import com.threebody.conference.ui.fragment.SetupFragment;
 import com.threebody.conference.ui.fragment.VideoFragment;
 import com.threebody.conference.ui.fragment.VideoSelectFragment;
+import com.threebody.conference.ui.fragment.VideoWindow;
 import com.threebody.conference.ui.util.FragmentUtil;
 import com.threebody.sdk.service.AudioService;
 import com.threebody.sdk.service.ChatService;
@@ -43,13 +49,12 @@ public class MeetingActivity extends BaseActivity {
     @InjectView(R.id.flSetup_btn)FrameLayout flSetupBtn;
     @InjectView(R.id.flExit_btn)FrameLayout flExitBtn;
 
-    ChatFragment chatFragment;
+    ChatFragment chatFragment; FrameLayout chatNumberLayout; TextView chatNumberText; int chatNumber = 0;
     VideoFragment videoFragment;
     SetupFragment setupFragment;
     VideoSelectFragment videoSelectFragment;
     List<FrameLayout> btnList;
     List<Fragment> fragmentList;
-    int fragmentIndex = 1;
 
     // biz objects
     RoomService roomService;
@@ -68,8 +73,8 @@ public class MeetingActivity extends BaseActivity {
         super.initUI();
 
         getSupportActionBar().hide();
-        flChatBtn.setOnClickListener(this);
-        flVideoBtn.setOnClickListener(this);
+        flChatBtn.setOnClickListener(this); chatNumberLayout = (FrameLayout) findViewById(R.id.layout_chat_number_id);
+        flVideoBtn.setOnClickListener(this); chatNumberText = (TextView) findViewById(R.id.text_chat_number_id);
         flSetupBtn.setOnClickListener(this);
         flExitBtn.setOnClickListener(this);
         btnList = new ArrayList<>();
@@ -91,27 +96,35 @@ public class MeetingActivity extends BaseActivity {
         // init biz objects
         initBizObjects();
     }
-
+    int oldIndex = 1;
+    int fragmentIndex = 1;
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
-            case R.id.flChat_btn:
-            case R.id.flVideo_btn:
-            case R.id.flSetup_btn:
-                int oldIndex = fragmentIndex;
-                btnList.get(fragmentIndex).setBackgroundResource(R.color.liquid);
-                fragmentIndex = Integer.parseInt((String)v.getTag());
-                if(oldIndex != fragmentIndex){
-                    v.setBackgroundResource(R.drawable.topbg);
-                    changeFragment(oldIndex, fragmentIndex);
-                }
-                break;
-            case R.id.flExit_btn:
-               showDialog();
-                break;
-            default:
-                break;
+        int viewIndex = Integer.parseInt((String)v.getTag());
+        oldIndex = fragmentIndex;
+        fragmentIndex = viewIndex;
+        //do nothing if it's the same button as previous one
+        if (oldIndex == viewIndex){
+            return;
+        }
+
+        //flExit_btn
+        if (v.getId() == R.id.flExit_btn){
+            showDialog();
+            return;
+        }
+
+        //else
+        btnList.get(oldIndex).setBackgroundResource(R.color.liquid);
+        if(oldIndex != fragmentIndex){
+            v.setBackgroundResource(R.drawable.topbg);
+            changeFragment(oldIndex, fragmentIndex);
+        }
+        if (Integer.parseInt((String)v.getTag()) == 0){
+            //chatfragment
+            chatNumberLayout.setVisibility(View.INVISIBLE);
+            chatNumber = 0;
         }
     }
     private void changeFragment(int old, int index){
@@ -153,8 +166,16 @@ public class MeetingActivity extends BaseActivity {
         chatService = new ChatService(roomService, new ChatService.ChatCallback() {
             @Override
             public void onReceivePublicMessage(int nodeId, String message) {
-                LoggerUtil.info(getClass().getName(), " receive public message nodeId = "+nodeId +" message = "+message);
-                    chatFragment.receivePublicMessage();
+                LoggerUtil.info(getClass().getName(), " receive public message nodeId = " + nodeId + " message = " + message);
+                chatFragment.receivePublicMessage();
+
+                if (fragmentIndex == 0){
+                    return;
+                }
+
+                ChatNumberRefreshTask task = new ChatNumberRefreshTask();
+                task.execute();
+
             }
 
             @Override
@@ -187,7 +208,7 @@ public class MeetingActivity extends BaseActivity {
                 if(result == 0){
                     Message msg = new Message();
                     msg.what = VIDEO_STATUS;
-                    msg.obj = true;
+                    msg.obj = false;
                     msg.arg1 = nodeId;
                     handler.sendMessage(msg);
                 }
@@ -281,10 +302,10 @@ public class MeetingActivity extends BaseActivity {
     Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-
+            N2MVideo n2MVideo;
             switch (msg.what){
                 case VIDEO_OPEN:
-                    N2MVideo n2MVideo = (N2MVideo)msg.obj;
+                    n2MVideo = (N2MVideo)msg.obj;
                     videoFragment.refreshVideoWindows();
                     // update Setup Fragment UI
                     if(n2MVideo.getNodeId() == roomService.getMe().getNodeId()){
@@ -324,5 +345,21 @@ public class MeetingActivity extends BaseActivity {
 
     public void showVideoSelectFragment() {
         FragmentUtil.moveToRightFragment(this, R.id.mainScreenLinearLayout, videoSelectFragment);
+    }
+
+    private class ChatNumberRefreshTask extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            chatNumber++;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+//            super.onPostExecute(aVoid);
+            chatNumberText.setText(chatNumber + "");
+            chatNumberLayout.setVisibility(View.VISIBLE);
+        }
     }
 }
