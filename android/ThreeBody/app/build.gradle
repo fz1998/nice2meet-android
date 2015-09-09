@@ -27,9 +27,14 @@ dependencies {
 //    testCompile 'org.testng:testng:6.0.1'
 
     // moved from library module here @08:18, 20150906
-    compile files('libs/fastjson.jar')
-    compile files('libs/android-async-http-1.4.4-fix.jar')
-    compile files('libs/mcu1.3_sdk.jar')
+//    compile files('libs/fastjson.jar')
+//    compile files('libs/android-async-http-1.4.4-fix.jar')
+//    compile files('libs/mcu1.3_sdk.jar')
+
+    // moved libs out of source tree
+    compile files('../libs/fastjson.jar')
+    compile files('../libs/android-async-http-1.4.4-fix.jar')
+    compile files('../libs/mcu1.3_sdk.jar')
 
 }
 
