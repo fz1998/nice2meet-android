@@ -1,0 +1,7 @@
+/.gradle
+/.idea
+/.navigation
+.DS_Store
+/build
+/gradle
+/misc
