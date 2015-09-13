@@ -24,7 +24,7 @@ public class VideoService {
     Video.CameraType currentCameraType;
     RoomService roomService;
     Video videoModule;
-    private boolean isVideoOn = false;
+    private boolean isLocalVideoOn = false;
 
     Screen.ScreenListener screenListener;
     Screen screenModule;
@@ -54,12 +54,17 @@ public class VideoService {
         initListener();
     }
 
-    private synchronized N2MVideo findVideoById(int nodeid, String deviceId){
+    private synchronized N2MVideo findVideoByIdAndDevice(int nodeid, String deviceId){
         List<N2MVideo> videos = videoDisplayController.getVideoList();
         if(videos != null && !videos.isEmpty()){
             for (N2MVideo n2MVideo : videos){
-                if(deviceId.equals(n2MVideo.getDeviceId()) && n2MVideo.getNodeId() == nodeid){
-                    return n2MVideo;
+//                if(deviceId.equals(n2MVideo.getDeviceId()) && n2MVideo.getNodeId() == nodeid){
+//                    return n2MVideo;
+//                }
+                if (n2MVideo.getNodeId() == nodeid){
+                    if (deviceId.equals(n2MVideo.getDeviceId()) || n2MVideo.getDeviceId() == ""){
+                        return  n2MVideo;
+                    }
                 }
             }
         }
@@ -83,16 +88,39 @@ public class VideoService {
                 if(result == 0){
                     User user = roomService.findUserById(nodeId);
                     if(user != null){
-                        if(videoBelongToCurrentUser(user)){
-                            isVideoOn = true;
+                        if(videoBelongToLocalUser(user)){
+                            isLocalVideoOn = true;
                         }
-                        user.setVideoOn(true);
-                        N2MVideo video = new N2MVideo(nodeId, deviceId);
-                        video.setUser(user);
+
+//                        List<N2MVideo> videoList = videoDisplayController.getVideoListById(nodeId);
+//                        if (videoList.size() == 0) {
+//                            N2MVideo video = new N2MVideo(nodeId, deviceId);
+//                            videoList.set(0, new N2MVideo(nodeId));
+//                            video.setUser(user);
+//                            videoDisplayController.addVideo(video);
+//                        }else {
+//                            for (N2MVideo video: videoList) {
+//                                video.setUser(user);
+//                            }
+//                        }
+
+                        N2MVideo video = findVideoByIdAndDevice(nodeId, deviceId);
+                        if (video == null) {
+                            video = new N2MVideo(nodeId, deviceId);
+                            user.setVideoOn(true);
+                            video.setUser(user);
+                            videoDisplayController.addVideo(video);
+                        } else {
+                            //check if the device is null
+                            video.getUser().setVideoOn(true);
+                            if (video.getDeviceId() == null || video.getDeviceId() == ""){
+                                video.setDeviceId(deviceId);
+                            }
+                        }
+
 
                         //// TODO: 2015/9/1 should display videoModule here ,rather than come all the way from VideoFragment to do this
                         // add new device to video display controller, attaching it to VideoWindow if possible
-                        videoDisplayController.addVideo(video);
 
                         // call back for UI update
                         // just ask UI to update, no device passed here ?
@@ -103,29 +131,28 @@ public class VideoService {
                 }
             }
 
-            private boolean videoBelongToCurrentUser(User user) {
+            private boolean videoBelongToLocalUser(User user) {
                 return user.getNodeId() == roomService.getMe().getNodeId();
             }
 
             @Override
             synchronized public void onCloseVideo(int result, int nodeId, String deviceId) {
                 LoggerUtil.info(tag, "onCloseVideo result = "+result+" nodeId = "+nodeId+" deviceId = "+deviceId);
-                N2MVideo n2MVideo = findVideoById(nodeId, deviceId);
-                if(n2MVideo != null) {
-                    n2MVideo.setVideoChecked(false);
-                }
 
                 if(result == 0){
                     User user = roomService.findUserById(nodeId);
-                    if(user != null){
-                        if(user.getNodeId() == getRoomService().getMe().getNodeId()){
-                            isVideoOn = false;
+                    if(user != null) {
+                        if (user.getNodeId() == getRoomService().getMe().getNodeId()) {
+                            isLocalVideoOn = false;
                         }
-                        user.setVideoOn(false);
-                    }
+//                        user.setVideoOn(false);
 
-                    if(n2MVideo != null){
-                        videoDisplayController.deleteVideo(n2MVideo);
+                        N2MVideo video = findVideoByIdAndDevice(nodeId, deviceId);
+
+                        if (video != null && !video.getUser().isAudioOn()) {
+                            videoDisplayController.deleteVideo(video);
+                            video.getUser().setVideoOn(false);
+                        }
                     }
                 }
 
@@ -144,7 +171,7 @@ public class VideoService {
 
             @Override
             synchronized public void onVideoData(int nodeId, String deviceId, byte[] data, int len, int width, int height) {
-                // TODO: 2015/9/8 implement this if need to take care of raw video data, in the future.
+                // TODO: 2015/9/8 implement this if need to take care of raw videoModule data, in the future.
             }
         };
         videoModule.setListener(listener);
@@ -159,11 +186,21 @@ public class VideoService {
                     User user = roomService.findUserById(nodeId);
                     if(user != null){
                         if(videoBelongToCurrentUser(user)){
-                            isVideoOn = true;
+                            isLocalVideoOn = true;
                         }
                         user.setVideoOn(true);
                         user.setUserName(user.getUserName() + " Screen"); // TODO: 2015/9/8 dirty. set user name as name + "screen"
-                        N2MVideo video = new N2MVideo(nodeId, screenId, true);
+
+                        N2MVideo video = videoDisplayController.getVideoById(nodeId);
+                        if (video == null) {
+                            video = new N2MVideo(nodeId, screenId, true);
+                        } else {
+                            //check if the device is null
+//                            if (video.getDeviceId() == null || video.getDeviceId() == ""){
+//                                video.setDeviceId(deviceId);
+//                            }
+                        }
+
                         video.setUser(user);
 
                         //// TODO: 2015/9/1 should display videoModule here ,rather than come all the way from VideoFragment to do this
@@ -188,7 +225,7 @@ public class VideoService {
             public void onCloseScreen(int result, int nodeId, String screenId){
 
                 LoggerUtil.info(tag, "onCloseScreen result = "+result+" nodeId = "+nodeId+" deviceId = "+screenId);
-                N2MVideo video = findVideoById(nodeId, screenId);
+                N2MVideo video = findVideoByIdAndDevice(nodeId, screenId);
                 if (video != null) {
                     video.setVideoChecked(false);
                 }
@@ -196,7 +233,7 @@ public class VideoService {
                     User user = roomService.findUserById(nodeId);
                     if(user != null){
                         if(user.getNodeId() == getRoomService().getMe().getNodeId()){
-                            isVideoOn = false;
+                            isLocalVideoOn = false;
                         }
                         user.setVideoOn(false);
                     }
@@ -219,11 +256,11 @@ public class VideoService {
     public boolean openLocalVideo(int nodeId){
         if(videoModule.openLocalVideo(Video.CameraType.Front)){
             currentCameraType  = Video.CameraType.Front;
-            isVideoOn = true;
+            isLocalVideoOn = true;
             return true;
         }else if(videoModule.openLocalVideo(Video.CameraType.Back)){
             currentCameraType  = Video.CameraType.Back;
-            isVideoOn = true;
+            isLocalVideoOn = true;
             return true;
         }
         return false;
@@ -231,7 +268,7 @@ public class VideoService {
 
     public boolean closeVideo(int nodeId){
         if(videoModule.closeVideo(nodeId)){
-            isVideoOn = false;
+            isLocalVideoOn = false;
             return true;
         }
         return false;
@@ -247,7 +284,7 @@ public class VideoService {
     }
 
     public  boolean removeVideoRender(int nodeId,String deviceId, VideoRenderer renderer){
-          return videoModule.removeVideoRender(nodeId, renderer);
+        return videoModule.removeVideoRender(nodeId, renderer);
     }
 
     public  boolean switchCamera(){
@@ -260,15 +297,15 @@ public class VideoService {
         }
     }
 
-    public boolean isVideoOn() {
-        return isVideoOn;
+    public boolean isLocalVideoOn() {
+        return isLocalVideoOn;
     }
 
     public interface VideoCallback{
-         void onShareScreen(N2MVideo n2MVideo);
-         void onCloseScreen(int result, int nodeId, String deviceId);
-         void onOpenVideo(N2MVideo n2MVideo);
-         void onCloseVideo(int result, int nodeId, String deviceId);
-         void onRequestOpenVideo(int nodeId, String deviceId);
+        void onShareScreen(N2MVideo n2MVideo);
+        void onCloseScreen(int result, int nodeId, String deviceId);
+        void onOpenVideo(N2MVideo n2MVideo);
+        void onCloseVideo(int result, int nodeId, String deviceId);
+        void onRequestOpenVideo(int nodeId, String deviceId);
     }
 }

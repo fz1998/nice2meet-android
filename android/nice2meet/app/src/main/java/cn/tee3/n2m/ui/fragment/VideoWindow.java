@@ -24,7 +24,7 @@ public class VideoWindow extends FrameLayout {
     View llVideoWindow;
 
     TextView tvUserName;
-    ImageView ivAudioStatus;
+    ImageView ivAudioStatus; ImageView backGroundImage;
     ProgressBar progressBar;
 
     // biz objects
@@ -58,7 +58,7 @@ public class VideoWindow extends FrameLayout {
     private void init() {
         // the container for all views inside llVideoFragment window
         llVideoWindow = LayoutInflater.from(getContext()).inflate(R.layout.video_window, null);
-
+        backGroundImage = (ImageView) llVideoWindow.findViewById(R.id.image_video_window_id);///////////////////////////////
         tvUserName = (TextView) llVideoWindow.findViewById(R.id.tvUserName);
         ivAudioStatus = (ImageView) llVideoWindow.findViewById(R.id.ivAudioStatus);
 
@@ -86,23 +86,42 @@ public class VideoWindow extends FrameLayout {
             // could be detached or never attached.
             tvUserName.setText("");
             ivAudioStatus.setVisibility(INVISIBLE);
+            backGroundImage.setVisibility(VISIBLE);
             return;
-        } else {
+        } else if (video.isVideoChecked()){
 
             // show the whole window
-
             llVideoWindow.setVisibility(View.VISIBLE);
             // show user name
             tvUserName.setText(video.getUser().getUserName());
 
             // show audio icon
             ivAudioStatus.setVisibility(VISIBLE);
+            backGroundImage.setVisibility(INVISIBLE);
             if (video.getUser().isAudioOn()) {
                 ivAudioStatus.setImageResource(R.drawable.status_sound);
             } else {
                 ivAudioStatus.setImageResource(R.drawable.status_soundoff);
             }
         }
+
+//        if (video.isVideoChecked()) {
+//            // show the whole window
+//            llVideoWindow.setVisibility(View.VISIBLE);
+//            // show user name
+//            tvUserName.setText(video.getUser().getUserName());
+//
+//            // show audio icon
+//            ivAudioStatus.setVisibility(VISIBLE);
+//            backGroundImage.setVisibility(INVISIBLE);
+//            if (video.getUser().isAudioOn()) {
+//                ivAudioStatus.setImageResource(R.drawable.status_sound);
+//            } else {
+//                ivAudioStatus.setImageResource(R.drawable.status_soundoff);
+//            }
+//        }else {
+//
+//        }
     }
 
     public void setAudioStatusIcon(boolean isOpen) {

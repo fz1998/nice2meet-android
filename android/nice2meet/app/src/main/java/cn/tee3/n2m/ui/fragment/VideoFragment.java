@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import cn.tee3.n2m.R;
+import cn.tee3.n2m.biz.service.AudioService;
 import cn.tee3.n2m.biz.service.VideoService;
 import cn.tee3.n2m.ui.activity.MeetingActivity;
 import cn.tee3.n2m.ui.VideoDisplayController;
@@ -23,6 +24,7 @@ public class VideoFragment extends BaseFragment {
     VideoWindow lowerVideoWindow;
 
     VideoService videoService;
+    AudioService audioService;
 
     public VideoDisplayController getVideoDisplayController() {
         return videoDisplayController;
@@ -33,7 +35,7 @@ public class VideoFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(llVideoFragment == null){
-             llVideoFragment = (LinearLayout) inflater.inflate(R.layout.fragment_video, null);
+            llVideoFragment = (LinearLayout) inflater.inflate(R.layout.fragment_video, null);
             initView(llVideoFragment);
         }else{
             ViewGroup vg = (ViewGroup) llVideoFragment.getParent();
@@ -68,24 +70,30 @@ public class VideoFragment extends BaseFragment {
         lowerVideoWindow.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                ((MeetingActivity) getActivity()).showVideoSelectFragment();
+                ((MeetingActivity) getActivity()).changeToVideoSet();
                 return true;
             }
         });
 
 
-        // init VideoCommon
+        // init VideoService
         videoService = ((MeetingActivity)getActivity()).getVideoService();
         upperVideoWindow.setVideoService(videoService);
         lowerVideoWindow.setVideoService(videoService);
+
+        // TODO: 2015/9/9 new : AudioService pass to videoDisplayController
+        //init AudioService
+        audioService = ((MeetingActivity)getActivity()).getAudioService();
 
         // init VideoDisplayController
         videoDisplayController = new VideoDisplayController();
         videoDisplayController.setLowerVideoWindow(lowerVideoWindow);
         videoDisplayController.setUpperVideoWindow(upperVideoWindow);
         videoDisplayController.setVideoService(videoService);
+        videoDisplayController.setAudioService(audioService);
 
         videoService.setVideoDisplayController(videoDisplayController);
+        audioService.setVideoDisplayController(videoDisplayController);
     }
 
     // TODO: 2015/8/31 To use singleton instance for click handler.
@@ -117,7 +125,7 @@ public class VideoFragment extends BaseFragment {
         v1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                ((MeetingActivity) getActivity()).showVideoSelectFragment();
+                ((MeetingActivity) getActivity()).changeToVideoSet();
                 return true;
             }
         });

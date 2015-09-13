@@ -53,9 +53,9 @@ public class SetupFragment extends BaseFragment {
 //            setupFragmentView.refreshDrawableState();
 //            return setupFragmentView;
 //        } else {
-            setupFragmentView = inflater.inflate(R.layout.fragment_setup, null);
-            initView(setupFragmentView);
-            return setupFragmentView;
+        setupFragmentView = inflater.inflate(R.layout.fragment_setup, null);
+        initView(setupFragmentView);
+        return setupFragmentView;
 //        }
     }
 
@@ -155,7 +155,7 @@ public class SetupFragment extends BaseFragment {
 
                 break;
             case R.id.btn_select_video:
-                ((MeetingActivity)getActivity()).showVideoSelectFragment();
+                ((MeetingActivity)getActivity()).changeToVideoSet();
                 break;
             case R.id.btn_switch_front_back_camera:
                 String tag = (String) btnSwitchFrontBackCamera.getTag();
@@ -180,7 +180,7 @@ public class SetupFragment extends BaseFragment {
     }
 
     private boolean isMicOn() {
-        return roomService.getAudioService().isMicOn();
+        return roomService.getAudioService().isLocalAudioOn();
 
     }
 
@@ -252,6 +252,6 @@ public class SetupFragment extends BaseFragment {
     }
 
     private boolean isVideoOn() {
-        return roomService.getVideoService().isVideoOn();
+        return roomService.getVideoService().isLocalVideoOn();
     }
 }

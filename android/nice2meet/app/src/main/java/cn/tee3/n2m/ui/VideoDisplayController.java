@@ -2,6 +2,7 @@ package cn.tee3.n2m.ui;
 
 //import com.threebody.conference.ui.fragment.VideoWindow;
 
+import cn.tee3.n2m.biz.service.AudioService;
 import cn.tee3.n2m.ui.fragment.VideoWindow;
 import cn.tee3.n2m.biz.service.VideoService;
 import cn.tee3.n2m.biz.domain.N2MVideo;
@@ -24,6 +25,7 @@ public class VideoDisplayController {
     List<N2MVideo> videoList = new ArrayList<N2MVideo>();
     List<N2MVideo> displayedVideoList = new ArrayList<N2MVideo>();
     private VideoService videoService;
+    private AudioService audioService;
 
     public void addVideo(N2MVideo video) {
         videoList.add(video);
@@ -72,6 +74,10 @@ public class VideoDisplayController {
 
     public void setVideoService(VideoService videoService) {
         this.videoService = videoService;
+    }
+
+    public void setAudioService(AudioService audioService) {
+        this.audioService = audioService;
     }
 
     public void switchWindowPosition() {
@@ -142,6 +148,25 @@ public class VideoDisplayController {
 
     public List<N2MVideo> getVideoList() {
         return videoList;
+    }
+
+    public N2MVideo getVideoById(int nodeId) {
+        for (N2MVideo video: getVideoList()) {
+            if (video.getNodeId() == nodeId){
+                return video;
+            }
+        }
+        return null;
+    }
+
+    public List<N2MVideo> getVideoListById(int nodeId) {
+        List<N2MVideo> list = new ArrayList<N2MVideo>();
+        for (N2MVideo video: getVideoList()) {
+            if (video.getNodeId() == nodeId){
+                list.add(video);
+            }
+        }
+        return list;
     }
 
     public void deleteVideo(N2MVideo video) {

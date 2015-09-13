@@ -34,9 +34,12 @@ public class MeetingActivity extends BaseActivity {
 
     public static final int SCREEN_CLOSE= 40005;
     public static final int SCREEN_OPEN= 40004;
-    public static final int VIDEO_STATUS = 40003;
     public static final int VIDEO_CLOSE= 40002;
     public static final int VIDEO_OPEN= 40001;
+
+    //    public static final int AUDIO_STATUS = 40003;
+    public static final int AUDIO_OPEN = 40006;
+    public static final int AUDIO_CLOSE = 40007;
 
     @InjectView(R.id.flChat_btn)FrameLayout flChatBtn;
     @InjectView(R.id.flVideo_btn)FrameLayout flVideoBtn;
@@ -94,18 +97,21 @@ public class MeetingActivity extends BaseActivity {
     int fragmentIndex = 1;
     @Override
     public void onClick(View v) {
-        super.onClick(v);
+//        super.onClick(v);
         int viewIndex = Integer.parseInt((String)v.getTag());
-        oldIndex = fragmentIndex;
-        fragmentIndex = viewIndex;
-        //do nothing if it's the same button as previous one
-        if (oldIndex == viewIndex){
+
+        //flExit_btn
+//        if (v.getId() == R.id.flExit_btn){
+        if (viewIndex == 3){
+            showDialog();
             return;
         }
 
-        //flExit_btn
-        if (v.getId() == R.id.flExit_btn){
-            showDialog();
+        oldIndex = fragmentIndex;
+        fragmentIndex = viewIndex;
+
+        //do nothing if it's the same button as previous one
+        if (oldIndex == viewIndex){
             return;
         }
 
@@ -121,7 +127,7 @@ public class MeetingActivity extends BaseActivity {
             chatNumber = 0;
         }
     }
-    private void changeFragment(int old, int index){
+    private synchronized void changeFragment(int old, int index){
         if(old > index){
             FragmentUtil.moveToLeftFragment(this, R.id.mainScreenLinearLayout, fragmentList.get(index));
         }else{
@@ -185,24 +191,24 @@ public class MeetingActivity extends BaseActivity {
         // audio common
         audioService = new AudioService(roomService, new AudioService.AudioCallback() {
             @Override
-            public void onOpenMicrophone(int result, int nodeId) {
+            public void onOpenMicrophone(int result, int nodeId, Boolean needToRefreshWindow) {
 
                 if(result == 0){
                     Message msg = new Message();
-                    msg.what = VIDEO_STATUS;
-                    msg.obj = true;
+                    msg.what = AUDIO_OPEN;
+                    msg.obj = needToRefreshWindow;
                     msg.arg1 = nodeId;
                     handler.sendMessage(msg);
                 }
             }
 
             @Override
-            public void onCloseMicrophone(int result, int nodeId) {
+            public void onCloseMicrophone(int result, int nodeId, Boolean needToRefreshWindow) {
 
                 if(result == 0){
                     Message msg = new Message();
-                    msg.what = VIDEO_STATUS;
-                    msg.obj = false;
+                    msg.what = AUDIO_CLOSE;
+                    msg.obj = needToRefreshWindow;
                     msg.arg1 = nodeId;
                     handler.sendMessage(msg);
                 }
@@ -259,6 +265,11 @@ public class MeetingActivity extends BaseActivity {
 
     public VideoService getVideoService() {
         return videoService;
+    }
+
+    // TODO: 2015/9/9 new AudioService
+    public AudioService getAudioService() {
+        return audioService;
     }
 
     public ChatService getChatService() {
@@ -329,15 +340,31 @@ public class MeetingActivity extends BaseActivity {
                         setupFragment.showOpenLocalVideoOnVideoSwitch();
                     }
                     break;
-                case VIDEO_STATUS:
-                    boolean isOpen = (Boolean)msg.obj;
-                    videoFragment.setAudioStatus(isOpen, msg.arg1);
+//                case AUDIO_STATUS:
+//                    boolean isOpen = (Boolean)msg.obj;
+//                    videoFragment.setAudioStatus(isOpen, msg.arg1);
+//                    break;
+                case AUDIO_OPEN:
+                    boolean needToRefreshWindow = (Boolean) msg.obj;
+                    if (needToRefreshWindow) {
+                        videoFragment.refreshVideoWindows();
+                    } else{
+                        videoFragment.setAudioStatus(true, msg.arg1);
+                    }
+                    break;
+                case AUDIO_CLOSE:
+                    needToRefreshWindow = (Boolean) msg.obj;
+                    if (needToRefreshWindow) {
+                        videoFragment.refreshVideoWindows();
+                    } else{
+                        videoFragment.setAudioStatus(false, msg.arg1);
+                    }
                     break;
             }
         }
     };
 
-    public void showVideoSelectFragment() {
+    public void changeToVideoSet() {
         FragmentUtil.moveToRightFragment(this, R.id.mainScreenLinearLayout, videoSelectFragment);
     }
 

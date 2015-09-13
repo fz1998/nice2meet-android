@@ -1,10 +1,14 @@
 package cn.tee3.n2m.biz.service;
 
 
+import cn.tee3.n2m.biz.domain.N2MVideo;
 import cn.tee3.n2m.biz.util.LoggerUtil;
+import cn.tee3.n2m.ui.VideoDisplayController;
 
 import org.st.Audio;
 import org.st.User;
+
+import java.util.List;
 
 public class AudioService {
     String tag = getClass().getName();
@@ -14,7 +18,13 @@ public class AudioService {
     AudioCallback callback;
     RoomService roomService;
 
-    private boolean isMicOn = false;
+    private VideoDisplayController videoDisplayController;
+
+    public void setVideoDisplayController(VideoDisplayController videoDisplayController) {
+        this.videoDisplayController = videoDisplayController;
+    }
+
+    private boolean isLocalAudioOn = false;
     private boolean isHandFree = true;
 
     public AudioService(RoomService roomService, AudioCallback callbak) {
@@ -25,7 +35,7 @@ public class AudioService {
         initListener();
     }
 
-    private boolean checkMe(int nodeId) {
+    private boolean audioBelongToLocalUser(int nodeId) {
         User me = roomService.getCurrentUser();
         if (me != null) {
             if (me.getNodeId() == nodeId) {
@@ -48,7 +58,7 @@ public class AudioService {
         if (audioModule != null) {
             boolean isSucceed = audioModule.closeMicrophone(id);
             if (isSucceed) {
-                isMicOn = false;
+                isLocalAudioOn = false;
             }
             return isSucceed;
         }
@@ -73,34 +83,85 @@ public class AudioService {
             @Override
             synchronized public void onOpenMicrophone(int result, int nodeId) {
                 LoggerUtil.info(tag, "onOpenMic result = " + result + " nodeId = " + nodeId);
-                User user = roomService.findUserById(nodeId);
-                if (user != null) {
-                    user.setAudioOn(true);
-                }
                 if (result == 0) {
-                    if (checkMe(nodeId)) {
-                        isMicOn = true;
+                    User user = roomService.findUserById(nodeId);
+                    if (user != null) {
+                        if (audioBelongToLocalUser(nodeId)) {
+                            isLocalAudioOn = true;
+                        }
+
+                        Boolean needToRefreshWindow;
+
+                        List<N2MVideo> videoList = videoDisplayController.getVideoListById(nodeId);
+                        if (videoList.size() == 0) {
+                            N2MVideo video = new N2MVideo(nodeId, "");
+//                            videoList.set(0, new N2MVideo(nodeId));
+                            user.setAudioOn(true);
+                            video.setUser(user);
+                            videoDisplayController.addVideo(video);
+                            needToRefreshWindow = true;
+                        }else {
+                            for (N2MVideo video: videoList) {
+                                video.getUser().setAudioOn(true); ////////////////////////
+//                                video.setUser(user);
+                            }
+                            needToRefreshWindow = false;
+                        }
+//                        N2MVideo video = videoDisplayController.getVideoById(nodeId);
+//                        if (video == null) {
+//                            video = new N2MVideo(nodeId);
+//                        }
+
+                        if (callback != null) {
+                            callback.onOpenMicrophone(result, nodeId, needToRefreshWindow);
+                        }
                     }
-                }
-                if (callback != null) {
-                    callback.onOpenMicrophone(result, nodeId);
                 }
             }
 
             @Override
             synchronized public void onCloseMicrophone(int result, int nodeId) {
                 LoggerUtil.info(tag, "onCloseMic result = " + result + " nodeId = " + nodeId);
-                User user = roomService.findUserById(nodeId);
-                if (user != null) {
-                    user.setAudioOn(false);
-                }
                 if (result == 0) {
-                    if (checkMe(nodeId)) {
-                        isMicOn = false;
+                    User user = roomService.findUserById(nodeId);
+                    if (user != null) {
+                        if (audioBelongToLocalUser(nodeId)) {
+                            isLocalAudioOn = false;
+                        }
+//                        user.setAudioOn(false);
+                        Boolean needToRefreshWindow = false;
+
+                        List<N2MVideo> videoList = videoDisplayController.getVideoListById(nodeId);
+                        for (N2MVideo video: videoList) {
+                            if(video != null && !video.getUser().isVideoOn()){
+                                videoDisplayController.deleteVideo(video);
+                                needToRefreshWindow = true;
+                            }
+                            video.getUser().setAudioOn(false);
+                        }
+
+//                        if (videoList.size() == 0) {
+//                            N2MVideo video = new N2MVideo(nodeId);
+//                            videoList.set(0, new N2MVideo(nodeId));
+//                            video.setUser(user);
+//                            videoDisplayController.addVideo(video);
+//                        }else {
+//                            for (N2MVideo video: videoList) {
+//                                video.setUser(user);
+//                            }
+//                        }
+
+
+//                        N2MVideo video = videoDisplayController.getVideoById(nodeId);
+//
+//                        if(video != null && !video.getUser().isVideoOn()){
+//                            videoDisplayController.deleteVideo(video);
+//                        }
+
+                        if (callback != null) {
+                            callback.onCloseMicrophone(result, nodeId, needToRefreshWindow);
+                        }
                     }
-                }
-                if (callback != null) {
-                    callback.onCloseMicrophone(result, nodeId);
                 }
             }
 
@@ -114,8 +175,12 @@ public class AudioService {
         audioModule.setListener(listener);
     }
 
-    public boolean isMicOn() {
-        return isMicOn;
+    private boolean videoBelongToCurrentUser(User user) {
+        return user.getNodeId() == roomService.getMe().getNodeId();
+    }
+
+    public boolean isLocalAudioOn() {
+        return isLocalAudioOn;
     }
 
     public void setHandFree(boolean handFree) {
@@ -133,7 +198,7 @@ public class AudioService {
          * @param result
          * @param nodeId
          */
-        void onOpenMicrophone(int result, int nodeId);
+        void onOpenMicrophone(int result, int nodeId, Boolean needToRefreshWindow);
 
         /**
          * 关闭MIC结果
@@ -141,7 +206,7 @@ public class AudioService {
          * @param result
          * @param nodeId
          */
-        void onCloseMicrophone(int result, int nodeId);
+        void onCloseMicrophone(int result, int nodeId, Boolean needToRefreshWindow);
 
         /**
          * 请求打开音频设备，房间音频路数用完，主持人会接受到此请求，用于音频控制
