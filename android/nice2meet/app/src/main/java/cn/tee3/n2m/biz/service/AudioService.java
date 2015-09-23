@@ -1,14 +1,14 @@
 package cn.tee3.n2m.biz.service;
 
 
-import cn.tee3.n2m.biz.domain.N2MVideo;
-import cn.tee3.n2m.biz.util.LoggerUtil;
-import cn.tee3.n2m.ui.VideoDisplayController;
-
 import org.st.Audio;
 import org.st.User;
 
 import java.util.List;
+
+import cn.tee3.n2m.biz.domain.N2MVideo;
+import cn.tee3.n2m.biz.util.LoggerUtil;
+import cn.tee3.n2m.ui.VideoDisplayController;
 
 public class AudioService {
     String tag = getClass().getName();
@@ -95,7 +95,6 @@ public class AudioService {
                         List<N2MVideo> videoList = videoDisplayController.getVideoListById(nodeId);
                         if (videoList.size() == 0) {
                             N2MVideo video = new N2MVideo(nodeId, "");
-//                            videoList.set(0, new N2MVideo(nodeId));
                             user.setAudioOn(true);
                             video.setUser(user);
                             videoDisplayController.addVideo(video);
@@ -103,7 +102,6 @@ public class AudioService {
                         }else {
                             for (N2MVideo video: videoList) {
                                 video.getUser().setAudioOn(true); ////////////////////////
-//                                video.setUser(user);
                             }
                             needToRefreshWindow = false;
                         }

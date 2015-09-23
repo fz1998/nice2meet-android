@@ -143,25 +143,17 @@ public class VideoFragment extends BaseFragment {
 
     public void setAudioStatus(boolean isOpen, int nodeId){
 
+        // TODO: 2015/9/23 getVideo() is null, need to protect here.
+        if(upperVideoWindow.getVideo() == null) {
+            return;
+        }
+
         if (upperVideoWindow.getVideo().getNodeId() == nodeId){
             //upperwindow
             upperVideoWindow.setAudioStatusIcon(isOpen);
         }else {
             lowerVideoWindow.setAudioStatusIcon(isOpen);
         }
-
-//        if(deviceUpper != null && deviceUpper.getUser() != null){
-//            if(deviceUpper.getUser().getNodeId() == nodeId){
-//                upperVideoWindow.setAudioStatusIcon(isOpen);
-//                return;
-//            }
-//        }
-//        if(deviceLower != null && deviceLower.getUser() != null){
-//            if(deviceLower.getUser().getNodeId() == nodeId){
-//                lowerVideoWindow.setAudioStatusIcon(isOpen);
-//            }
-//        }
-
     }
 
     public void closeAll() {

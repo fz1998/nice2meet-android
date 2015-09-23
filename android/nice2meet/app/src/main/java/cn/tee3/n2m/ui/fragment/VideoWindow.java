@@ -136,7 +136,6 @@ public class VideoWindow extends FrameLayout {
         return mRenderer;
     }
 
-    //// TODO: 2015/8/29  why not on VideoCommon object ?
     public void removeVideoRender() {
         if (video != null) {
             if (video.isScreen()) {

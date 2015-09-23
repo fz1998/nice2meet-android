@@ -40,7 +40,7 @@ public class JoinRoomActivity extends BaseActivity implements RoomService.JoinRe
         etPassword.setText("admin");
 
         // TODO: 2015/9/6 for testing only, need to delete.
-        joinConference();
+//        joinConference();
     }
 
     @Override

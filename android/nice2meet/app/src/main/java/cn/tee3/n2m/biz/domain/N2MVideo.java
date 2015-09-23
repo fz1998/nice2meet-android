@@ -7,6 +7,8 @@ import org.st.User;
  */
 public class N2MVideo {
     int nodeId;
+
+    // TODO: 2015/9/23 if deviceId="", then it is a audio device. by ZSY.
     String deviceId;
     boolean isScreen = false;
     User user;
