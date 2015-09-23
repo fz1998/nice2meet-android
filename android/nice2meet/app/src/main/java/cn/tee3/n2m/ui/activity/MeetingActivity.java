@@ -40,13 +40,17 @@ public class MeetingActivity extends BaseActivity {
     //    public static final int AUDIO_STATUS = 40003;
     public static final int AUDIO_OPEN = 40006;
     public static final int AUDIO_CLOSE = 40007;
+    public static final int INDEX_EXIT = 3;
 
     @InjectView(R.id.flChat_btn)FrameLayout flChatBtn;
     @InjectView(R.id.flVideo_btn)FrameLayout flVideoBtn;
     @InjectView(R.id.flSetup_btn)FrameLayout flSetupBtn;
     @InjectView(R.id.flExit_btn)FrameLayout flExitBtn;
 
-    ChatFragment chatFragment; FrameLayout chatNumberLayout; TextView chatNumberText; int chatNumber = 0;
+    ChatFragment chatFragment;
+    FrameLayout chatNumberLayout;
+    TextView chatNumberText;
+    int chatNumber = 0;
     VideoFragment videoFragment;
     SetupFragment setupFragment;
     VideoSelectFragment videoSelectFragment;
@@ -70,8 +74,10 @@ public class MeetingActivity extends BaseActivity {
         super.initUI();
 
         getSupportActionBar().hide();
-        flChatBtn.setOnClickListener(this); chatNumberLayout = (FrameLayout) findViewById(R.id.layout_chat_number_id);
-        flVideoBtn.setOnClickListener(this); chatNumberText = (TextView) findViewById(R.id.text_chat_number_id);
+        flChatBtn.setOnClickListener(this);
+        chatNumberLayout = (FrameLayout) findViewById(R.id.layout_chat_number_id);
+        flVideoBtn.setOnClickListener(this);
+        chatNumberText = (TextView) findViewById(R.id.text_chat_number_id);
         flSetupBtn.setOnClickListener(this);
         flExitBtn.setOnClickListener(this);
         btnList = new ArrayList<>();
@@ -102,7 +108,7 @@ public class MeetingActivity extends BaseActivity {
 
         //flExit_btn
 //        if (v.getId() == R.id.flExit_btn){
-        if (viewIndex == 3){
+        if (viewIndex== INDEX_EXIT) {
             showDialog();
             return;
         }
