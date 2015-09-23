@@ -7,15 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
+
+import butterknife.InjectView;
 import cn.tee3.n2m.R;
-import cn.tee3.n2m.ui.activity.MeetingActivity;
-import cn.tee3.n2m.ui.util.ToastUtil;
 import cn.tee3.n2m.biz.service.AudioService;
 import cn.tee3.n2m.biz.service.N2MRoomSystem;
 import cn.tee3.n2m.biz.service.RoomService;
-
-import butterknife.InjectView;
+import cn.tee3.n2m.ui.activity.MeetingActivity;
+import cn.tee3.n2m.ui.util.ToastUtil;
 
 /**
  * Created by xiaxin on 15-1-14.
@@ -31,7 +30,6 @@ public class SetupFragment extends BaseFragment {
     @InjectView(R.id.btn_speaker_hand_free_switch)Button btnSpeakerHandFreeSwitch;
     @InjectView(R.id.btn_switch_front_back_camera)Button btnSwitchFrontBackCamera;
     @InjectView(R.id.button_switchvideo_id)Button buttonSwitchVideo;
-    @InjectView(R.id.llHelp)LinearLayout llHelp;
 
     View setupFragmentView;
 
@@ -65,7 +63,6 @@ public class SetupFragment extends BaseFragment {
         roomService = N2MRoomSystem.instance().getRoomService();
         btnVideoSwitch.setOnClickListener(this);
         btnAudioSwitch.setOnClickListener(this);
-        llHelp.setOnClickListener(this);
         btnSpeakerHandFreeSwitch.setOnClickListener(this);
         btnSelectVideo.setOnClickListener(this);
         btnSwitchFrontBackCamera.setOnClickListener(this);

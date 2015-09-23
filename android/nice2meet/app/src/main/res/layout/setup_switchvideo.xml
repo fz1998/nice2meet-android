@@ -3,7 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
-    <RelativeLayout
+    <!--<RelativeLayout-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -16,6 +17,15 @@
             android:layout_centerVertical="true"
             android:src="@drawable/video"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/TextSize17"
+            android:textColor="@color/white"
+            android:text="@string/switchVideo"
+            android:layout_marginLeft="@dimen/TextSize10"
+            android:layout_weight="1"/>
+
         <Button
             android:id="@+id/button_switchvideo_id"
             android:layout_width="wrap_content"
@@ -23,13 +33,15 @@
             android:gravity="center_vertical"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="@string/switchVideo"
+            android:text="@string/switchVideo2"
             android:tag="@string/frontCamera"
             android:layout_marginLeft="@dimen/TextSize05"
             android:layout_marginRight="@dimen/TextSize05"
 
             />
-    </RelativeLayout>
+        </LinearLayout>
+
+    <!--</RelativeLayout>-->
     <LinearLayout style="@style/lineHorizontal"/>
 </LinearLayout>
 

@@ -10,9 +10,5 @@
     <include layout="@layout/setup_set_audio"/>
     <include layout="@layout/setup_set_speaker"/>
     <include layout="@layout/setup_set_cameraswitch"/>
-
     <include layout="@layout/setup_switchvideo"/>
-
-    <include layout="@layout/setup_set_help"/>
-
 </LinearLayout>

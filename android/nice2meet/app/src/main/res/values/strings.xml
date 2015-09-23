@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">幸会Beta1.0</string>
+    <string name="app_name">幸会1.0</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
@@ -12,7 +12,7 @@
     <string name="useBackCamera">使用后置摄像头</string>
     <string name="useFrontCamera">使用前置摄像头</string>
     <string name="frontCamera">FRONT_CAMERA</string>
-    <string name="switchVideo">切换上下视频（或长按上视频）</string>
+    <string name="switchVideo">切换上下视频窗口</string>
 
     <string name="videoSelect">选择视频</string>
     <string name="openAudio">打开本地音频</string>
@@ -47,4 +47,10 @@
     <!-- error -->
     <string name="connectFailure">网络连接不给力！</string>
     <string name="responseNull">网络异常，请检查网络是否给力</string>
+
+
+    <string name="localVideo">本地视频</string>
+    <string name="localAudio">本地音频</string>
+    <string name="handFree">免提</string>
+    <string name="switchVideo2">切换窗口</string>
 </resources>

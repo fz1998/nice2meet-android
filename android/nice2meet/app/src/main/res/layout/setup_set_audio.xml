@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/TextSize17"
             android:textColor="@color/white"
-            android:text="@string/openAudio"
+            android:text="@string/localAudio"
             android:layout_marginLeft="@dimen/TextSize10"
             android:layout_weight="1"/>
         <Button
